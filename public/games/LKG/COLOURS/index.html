@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Riya's Rainbow Rescue 🌈 | CHOTAPLAY</title>
+  <meta name="description" content="Help Riya and Little Star rescue the magical faded rainbow by discovering and using all 7 colors of VIBGYOR in a joyful, interactive world!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-app" class="game-container state-initial">
+    
+    <!-- AUDIO & CONTROLS HUD -->
+    <header class="game-header">
+      <div class="brand-badge">
+        <span class="brand-chota">CHOTA</span><span class="brand-play">PLAY</span>
+      </div>
+      <div class="game-title-pill">
+        <span class="title-rainbow-icon">🌈</span>
+        <span class="title-text">Riya's Rainbow Rescue</span>
+      </div>
+      <div class="hud-controls">
+        <button id="btn-sound" class="hud-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <span class="hud-icon sound-on">🔊</span>
+          <span class="hud-icon sound-off hidden">🔇</span>
+        </button>
+        <button id="btn-repeat-voice" class="hud-btn" title="Hear Hint" aria-label="Hear Hint">
+          <span class="hud-icon">🗣️</span>
+        </button>
+        <button id="btn-reset" class="hud-btn" title="Restart Game" aria-label="Restart Game">
+          <span class="hud-icon">🔄</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTINUOUS MAGICAL ENVIRONMENT -->
+    <main id="world-stage" class="world-stage">
+      
+      <!-- SKY & CELESTIAL BACKGROUND -->
+      <div class="sky-layer">
+        <div class="sun-container" id="world-sun">
+          <div class="sun-core"></div>
+          <div class="sun-rays"></div>
+        </div>
+        <div class="cloud-group">
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+        </div>
+        <div class="sky-stars-layer" id="sky-stars"></div>
+        <div class="sky-aurora" id="sky-aurora"></div>
+      </div>
+
+      <!-- THE 7-ARC RAINBOW -->
+      <div class="rainbow-wrapper" id="rainbow-wrapper">
+        <div class="rainbow-glow-backdrop" id="rainbow-glow"></div>
+        <svg class="rainbow-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#FF3366" />
+              <stop offset="50%" stop-color="#FF1A40" />
+              <stop offset="100%" stop-color="#FF5252" />
+            </linearGradient>
+            <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#FFA726" />
+              <stop offset="50%" stop-color="#FF9100" />
+              <stop offset="100%" stop-color="#FF6D00" />
+            </linearGradient>
+            <linearGradient id="grad-yellow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#FFEE58" />
+              <stop offset="50%" stop-color="#FFD600" />
+              <stop offset="100%" stop-color="#FFEA00" />
+            </linearGradient>
+            <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#69F0AE" />
+              <stop offset="50%" stop-color="#00E676" />
+              <stop offset="100%" stop-color="#00C853" />
+            </linearGradient>
+            <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#40C4FF" />
+              <stop offset="50%" stop-color="#00B0FF" />
+              <stop offset="100%" stop-color="#2979FF" />
+            </linearGradient>
+            <linearGradient id="grad-indigo" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#7C4DFF" />
+              <stop offset="50%" stop-color="#651FFF" />
+              <stop offset="100%" stop-color="#3D5AFE" />
+            </linearGradient>
+            <linearGradient id="grad-violet" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#E040FB" />
+              <stop offset="50%" stop-color="#D500F9" />
+              <stop offset="100%" stop-color="#AA00FF" />
+            </linearGradient>
+
+            <filter id="faded-filter">
+              <feColorMatrix type="saturate" values="0.15" />
+            </filter>
+            <filter id="crystal-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- 7 Rainbow Arcs (Outer to Inner: Red, Orange, Yellow, Green, Blue, Indigo, Violet) -->
+          <!-- Base / Faded Track paths -->
+          <g class="faded-arcs">
+            <path id="arc-bg-0" class="rainbow-arc-bg" d="M 80,500 A 420,420 0 0,1 920,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="arc-bg-1" class="rainbow-arc-bg" d="M 112,500 A 388,388 0 0,1 888,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="arc-bg-2" class="rainbow-arc-bg" d="M 144,500 A 356,356 0 0,1 856,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="arc-bg-3" class="rainbow-arc-bg" d="M 176,500 A 324,324 0 0,1 824,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="arc-bg-4" class="rainbow-arc-bg" d="M 208,500 A 292,292 0 0,1 792,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="arc-bg-5" class="rainbow-arc-bg" d="M 240,500 A 260,260 0 0,1 760,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="arc-bg-6" class="rainbow-arc-bg" d="M 272,500 A 228,228 0 0,1 728,500" stroke="#cbd5e1" stroke-width="26" fill="none" stroke-linecap="round" />
+          </g>
+
+          <!-- Active Vibrant Rainbow Arcs -->
+          <g class="active-arcs">
+            <path id="rainbow-arc-0" class="rainbow-arc arc-red" data-color="red" d="M 80,500 A 420,420 0 0,1 920,500" stroke="url(#grad-red)" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="rainbow-arc-1" class="rainbow-arc arc-orange" data-color="orange" d="M 112,500 A 388,388 0 0,1 888,500" stroke="url(#grad-orange)" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="rainbow-arc-2" class="rainbow-arc arc-yellow" data-color="yellow" d="M 144,500 A 356,356 0 0,1 856,500" stroke="url(#grad-yellow)" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="rainbow-arc-3" class="rainbow-arc arc-green" data-color="green" d="M 176,500 A 324,324 0 0,1 824,500" stroke="url(#grad-green)" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="rainbow-arc-4" class="rainbow-arc arc-blue" data-color="blue" d="M 208,500 A 292,292 0 0,1 792,500" stroke="url(#grad-blue)" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="rainbow-arc-5" class="rainbow-arc arc-indigo" data-color="indigo" d="M 240,500 A 260,260 0 0,1 760,500" stroke="url(#grad-indigo)" stroke-width="26" fill="none" stroke-linecap="round" />
+            <path id="rainbow-arc-6" class="rainbow-arc arc-violet" data-color="violet" d="M 272,500 A 228,228 0 0,1 728,500" stroke="url(#grad-violet)" stroke-width="26" fill="none" stroke-linecap="round" />
+          </g>
+
+          <!-- Fluffy Cloud Footings -->
+          <g class="rainbow-cloud-feet">
+            <g transform="translate(30, 430) scale(0.9)">
+              <ellipse cx="60" cy="50" rx="45" ry="35" fill="#FFFFFF" opacity="0.95" />
+              <ellipse cx="95" cy="35" rx="40" ry="32" fill="#FFFFFF" />
+              <ellipse cx="130" cy="50" rx="42" ry="34" fill="#FFFFFF" opacity="0.95" />
+            </g>
+            <g transform="translate(800, 430) scale(0.9)">
+              <ellipse cx="60" cy="50" rx="45" ry="35" fill="#FFFFFF" opacity="0.95" />
+              <ellipse cx="95" cy="35" rx="40" ry="32" fill="#FFFFFF" />
+              <ellipse cx="130" cy="50" rx="42" ry="34" fill="#FFFFFF" opacity="0.95" />
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 7 CRYSTAL PROGRESS HUD -->
+      <div class="crystal-hud" id="crystal-hud" role="region" aria-label="Color Crystals Progress">
+        <div class="hud-label">Magical Crystals:</div>
+        <div class="crystal-slots">
+          <div class="crystal-slot" data-index="0" data-color="red" id="slot-0" title="Red">
+            <div class="slot-crystal red-crystal">🔴</div>
+            <span class="slot-name">RED</span>
+            <span class="slot-check">✓</span>
+          </div>
+          <div class="crystal-slot" data-index="1" data-color="orange" id="slot-1" title="Orange">
+            <div class="slot-crystal orange-crystal">🟠</div>
+            <span class="slot-name">ORANGE</span>
+            <span class="slot-check">✓</span>
+          </div>
+          <div class="crystal-slot" data-index="2" data-color="yellow" id="slot-2" title="Yellow">
+            <div class="slot-crystal yellow-crystal">🟡</div>
+            <span class="slot-name">YELLOW</span>
+            <span class="slot-check">✓</span>
+          </div>
+          <div class="crystal-slot" data-index="3" data-color="green" id="slot-3" title="Green">
+            <div class="slot-crystal green-crystal">🟢</div>
+            <span class="slot-name">GREEN</span>
+            <span class="slot-check">✓</span>
+          </div>
+          <div class="crystal-slot" data-index="4" data-color="blue" id="slot-4" title="Blue">
+            <div class="slot-crystal blue-crystal">🔵</div>
+            <span class="slot-name">BLUE</span>
+            <span class="slot-check">✓</span>
+          </div>
+          <div class="crystal-slot" data-index="5" data-color="indigo" id="slot-5" title="Indigo">
+            <div class="slot-crystal indigo-crystal">🟣</div>
+            <span class="slot-name">INDIGO</span>
+            <span class="slot-check">✓</span>
+          </div>
+          <div class="crystal-slot" data-index="6" data-color="violet" id="slot-6" title="Violet">
+            <div class="slot-crystal violet-crystal">🟪</div>
+            <span class="slot-name">VIOLET</span>
+            <span class="slot-check">✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENERY LANDSCAPE -->
+      <div class="scenery-layer" id="scenery-layer">
+        <!-- Distant Mountains -->
+        <div class="mountains-bg">
+          <svg viewBox="0 0 1200 300" preserveAspectRatio="none" class="mountains-svg">
+            <path d="M 0,300 L 0,160 Q 200,60 400,180 T 800,120 Q 1000,50 1200,170 L 1200,300 Z" class="mountain-back" />
+            <path d="M 0,300 L 0,210 Q 300,120 600,230 T 1200,200 L 1200,300 Z" class="mountain-front" />
+          </svg>
+        </div>
+
+        <!-- Rolling Hills -->
+        <div class="hills-bg">
+          <svg viewBox="0 0 1200 240" preserveAspectRatio="none" class="hills-svg">
+            <path d="M 0,240 L 0,100 Q 250,20 550,110 T 1200,80 L 1200,240 Z" class="hill-back" />
+            <path d="M 0,240 L 0,130 Q 350,60 750,140 T 1200,110 L 1200,240 Z" class="hill-front" />
+          </svg>
+        </div>
+
+        <!-- River Stream -->
+        <div class="river-container" id="world-river">
+          <svg viewBox="0 0 900 260" preserveAspectRatio="none" class="river-svg">
+            <path id="river-bed" d="M 0,200 Q 250,170 480,210 T 900,180 L 900,260 L 0,260 Z" class="river-bed-faded" />
+            <path id="river-water" d="M 0,200 Q 250,170 480,210 T 900,180 L 900,260 L 0,260 Z" class="river-water-active" />
+          </svg>
+          <div class="river-splash-group" id="river-splashes">
+            <span class="splash-drop drop-1">💧</span>
+            <span class="splash-drop drop-2">💧</span>
+            <span class="splash-drop drop-3">💧</span>
+          </div>
+        </div>
+
+        <!-- Scenery Trees & Foliage -->
+        <div class="scenery-tree tree-left" id="tree-left">
+          <div class="tree-trunk"></div>
+          <div class="tree-crown crown-1"></div>
+          <div class="tree-crown crown-2"></div>
+        </div>
+        <div class="scenery-tree tree-right" id="tree-right">
+          <div class="tree-trunk"></div>
+          <div class="tree-crown crown-1"></div>
+          <div class="tree-crown crown-2"></div>
+        </div>
+
+        <!-- Animated Butterflies & Birds (Appear/Animate) -->
+        <div class="creature butterfly butterfly-1" id="butterfly-1" title="Tap butterfly!">🦋</div>
+        <div class="creature butterfly butterfly-2" id="butterfly-2" title="Tap butterfly!">🦋</div>
+        <div class="creature bird bird-1" id="bird-1">🕊️</div>
+        <div class="creature bird bird-2" id="bird-2">🕊️</div>
+      </div>
+
+      <!-- INTERACTIVE GAMEPLAY ZONE (Dynamically populates for current color) -->
+      <section class="interactive-stage" id="interactive-stage" aria-live="polite">
+        <!-- Stage content generated dynamically by JavaScript -->
+      </section>
+
+      <!-- CHARACTERS STAGE: RIYA & LITTLE STAR -->
+      <div class="characters-layer">
+        
+        <!-- RIYA CHARACTER -->
+        <div class="character-riya-wrapper" id="riya-container">
+          <div class="riya-speech-bubble" id="riya-speech" aria-live="polite">
+            <div class="bubble-speaker">Riya:</div>
+            <p class="bubble-text" id="riya-speech-text">The rainbow has lost its colours! Can you help me bring them back?</p>
+            <div class="bubble-arrow"></div>
+          </div>
+          <div class="riya-avatar-box" id="riya-avatar">
+            <img src="assets/riya.png" alt="Riya the friendly explorer" class="riya-img" id="riya-img" />
+            <div class="riya-glow-aura"></div>
+          </div>
+        </div>
+
+        <!-- LITTLE STAR CHARACTER -->
+        <div class="character-star-wrapper" id="star-container" title="Tap Little Star!">
+          <div class="star-avatar" id="star-avatar">
+            <svg viewBox="0 0 100 100" class="star-svg">
+              <defs>
+                <radialGradient id="star-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFF9C4" />
+                  <stop offset="60%" stop-color="#FFEB3B" />
+                  <stop offset="100%" stop-color="#FFC107" />
+                </radialGradient>
+              </defs>
+              <!-- 5-Point Cute Star Body -->
+              <polygon points="50,5 64,36 98,36 70,57 81,90 50,70 19,90 30,57 2,36 36,36" fill="url(#star-glow)" stroke="#FFA000" stroke-width="2.5" stroke-linejoin="round" />
+              <!-- Cute Eyes -->
+              <circle cx="40" cy="45" r="4.5" fill="#3E2723" class="star-eye" />
+              <circle cx="60" cy="45" r="4.5" fill="#3E2723" class="star-eye" />
+              <circle cx="41.5" cy="43.5" r="1.5" fill="#FFFFFF" />
+              <circle cx="61.5" cy="43.5" r="1.5" fill="#FFFFFF" />
+              <!-- Cheeks -->
+              <ellipse cx="33" cy="52" rx="4" ry="2.5" fill="#FF8A80" opacity="0.8" />
+              <ellipse cx="67" cy="52" rx="4" ry="2.5" fill="#FF8A80" opacity="0.8" />
+              <!-- Big Smile -->
+              <path d="M 42,52 Q 50,62 58,52" fill="none" stroke="#D84315" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+            <div class="star-aura"></div>
+          </div>
+          <div class="star-mini-sparkle s1">✨</div>
+          <div class="star-mini-sparkle s2">⭐</div>
+          <div class="star-mini-sparkle s3">✨</div>
+        </div>
+
+      </div>
+
+      <!-- CELEBRATION / WOW FINALE OVERLAY -->
+      <div class="celebration-overlay hidden" id="celebration-overlay">
+        <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+        <div class="celebration-modal">
+          <div class="celebration-badge">🌈 RAINBOW RESCUED! 🌈</div>
+          <h1 class="celebration-title">You are a Rainbow Hero!</h1>
+          <p class="celebration-subtitle">Look at all the magical vibrant colours!</p>
+          
+          <!-- Interactive Color Soundboard -->
+          <div class="color-rollcall-strip" id="rollcall-strip">
+            <button class="rollcall-pill rc-red" data-color="red">🔴 RED</button>
+            <button class="rollcall-pill rc-orange" data-color="orange">🟠 ORANGE</button>
+            <button class="rollcall-pill rc-yellow" data-color="yellow">🟡 YELLOW</button>
+            <button class="rollcall-pill rc-green" data-color="green">🟢 GREEN</button>
+            <button class="rollcall-pill rc-blue" data-color="blue">🔵 BLUE</button>
+            <button class="rollcall-pill rc-indigo" data-color="indigo">🟣 INDIGO</button>
+            <button class="rollcall-pill rc-violet" data-color="violet">🟪 VIOLET</button>
+          </div>
+
+          <div class="celebration-actions">
+            <button id="btn-play-free" class="action-btn btn-explore">✨ Explore Magical World</button>
+            <button id="btn-play-again" class="action-btn btn-restart">🔄 Play Again</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FREE PLAY BANNER (Shown during sandbox mode) -->
+      <div class="freeplay-hud hidden" id="freeplay-hud">
+        <span class="freeplay-badge">🌈 Rainbow Playground Active — Tap anything to make magic!</span>
+        <button id="btn-freeplay-replay" class="hud-mini-btn">🔄 Restart Story</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

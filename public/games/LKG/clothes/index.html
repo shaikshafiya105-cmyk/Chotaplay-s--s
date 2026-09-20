@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Riya's Magic Closet | ChotaPlay UKG Learning</title>
+  <meta name="description" content="An interactive UKG educational clothing discovery game for children aged 4-6. Learn clothes we wear, weather matching, and sorting with Riya and Little Star!">
+  
+  <!-- Google Fonts for Friendly Children's UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Audio Unlock & App Wrapper -->
+  <div id="game-app" class="game-container">
+    
+    <!-- Top HUD Navigation Bar -->
+    <header class="game-hud" id="game-hud">
+      <div class="hud-left">
+        <button id="btn-home" class="hud-btn home-btn" title="Home Menu" aria-label="Go to Home Menu">
+          <span class="btn-icon">🏠</span>
+          <span class="btn-label">Home</span>
+        </button>
+        <button id="btn-activities" class="hud-btn menu-btn" title="Choose Activity" aria-label="Choose Activity">
+          <span class="btn-icon">🎮</span>
+          <span class="btn-label">Games</span>
+        </button>
+        <button id="btn-freeplay" class="hud-btn freeplay-nav-btn" title="Free Play Magic Closet" aria-label="Free Play Mode">
+          <span class="btn-icon">✨</span>
+          <span class="btn-label">Free Play</span>
+        </button>
+      </div>
+
+      <!-- Wardrobe Progress Tracker -->
+      <div class="hud-center">
+        <div class="progress-card" id="progress-card">
+          <div class="progress-header">
+            <span class="progress-title">⭐ CLOSET DISCOVERIES</span>
+            <span class="progress-score" id="progress-text">0 / 8 Badges</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+            <div class="star-indicators" id="star-indicators">
+              <!-- Dynamically populated with 8 stars -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <button id="btn-speak-again" class="hud-btn repeat-btn" title="Hear Little Star Again" aria-label="Repeat Audio">
+          <span class="btn-icon">🔊</span>
+          <span class="btn-label">Repeat</span>
+        </button>
+        <button id="btn-sound-toggle" class="hud-btn sound-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <span class="btn-icon" id="sound-icon">🎵</span>
+          <span class="btn-label" id="sound-label">Sound On</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Scene Stage -->
+    <main class="game-stage" id="game-stage">
+      
+      <!-- Ambient Dynamic Background Layers (Magic Closet Room, Sunny, Rainy, Cold, School) -->
+      <div class="stage-backdrop" id="stage-backdrop">
+        <div class="backdrop-gradient" id="backdrop-gradient"></div>
+        <div class="scenery-elements" id="scenery-elements"></div>
+        <canvas id="weather-canvas" class="weather-canvas"></canvas>
+      </div>
+
+      <!-- Subtitles & Story Banner for Little Star & Riya -->
+      <div class="dialogue-overlay" id="dialogue-overlay">
+        <div class="companion-bubble" id="companion-bubble">
+          <div class="bubble-speaker" id="bubble-speaker">⭐ Little Star</div>
+          <div class="bubble-text" id="bubble-text">Welcome to Riya's Magic Closet!</div>
+        </div>
+      </div>
+
+      <!-- Center Play Arena -->
+      <div class="play-arena" id="play-arena">
+
+        <!-- Left / Character Area (Fully Dressed Riya & Little Star) -->
+        <section class="character-stage-wrap" id="character-stage-wrap">
+          <div class="character-platform">
+            <div class="platform-shadow"></div>
+            <div class="platform-glow"></div>
+          </div>
+          
+          <!-- Riya Guide & Reaction Character Container (Always Fully Dressed) -->
+          <div class="riya-character-container" id="riya-character-container">
+            <div class="riya-character" id="riya-guide">
+              <!-- SVG Layer rendered dynamically by CharacterRenderer -->
+            </div>
+            <div class="riya-name-badge">🌸 Riya</div>
+            <div class="riya-reaction-anchor" id="riya-reaction-anchor"></div>
+          </div>
+
+          <!-- Little Star Companion Element -->
+          <div class="little-star-companion" id="little-star-companion" title="Tap Little Star!">
+            <div class="star-halo"></div>
+            <div class="star-body-svg" id="star-svg-host"></div>
+          </div>
+        </section>
+
+        <!-- Right / Interactive Activity Panel -->
+        <section class="interactive-panel" id="interactive-panel">
+          
+          <!-- Scene 0: Welcome Opening Screen -->
+          <div class="scene-view active" id="scene-intro">
+            <div class="intro-card glass-panel">
+              <div class="intro-badge">CHOTAPLAY • UKG ENVIRONMENTAL STUDIES</div>
+              <h1 class="game-title">RIYA'S MAGIC<br><span class="title-highlight">CLOSET</span></h1>
+              <p class="intro-desc">Step inside the magical closet to discover, identify, match, and sort the wonderful clothes we wear!</p>
+              
+              <!-- Mini Magic Wardrobe Preview -->
+              <div class="intro-wardrobe-preview">
+                <div class="wardrobe-mini-doors" id="intro-wardrobe-doors">
+                  <div class="mini-door left-door">🚪✨</div>
+                  <div class="mini-door right-door">✨🚪</div>
+                </div>
+              </div>
+
+              <div class="intro-actions">
+                <button id="btn-start-game" class="magic-action-btn primary-start pulse-anim">
+                  <span class="btn-sparkle">✨</span>
+                  <span>START EXPLORING</span>
+                  <span class="btn-sparkle">✨</span>
+                </button>
+                <button id="btn-intro-freeplay" class="magic-action-btn secondary-btn">
+                  <span>👗 FREE PLAY CLOSET</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 1: Magic Closet Discovery (Exploration) -->
+          <div class="scene-view" id="scene-discovery">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 1 • MAGIC CLOSET DISCOVERY</div>
+              <h2 class="activity-instruction" id="discovery-prompt">Can you find the T-shirt?</h2>
+            </div>
+            
+            <div class="wardrobe-discovery-container">
+              <div class="magic-wardrobe-frame">
+                <div class="wardrobe-header-arch">✨ MAGIC WARDROBE ✨</div>
+                <div class="wardrobe-sections-grid" id="discovery-sections-grid">
+                  <!-- Populated dynamically with interactive clothing cards inside wardrobe shelves -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 2: Where Does It Belong? (Sorting Puzzle on Clothing Board) -->
+          <div class="scene-view" id="scene-where-belong">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 2 • WHERE DOES IT BELONG?</div>
+              <h2 class="activity-instruction" id="where-belong-prompt">Where does the Cap belong?</h2>
+            </div>
+            
+            <div class="clothing-board-container">
+              <div class="active-item-podium" id="where-belong-item-holder">
+                <!-- Current item card to sort -->
+              </div>
+              <div class="clothing-board-zones-grid" id="clothing-board-zones">
+                <div class="board-zone-drop" data-zone="head" id="zone-head">
+                  <div class="zone-icon">🧢</div>
+                  <div class="zone-label">HEAD</div>
+                  <div class="zone-counter" id="zone-head-count">0 items</div>
+                </div>
+                <div class="board-zone-drop" data-zone="neck" id="zone-neck">
+                  <div class="zone-icon">🧣</div>
+                  <div class="zone-label">NECK</div>
+                  <div class="zone-counter" id="zone-neck-count">0 items</div>
+                </div>
+                <div class="board-zone-drop" data-zone="body" id="zone-body">
+                  <div class="zone-icon">👕</div>
+                  <div class="zone-label">BODY</div>
+                  <div class="zone-counter" id="zone-body-count">0 items</div>
+                </div>
+                <div class="board-zone-drop" data-zone="hands" id="zone-hands">
+                  <div class="zone-icon">🧤</div>
+                  <div class="zone-label">HANDS</div>
+                  <div class="zone-counter" id="zone-hands-count">0 items</div>
+                </div>
+                <div class="board-zone-drop" data-zone="legs" id="zone-legs">
+                  <div class="zone-icon">👖</div>
+                  <div class="zone-label">LEGS</div>
+                  <div class="zone-counter" id="zone-legs-count">0 items</div>
+                </div>
+                <div class="board-zone-drop" data-zone="feet" id="zone-feet">
+                  <div class="zone-icon">👟</div>
+                  <div class="zone-label">FEET</div>
+                  <div class="zone-counter" id="zone-feet-count">0 items</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 3: Weather Detective (Situation Puzzle - Sunny, Rainy, Cold) -->
+          <div class="scene-view" id="scene-weather-detective">
+            <div class="activity-header">
+              <div class="activity-tag" id="weather-tag">GAME 3 • WEATHER DETECTIVE</div>
+              <h2 class="activity-instruction" id="weather-prompt">Look! It's sunny! What can we wear?</h2>
+            </div>
+            
+            <div class="weather-gameplay-container">
+              <!-- Magical Weather Window Frame -->
+              <div class="weather-window-frame" id="weather-window-frame">
+                <div class="weather-window-glass" id="weather-window-glass">
+                  <div class="weather-visual-sky" id="weather-visual-sky"></div>
+                  <div class="weather-condition-label" id="weather-condition-label">☀️ SUNNY DAY</div>
+                </div>
+              </div>
+
+              <!-- Situation Choices Grid -->
+              <div class="weather-choices-grid" id="weather-choices-grid">
+                <!-- 3 dynamic choices -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 4: What's in the School Bag? (Discovery Puzzle) -->
+          <div class="scene-view" id="scene-school-bag">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 4 • WHAT'S IN THE SCHOOL BAG?</div>
+              <h2 class="activity-instruction" id="school-bag-prompt">We're going to school! What should we pack?</h2>
+            </div>
+            
+            <div class="school-bag-layout">
+              <div class="school-bag-hero-area" id="school-bag-hero">
+                <div class="backpack-graphic-wrap" id="backpack-graphic-wrap">
+                  <!-- Backpack SVG animated -->
+                </div>
+                <div class="bag-packed-tray" id="bag-packed-tray">
+                  <span class="tray-title">🎒 Packed in Bag:</span>
+                  <div class="packed-items-row" id="packed-items-row"></div>
+                </div>
+              </div>
+
+              <div class="school-items-shelf" id="school-items-shelf">
+                <!-- Selectable items: Books, Pencil, Cap, Scarf, Umbrella, Shoes -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 5: Clothing Detective (Guessing Puzzle / Peek-Hole) -->
+          <div class="scene-view" id="scene-clothing-detective">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 5 • CLOTHING DETECTIVE</div>
+              <h2 class="activity-instruction" id="detective-prompt">Can you guess this hidden clothing item?</h2>
+            </div>
+            
+            <div class="detective-layout">
+              <div class="detective-magnifier-stage">
+                <div class="magnifier-ring">
+                  <div class="magnifier-lens" id="detective-peek-lens">
+                    <!-- Partially hidden / silhouette item -->
+                  </div>
+                  <div class="magnifier-handle"></div>
+                </div>
+                <div class="detective-clue-label" id="detective-clue-label">🔍 Mystery Clothing Clue</div>
+              </div>
+
+              <div class="detective-choices-row" id="detective-choices-row">
+                <!-- 3 Visual illustrated cards -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 6: Magic Clothing Sorter (Wardrobe Shelves Drag & Drop) -->
+          <div class="scene-view" id="scene-clothing-sorter">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 6 • MAGIC CLOTHING SORTER</div>
+              <h2 class="activity-instruction" id="sorter-prompt">Drag each clothing item to its correct shelf!</h2>
+            </div>
+            
+            <div class="sorter-shelves-layout">
+              <div class="sorter-spawn-zone" id="sorter-spawn-zone">
+                <!-- Current item to drag -->
+              </div>
+
+              <div class="sorter-shelves-rack">
+                <div class="wardrobe-shelf-zone" data-shelf="head" id="shelf-head">
+                  <div class="shelf-header">🧢 HEAD SHELF</div>
+                  <div class="shelf-items-tray" id="tray-head"></div>
+                </div>
+                <div class="wardrobe-shelf-zone" data-shelf="body" id="shelf-body">
+                  <div class="shelf-header">👕 BODY SHELF</div>
+                  <div class="shelf-items-tray" id="tray-body"></div>
+                </div>
+                <div class="wardrobe-shelf-zone" data-shelf="legs" id="shelf-legs">
+                  <div class="shelf-header">👖 LEGS SHELF</div>
+                  <div class="shelf-items-tray" id="tray-legs"></div>
+                </div>
+                <div class="wardrobe-shelf-zone" data-shelf="feet" id="shelf-feet">
+                  <div class="shelf-header">👟 FEET SHELF</div>
+                  <div class="shelf-items-tray" id="tray-feet"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 7: Where Do We Wear It? (Educational Mannequin & Arrow Diagram) -->
+          <div class="scene-view" id="scene-body-diagram">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 7 • WHERE DO WE WEAR IT?</div>
+              <h2 class="activity-instruction" id="body-diagram-prompt">Where do we wear Shoes?</h2>
+            </div>
+            
+            <div class="body-diagram-layout">
+              <div class="body-diagram-item-box" id="diagram-item-box">
+                <!-- Current clothing item -->
+              </div>
+
+              <!-- Separate Educational Diagram (NOT Riya) -->
+              <div class="educational-mannequin-wrap" id="mannequin-wrap">
+                <div class="mannequin-canvas-host" id="mannequin-svg-host"></div>
+                <div class="animated-pointer-arrow" id="mannequin-arrow">➔</div>
+              </div>
+
+              <!-- Body Part Choice Buttons -->
+              <div class="body-diagram-choices" id="diagram-choices-grid">
+                <button class="diagram-choice-btn" data-zone="head">
+                  <span class="btn-zone-icon">🧢</span>
+                  <span class="btn-zone-text">HEAD</span>
+                </button>
+                <button class="diagram-choice-btn" data-zone="neck">
+                  <span class="btn-zone-icon">🧣</span>
+                  <span class="btn-zone-text">NECK</span>
+                </button>
+                <button class="diagram-choice-btn" data-zone="body">
+                  <span class="btn-zone-icon">👕</span>
+                  <span class="btn-zone-text">BODY</span>
+                </button>
+                <button class="diagram-choice-btn" data-zone="hands">
+                  <span class="btn-zone-icon">🧤</span>
+                  <span class="btn-zone-text">HANDS</span>
+                </button>
+                <button class="diagram-choice-btn" data-zone="legs">
+                  <span class="btn-zone-icon">👖</span>
+                  <span class="btn-zone-text">LEGS</span>
+                </button>
+                <button class="diagram-choice-btn" data-zone="feet">
+                  <span class="btn-zone-icon">👟</span>
+                  <span class="btn-zone-text">FEET</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 8: Magic Closet Surprise (Closed Wardrobe Doors) -->
+          <div class="scene-view" id="scene-closet-surprise">
+            <div class="activity-header">
+              <div class="activity-tag">GAME 8 • MAGIC CLOSET SURPRISE</div>
+              <h2 class="activity-instruction" id="surprise-prompt">Choose a magic door to see what's inside!</h2>
+            </div>
+            
+            <div class="surprise-doors-grid" id="surprise-doors-grid">
+              <!-- 4 closed doors: Sunny, Rainy, Cold, School -->
+              <div class="magic-door-card" data-door="sunny" id="door-sunny">
+                <div class="door-exterior">
+                  <div class="door-knob">⭐</div>
+                  <div class="door-symbol">☀️</div>
+                  <div class="door-label">SUNNY DAY</div>
+                </div>
+                <div class="door-interior" id="interior-sunny"></div>
+              </div>
+
+              <div class="magic-door-card" data-door="rainy" id="door-rainy">
+                <div class="door-exterior">
+                  <div class="door-knob">⭐</div>
+                  <div class="door-symbol">🌧️</div>
+                  <div class="door-label">RAINY DAY</div>
+                </div>
+                <div class="door-interior" id="interior-rainy"></div>
+              </div>
+
+              <div class="magic-door-card" data-door="cold" id="door-cold">
+                <div class="door-exterior">
+                  <div class="door-knob">⭐</div>
+                  <div class="door-symbol">❄️</div>
+                  <div class="door-label">COLD DAY</div>
+                </div>
+                <div class="door-interior" id="interior-cold"></div>
+              </div>
+
+              <div class="magic-door-card" data-door="school" id="door-school">
+                <div class="door-exterior">
+                  <div class="door-knob">⭐</div>
+                  <div class="door-symbol">🏫</div>
+                  <div class="door-label">SCHOOL DAY</div>
+                </div>
+                <div class="door-interior" id="interior-school"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FINAL WOW MOMENT: THE MAGIC CLOSET CELEBRATION -->
+          <div class="scene-view" id="scene-final-celebration">
+            <div class="celebration-hero-layout glass-panel">
+              <div class="celebration-badge-gold">👑 CHOTAPLAY MASTER ACHIEVEMENT 👑</div>
+              <h2 class="celebration-main-title">THE MAGIC CLOSET CELEBRATION!</h2>
+              <p class="celebration-lead">All clothes have flown out of the closet and arranged into neat categories!</p>
+
+              <!-- Flying / Arranged Category Display -->
+              <div class="arranged-categories-showcase" id="arranged-categories-showcase">
+                <div class="category-display-col">
+                  <div class="col-title">🧢 HEAD</div>
+                  <div class="col-items" id="cat-showcase-head"></div>
+                </div>
+                <div class="category-display-col">
+                  <div class="col-title">👕 BODY</div>
+                  <div class="col-items" id="cat-showcase-body"></div>
+                </div>
+                <div class="category-display-col">
+                  <div class="col-title">👖 LEGS</div>
+                  <div class="col-items" id="cat-showcase-legs"></div>
+                </div>
+                <div class="category-display-col">
+                  <div class="col-title">👟 FEET</div>
+                  <div class="col-items" id="cat-showcase-feet"></div>
+                </div>
+                <div class="category-display-col">
+                  <div class="col-title">🌈 WEATHER</div>
+                  <div class="col-items" id="cat-showcase-weather"></div>
+                </div>
+              </div>
+
+              <div class="explorer-award-banner">
+                <div class="badge-award-icon">🌟</div>
+                <div class="badge-award-text">🌟 CLOTHING EXPLORER 🌟</div>
+              </div>
+
+              <div class="celebration-actions-row">
+                <button class="magic-action-btn primary-start" id="btn-celebrate-replay">
+                  <span>🔄 Replay Magic Closet</span>
+                </button>
+                <button class="magic-action-btn secondary-btn" id="btn-celebrate-freeplay">
+                  <span>✨ Explore in Free Play</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Free Play Mode: Magic Closet Explore -->
+          <div class="scene-view" id="scene-freeplay">
+            <div class="freeplay-container">
+              <div class="freeplay-header-bar">
+                <span class="freeplay-title">✨ MAGIC CLOSET EXPLORE (FREE PLAY)</span>
+                <span class="freeplay-tip">Tap any clothing item to hear its name and explore freely!</span>
+              </div>
+
+              <div class="freeplay-category-tabs" id="freeplay-tabs">
+                <button class="category-tab active" data-cat="all">🌟 All Clothes</button>
+                <button class="category-tab" data-cat="head">🧢 Head</button>
+                <button class="category-tab" data-cat="body">👕 Body</button>
+                <button class="category-tab" data-cat="legs">👖 Legs</button>
+                <button class="category-tab" data-cat="feet">👟 Feet</button>
+                <button class="category-tab" data-cat="weather">🌦️ Weather</button>
+                <button class="category-tab" data-cat="school">🏫 School</button>
+              </div>
+
+              <div class="freeplay-items-grid" id="freeplay-items-grid">
+                <!-- Populated with all clothes -->
+              </div>
+
+              <!-- Interactive Spotlight preview in Free Play -->
+              <div class="freeplay-spotlight-bar" id="freeplay-spotlight-bar">
+                <div class="spotlight-icon" id="freeplay-spotlight-icon">👕</div>
+                <div class="spotlight-info">
+                  <div class="spotlight-name" id="freeplay-spotlight-name">T-Shirt</div>
+                  <div class="spotlight-desc" id="freeplay-spotlight-desc">We wear a T-shirt on our body when it is sunny and warm!</div>
+                </div>
+                <button class="magic-action-btn small-btn" id="btn-spotlight-speak">🔊 Hear Again</button>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+
+    </main>
+
+    <!-- Activity Menu Drawer Modal -->
+    <div class="modal-backdrop" id="modal-activities">
+      <div class="modal-card glass-panel menu-modal">
+        <div class="modal-header">
+          <h2>Select a Closet Game</h2>
+          <button class="modal-close-btn" id="btn-close-activities" aria-label="Close">&times;</button>
+        </div>
+        <div class="activities-grid" id="activities-menu-list">
+          <!-- 8 mini game launcher cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Sparkle Particle Canvas -->
+    <canvas id="particles-canvas" class="particles-canvas"></canvas>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

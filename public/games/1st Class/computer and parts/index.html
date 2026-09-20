@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Quest — Build Your Computer! (Class 1)</title>
+  <meta name="description" content="A fun, colorful 2D educational computer adventure game for Class 1 children to learn basic computer parts through interactive gameplay." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Top Navigation / Progress Header -->
+    <header id="game-header">
+      <div class="header-title-group">
+        <span class="game-title-text">🖥️ COMPUTER QUEST</span>
+        <span class="subtitle-badge">Build Your Computer!</span>
+      </div>
+
+      <div class="header-controls">
+        <div class="parts-counter" id="parts-counter-text">⭐ Parts: 0/6</div>
+        <button class="btn-header-icon" id="btn-teacher-menu" aria-label="Teacher Settings">⚙️ Teacher Mode</button>
+      </div>
+    </header>
+
+    <!-- Main 2D Classroom Lab Arena -->
+    <main id="lab-arena">
+      <!-- Shelf with Computer Parts & Distractors -->
+      <section id="lab-shelf-container">
+        <div class="shelf-title">🔍 Computer Lab Room Objects</div>
+        <div id="lab-items-shelf">
+          <!-- Dynamic Lab Items rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Center Build Desk Area -->
+      <section id="build-desk-zone">
+        <div class="desk-header">
+          <span>🛠️ YOUR COMPUTER BUILD DESK</span>
+        </div>
+
+        <div class="computer-rig-grid">
+          <!-- Printer Slot (Top Left) -->
+          <div class="build-slot" id="slot-printer" data-slot="printer">
+            <div class="slot-blueprint">
+              <span class="blueprint-icon">🖨️</span>
+              <span class="blueprint-name">Printer</span>
+            </div>
+          </div>
+
+          <!-- Monitor Slot (Top Center) -->
+          <div class="build-slot" id="slot-monitor" data-slot="monitor">
+            <div class="slot-blueprint">
+              <span class="blueprint-icon">🖥️</span>
+              <span class="blueprint-name">Monitor</span>
+            </div>
+          </div>
+
+          <!-- CPU / System Unit Slot (Right Span) -->
+          <div class="build-slot" id="slot-cpu" data-slot="cpu">
+            <div class="slot-blueprint">
+              <span class="blueprint-icon">🎛️</span>
+              <span class="blueprint-name">CPU</span>
+            </div>
+          </div>
+
+          <!-- Speakers Slot (Bottom Left) -->
+          <div class="build-slot" id="slot-speaker" data-slot="speaker">
+            <div class="slot-blueprint">
+              <span class="blueprint-icon">🔊</span>
+              <span class="blueprint-name">Speakers</span>
+            </div>
+          </div>
+
+          <!-- Keyboard Slot (Bottom Center) -->
+          <div class="build-slot" id="slot-keyboard" data-slot="keyboard">
+            <div class="slot-blueprint">
+              <span class="blueprint-icon">⌨️</span>
+              <span class="blueprint-name">Keyboard</span>
+            </div>
+
+            <!-- Mouse Slot attached next to Keyboard -->
+            <div class="build-slot" id="slot-mouse" data-slot="mouse">
+              <div class="slot-blueprint">
+                <span class="blueprint-icon">🖱️</span>
+                <span class="blueprint-name">Mouse</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Friendly Guide & Narration Section -->
+    <footer id="bottom-guide-bar">
+      <!-- Animated Friendly Guide Character "Pixel" -->
+      <div class="guide-character idle" id="guide-character" title="Click for help!">
+        <svg class="guide-avatar-svg" viewBox="0 0 120 120">
+          <defs>
+            <linearGradient id="bunny-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#93c5fd" />
+              <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+            <linearGradient id="ear-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f472b6" />
+              <stop offset="100%" stop-color="#db2777" />
+            </linearGradient>
+          </defs>
+          <!-- Bunny Ears -->
+          <path d="M 40,55 C 30,10 15,15 32,5 C 45, -5 55,25 48,55 Z" fill="url(#bunny-grad)" stroke="#1e3a8a" stroke-width="3" />
+          <path d="M 38,48 C 30,20 22,20 32,12 C 40,5 46,28 42,48 Z" fill="url(#ear-grad)" />
+          <path d="M 80,55 C 90,10 105,15 88,5 C 75, -5 65,25 72,55 Z" fill="url(#bunny-grad)" stroke="#1e3a8a" stroke-width="3" />
+          <path d="M 82,48 C 90,20 98,20 88,12 C 80,5 74,28 78,48 Z" fill="url(#ear-grad)" />
+          <!-- Head -->
+          <circle cx="60" cy="72" r="42" fill="url(#bunny-grad)" stroke="#1e3a8a" stroke-width="4" />
+          <!-- Big Cute Eyes -->
+          <ellipse cx="44" cy="65" rx="8" ry="12" fill="#0f172a" />
+          <circle cx="42" cy="60" r="4" fill="#ffffff" />
+          <ellipse cx="76" cy="65" rx="8" ry="12" fill="#0f172a" />
+          <circle cx="74" cy="60" r="4" fill="#ffffff" />
+          <!-- Cheeks -->
+          <ellipse cx="32" cy="78" rx="7" ry="4" fill="#f472b6" opacity="0.8" />
+          <ellipse cx="88" cy="78" rx="7" ry="4" fill="#f472b6" opacity="0.8" />
+          <!-- Nose & Smile -->
+          <polygon points="56,76 64,76 60,82" fill="#db2777" />
+          <path d="M 50,85 Q 60,95 70,85" stroke="#1e3a8a" stroke-width="3" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <!-- Speech Bubble -->
+      <div id="guide-speech-bubble">
+        <span id="guide-speech-text">Welcome to the Computer Lab! Let's build our computer!</span>
+        <span class="speech-replay-hint">🔊 Tap to hear again</span>
+      </div>
+    </footer>
+
+    <!-- OVERLAYS & MODALS -->
+
+    <!-- 1. Start Game Overlay (Unlocks Audio on Click) -->
+    <div class="game-modal-overlay active" id="start-overlay">
+      <div class="modal-card">
+        <h1 class="modal-title">🖥️ COMPUTER QUEST</h1>
+        <p class="modal-subtitle">Join Pixel the Lab Bunny and build your very own computer!</p>
+        <button class="btn-primary-action" id="btn-start-game">▶️ Play Game</button>
+      </div>
+    </div>
+
+    <!-- 2. Part Micro-Demo Modal (Interactive Function Demonstration) -->
+    <div class="game-modal-overlay" id="micro-demo-modal">
+      <div class="modal-card" id="demo-content">
+        <!-- Injected dynamically by JS -->
+      </div>
+    </div>
+
+    <!-- 3. Final 3-Question Challenge Modal -->
+    <div class="game-modal-overlay" id="challenge-modal">
+      <div class="modal-card">
+        <div class="demo-badge">⭐ MINI CHALLENGE</div>
+        <h2 class="modal-title" id="challenge-question-text">Which part helps us type?</h2>
+        <div class="challenge-card-options" id="challenge-options-row">
+          <!-- Injected dynamically by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Celebration & Victory Modal -->
+    <div class="game-modal-overlay" id="celebration-modal">
+      <div class="modal-card">
+        <h1 class="modal-title">🎉 COMPUTER COMPLETE!</h1>
+        <p class="modal-subtitle">🏆 You are a true <strong>Computer Master</strong>!</p>
+        <button class="btn-primary-action" id="btn-enter-freeplay">🕹️ Enter "My Computer" Free-Play</button>
+      </div>
+    </div>
+
+    <!-- 5. Teacher / Classroom Settings Modal -->
+    <div class="game-modal-overlay" id="teacher-modal">
+      <div class="modal-card">
+        <h2 class="modal-title">⚙️ Classroom & Teacher Controls</h2>
+        <p class="modal-subtitle">Computer Quest — Class 1 Progress Summary</p>
+
+        <ul class="teacher-summary-list" id="teacher-summary-list">
+          <!-- Dynamic learned list -->
+        </ul>
+
+        <div class="teacher-button-grid">
+          <button class="btn-teacher-control" id="btn-toggle-voice">🔊 Voice: ON</button>
+          <button class="btn-teacher-control" id="btn-toggle-sound">🔔 Sounds: ON</button>
+          <button class="btn-teacher-control" id="btn-replay-voice">▶️ Replay Speech</button>
+          <button class="btn-teacher-control" id="btn-toggle-fullscreen">🖥️ Fullscreen Mode</button>
+          <button class="btn-teacher-control" id="btn-restart-game" style="grid-column: span 2; background: #fee2e2; color: #991b1b;">🔄 Restart Game</button>
+        </div>
+
+        <button class="btn-primary-action" id="btn-close-teacher" style="margin-top: 20px; font-size: 18px; padding: 8px 24px;">✕ Close</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Game Scripts -->
+  <script src="js/assets.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/dragdrop.js"></script>
+  <script src="js/teacher-mode.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

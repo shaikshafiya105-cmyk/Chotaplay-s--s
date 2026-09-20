@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 160" width="100%" height="100%">
+    <!-- Shadow -->
+    <ellipse cx="130" cy="148" rx="100" ry="10" fill="#000" opacity="0.2" />
+    <!-- Truck Compactor Body -->
+    <path d="M 25 50 L 150 50 L 160 120 L 25 120 Z" fill="#2B8A3E" />
+    <path d="M 15 65 L 35 50 L 35 120 L 15 110 Z" fill="#237032" />
+    <!-- Cab -->
+    <path d="M 160 65 L 195 65 Q 225 65 225 95 L 225 120 L 160 120 Z" fill="#40C057" />
+    <!-- Windshield -->
+    <path d="M 165 70 L 195 70 Q 215 70 215 90 L 165 90 Z" fill="#E7F5FF" stroke="#74C0FC" stroke-width="2" />
+    
+    <!-- Huge White Recycle Symbol -->
+    <circle cx="90" cy="85" r="24" fill="#237032" />
+    <text x="90" y="93" font-family="sans-serif" font-weight="900" font-size="24" fill="#A9E34B" text-anchor="middle">♻</text>
+
+    <!-- Safety Light -->
+    <rect x="180" y="52" width="14" height="13" rx="3" fill="#FCC419" stroke="#E67700" stroke-width="1.5" />
+    
+    <!-- Wheels -->
+    <circle cx="65" cy="125" r="22" fill="#212529" />
+    <circle cx="65" cy="125" r="11" fill="#CED4DA" stroke="#495057" stroke-width="2" />
+    <circle cx="185" cy="125" r="22" fill="#212529" />
+    <circle cx="185" cy="125" r="11" fill="#CED4DA" stroke="#495057" stroke-width="2" />
+  </svg>

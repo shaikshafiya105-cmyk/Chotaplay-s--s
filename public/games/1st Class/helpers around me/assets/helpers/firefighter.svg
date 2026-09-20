@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="100%" height="100%">
+    <!-- Shadow -->
+    <ellipse cx="100" cy="245" rx="55" ry="10" fill="#000" opacity="0.15" />
+    
+    <!-- Pants -->
+    <rect x="73" y="170" width="24" height="65" rx="8" fill="#E8590C" />
+    <rect x="103" y="170" width="24" height="65" rx="8" fill="#E8590C" />
+    <rect x="73" y="210" width="24" height="8" fill="#FFD43B" />
+    <rect x="103" y="210" width="24" height="8" fill="#FFD43B" />
+    <!-- Heavy Duty Boots -->
+    <ellipse cx="85" cy="235" rx="15" ry="9" fill="#212529" />
+    <ellipse cx="115" cy="235" rx="15" ry="9" fill="#212529" />
+
+    <!-- Coat / Jacket -->
+    <rect x="60" y="100" width="80" height="75" rx="12" fill="#D9480F" />
+    <!-- Reflective Stripes -->
+    <rect x="60" y="125" width="80" height="10" fill="#FFD43B" />
+    <rect x="60" y="150" width="80" height="8" fill="#E9ECEF" />
+    <rect x="97" y="100" width="6" height="75" fill="#212529" opacity="0.2" />
+
+    <!-- Left Arm -->
+    <rect x="40" y="105" width="22" height="50" rx="10" fill="#D9480F" />
+    <circle cx="51" cy="155" r="10" fill="#212529" /> <!-- Gloves -->
+
+    <!-- Right Arm with Fire Hose Nozzle -->
+    <path d="M 138 110 Q 165 125 155 150" fill="none" stroke="#D9480F" stroke-width="20" stroke-linecap="round" />
+    <circle cx="152" cy="154" r="10" fill="#212529" />
+    <!-- Hose & Brass Nozzle -->
+    <path d="M 160 200 Q 170 170 155 154" fill="none" stroke="#495057" stroke-width="12" stroke-linecap="round" />
+    <polygon points="150,150 170,140 174,148 154,158" fill="#FCC419" stroke="#E67700" stroke-width="2" />
+
+    <!-- Head -->
+    <circle cx="100" cy="62" r="30" fill="#FFD8A8" />
+    <ellipse cx="80" cy="70" rx="6" ry="4" fill="#FFA8A8" />
+    <ellipse cx="120" cy="70" rx="6" ry="4" fill="#FFA8A8" />
+    <!-- Eyes -->
+    <circle cx="86" cy="62" r="5" fill="#212529" />
+    <circle cx="88" cy="60" r="1.5" fill="#FFF" />
+    <circle cx="114" cy="62" r="5" fill="#212529" />
+    <circle cx="116" cy="60" r="1.5" fill="#FFF" />
+    <!-- Big confident smile -->
+    <path d="M 88 74 Q 100 88 112 74" fill="none" stroke="#212529" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Fire Helmet -->
+    <path d="M 60 52 Q 100 15 140 52 Z" fill="#E03131" />
+    <path d="M 52 52 Q 100 42 148 52 Q 100 60 52 52 Z" fill="#C92A2A" />
+    <!-- Golden Shield Badge -->
+    <path d="M 94 30 L 106 30 L 108 42 L 100 48 L 92 42 Z" fill="#FFD43B" stroke="#F59F00" stroke-width="1.5" />
+    <text x="100" y="42" font-family="sans-serif" font-weight="900" font-size="8" fill="#C92A2A" text-anchor="middle">1</text>
+  </svg>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Riya's Magic Day ✨ | Good Habits Game for Kids | Chotaplay</title>
+  <meta name="description" content="A magical, interactive good habits educational browser game for children aged 3-6. Help Riya brush teeth, wash hands, eat healthy, clean her room, help others, and make the world magical!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient World Background with Dynamic Visual Tiers -->
+  <div id="world-backdrop" class="world-backdrop tier-0">
+    <div class="sky-elements">
+      <div class="sun-orb" id="sun-orb"></div>
+      <div class="moon-orb" id="moon-orb"></div>
+      <div class="rainbow-arc" id="rainbow-arc"></div>
+      <div class="floating-cloud cloud-1"></div>
+      <div class="floating-cloud cloud-2"></div>
+      <div class="floating-cloud cloud-3"></div>
+      <div class="starry-sky" id="starry-sky"></div>
+    </div>
+    <div class="world-particles" id="world-particles"></div>
+    <div class="world-nature" id="world-nature">
+      <div class="nature-hills"></div>
+      <div class="nature-flowers" id="nature-flowers"></div>
+      <div class="nature-butterflies" id="nature-butterflies"></div>
+    </div>
+  </div>
+
+  <!-- Main Game Container (16:9 Scaled Viewport) -->
+  <main id="game-app" class="game-app">
+    <!-- Top HUD Header -->
+    <header class="game-hud" id="game-hud">
+      <div class="brand-badge">
+        <span class="brand-chota">CHOTA</span><span class="brand-play">PLAY</span>
+      </div>
+
+      <!-- Magic Energy Meter -->
+      <div class="magic-meter-container" id="magic-meter-container" title="Magic Energy Meter">
+        <div class="meter-icon-wrap">
+          <span class="meter-gem">💎</span>
+          <span class="meter-sparkle-dot">✨</span>
+        </div>
+        <div class="meter-info">
+          <div class="meter-header">
+            <span class="meter-title">✨ MAGIC ENERGY</span>
+            <span class="meter-percent" id="meter-percent">0%</span>
+          </div>
+          <div class="meter-track">
+            <div class="meter-fill" id="meter-fill">
+              <div class="meter-shine"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Audio & Voice Controls -->
+      <div class="hud-controls">
+        <button id="btn-replay-voice" class="hud-btn" title="Hear voice again" aria-label="Replay Voice">
+          🔊
+        </button>
+        <button id="btn-toggle-sound" class="hud-btn active" title="Toggle Sound" aria-label="Toggle Sound">
+          🎵
+        </button>
+        <button id="btn-view-badges" class="hud-btn" title="View Habit Badges" aria-label="View Badges">
+          🏅 <span class="badge-count-pill" id="badge-count-pill">0/7</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stage Area for Scenes & Characters -->
+    <div class="stage-container" id="stage-container">
+      
+      <!-- Companion Little Star Overlay -->
+      <div class="companion-star" id="companion-star">
+        <div class="star-halo"></div>
+        <div class="star-svg-wrap">
+          <svg class="star-svg" viewBox="0 0 100 100" width="80" height="80">
+            <defs>
+              <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFF566" />
+                <stop offset="50%" stop-color="#FFD600" />
+                <stop offset="100%" stop-color="#FFA000" />
+              </linearGradient>
+              <filter id="starGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+            <polygon points="50,5 64,36 98,36 70,57 81,90 50,70 19,90 30,57 2,36 36,36" 
+                     fill="url(#starGrad)" stroke="#FFE082" stroke-width="2" filter="url(#starGlow)" />
+            <!-- Star Cute Face -->
+            <ellipse class="star-eye left" cx="42" cy="46" rx="3.5" ry="5" fill="#3E2723"/>
+            <ellipse class="star-eye right" cx="58" cy="46" rx="3.5" ry="5" fill="#3E2723"/>
+            <circle cx="43" cy="44" r="1.5" fill="#FFFFFF"/>
+            <circle cx="59" cy="44" r="1.5" fill="#FFFFFF"/>
+            <ellipse cx="36" cy="52" rx="4" ry="2.5" fill="#FF80AB" opacity="0.7"/>
+            <ellipse cx="64" cy="52" rx="4" ry="2.5" fill="#FF80AB" opacity="0.7"/>
+            <path class="star-mouth" d="M 44 54 Q 50 62 56 54" fill="none" stroke="#3E2723" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="companion-speech-bubble" id="companion-bubble">
+          <p id="companion-text">Good morning, Riya!</p>
+        </div>
+      </div>
+
+      <!-- Scene Host (Dynamic Injected Content) -->
+      <section class="scene-viewport" id="scene-viewport">
+        <!-- Scene content dynamically mounted by HabitManager -->
+      </section>
+
+      <!-- Particle Canvas Overlay -->
+      <canvas id="fx-canvas" class="fx-canvas"></canvas>
+    </div>
+
+    <!-- Bottom Stage Banner / Prompt -->
+    <footer class="game-footer" id="game-footer">
+      <div class="habit-step-tracker" id="habit-step-tracker">
+        <!-- Dots for 8 Habits -->
+        <span class="step-dot" data-habit="wake" title="Wake Up">☀️</span>
+        <span class="step-dot" data-habit="brush" title="Brush Teeth">🪥</span>
+        <span class="step-dot" data-habit="wash" title="Wash Hands">🧼</span>
+        <span class="step-dot" data-habit="food" title="Healthy Food">🍎</span>
+        <span class="step-dot" data-habit="cleanup" title="Clean Room">🧸</span>
+        <span class="step-dot" data-habit="kindness" title="Helping">❤️</span>
+        <span class="step-dot" data-habit="environment" title="Clean World">🌱</span>
+        <span class="step-dot" data-habit="bedtime" title="Good Sleep">🌙</span>
+      </div>
+      <div class="prompt-text-bar" id="prompt-text-bar">
+        <span id="prompt-text">Welcome to Riya's Magic Day! ✨</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Badges Collection Modal Drawer -->
+  <aside id="badges-modal" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🏅 Riya's Magic Habit Badges</h2>
+        <button id="btn-close-badges" class="btn-close" aria-label="Close Badges">✕</button>
+      </div>
+      <div class="badges-grid" id="badges-grid">
+        <!-- Badges will be generated here -->
+      </div>
+      <p class="badges-subtext">Every good habit makes your day sparkle with magic!</p>
+    </div>
+  </aside>
+
+  <!-- Grand WOW Celebration Overlay -->
+  <section id="celebration-overlay" class="celebration-overlay hidden">
+    <div class="celebration-card">
+      <div class="celebration-rays"></div>
+      <div class="celebration-stars-burst">✨ ⭐ 🌟 ⭐ ✨</div>
+      <h1 class="celebration-title">✨ MAGIC DAY COMPLETE! ✨</h1>
+      <p class="celebration-subtitle">Riya & Little Star made the whole world bright and magical!</p>
+      
+      <div class="celebration-char-stage">
+        <div class="celebrating-star">⭐</div>
+        <div class="celebrating-riya" id="celebrating-riya-icon">👧✨</div>
+        <div class="celebrating-rainbow">🌈</div>
+      </div>
+
+      <div class="celebration-quote">
+        "Good habits make every single day magical!" 💖
+      </div>
+
+      <div class="celebration-actions">
+        <button id="btn-explore-freeplay" class="btn-magic-action btn-pulse">
+          🌸 Explore Magic World (Free Play)
+        </button>
+        <button id="btn-play-again" class="btn-magic-action btn-secondary">
+          🔄 Play Day Again
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Free Play Floating Helper Overlay Bar -->
+  <nav id="freeplay-bar" class="freeplay-bar hidden">
+    <div class="freeplay-badge">🌟 Magic Free Play Mode</div>
+    <div class="freeplay-hint">Tap any flower, butterfly, star, cloud, or Riya to play magic notes!</div>
+    <button id="btn-freeplay-replay" class="btn-tiny">🔄 Start Over</button>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

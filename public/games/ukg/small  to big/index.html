@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Riya's Magic Size Factory | Chotaplay UKG Math Game</title>
+  <meta name="description" content="Help Riya and Little Star repair the Magic Size Factory! An interactive UKG Mathematics game teaching Small to Big, Big to Small, and Size Comparison.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Particle Canvas for Magic Factory Sparkles -->
+  <canvas id="magic-canvas"></canvas>
+
+  <div id="game-app">
+    <!-- Top Header & Control Bar -->
+    <header id="game-header">
+      <div class="brand-zone">
+        <div class="brand-badge">CHOTAPLAY</div>
+        <div class="game-tag">UKG MATHEMATICS • SMALL & BIG</div>
+      </div>
+
+      <!-- Factory Progress Gauge -->
+      <div class="factory-progress-container" title="Factory Repair Progress">
+        <div class="progress-label">
+          <span class="gear-icon">⚙️</span> FACTORY REPAIR: <span id="progress-count">0</span>/6
+        </div>
+        <div class="gears-meter" id="gears-meter">
+          <span class="gear-step" data-step="1">⚙️</span>
+          <span class="gear-step" data-step="2">⚙️</span>
+          <span class="gear-step" data-step="3">⚙️</span>
+          <span class="gear-step" data-step="4">⚙️</span>
+          <span class="gear-step" data-step="5">⚙️</span>
+          <span class="gear-step" data-step="6">⚙️</span>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="header-controls">
+        <button id="btn-replay-voice" class="icon-btn" title="Repeat Voice Instruction" aria-label="Repeat Voice">
+          <span class="btn-icon">🔊</span>
+          <span class="btn-text">Hear Again</span>
+        </button>
+        <button id="btn-sound-toggle" class="icon-btn" title="Toggle Sound Effects" aria-label="Toggle Sound">
+          <span class="btn-icon" id="sound-icon">🎵</span>
+        </button>
+        <button id="btn-workshop-mode" class="icon-btn secondary-btn" title="Open Free Play Workshop" aria-label="Free Play Workshop">
+          <span class="btn-icon">🎨</span>
+          <span class="btn-text">Free Play</span>
+        </button>
+        <button id="btn-restart" class="icon-btn" title="Restart Game" aria-label="Restart Adventure">
+          <span class="btn-icon">🔄</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Character Interaction Stage (Riya & Little Star) -->
+    <section id="character-stage">
+      <div class="characters-wrapper">
+        <!-- Riya Character Card -->
+        <div id="riya-avatar" class="character-card riya-card">
+          <div class="character-svg-container" id="riya-svg-host"></div>
+          <div class="char-name-tag">Riya</div>
+        </div>
+
+        <!-- Speech Bubble (Voice First & Subtitles) -->
+        <div id="speech-bubble" class="speech-bubble">
+          <div class="speaker-indicator" id="speaker-name">Little Star</div>
+          <div class="speech-text" id="speech-text">Welcome to Riya's Magic Size Factory!</div>
+          <button id="bubble-listen-btn" class="mini-listen-btn" title="Listen again">🔊</button>
+        </div>
+
+        <!-- Little Star Companion Card -->
+        <div id="star-avatar" class="character-card star-card">
+          <div class="character-svg-container" id="star-svg-host"></div>
+          <div class="char-name-tag">Little Star</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Dynamic Game Arena -->
+    <main id="game-arena">
+      <!-- 1. OPENING STORY SCENE -->
+      <div id="scene-intro" class="scene active">
+        <div class="intro-backdrop">
+          <div class="factory-pipes-top">
+            <div class="pipe pipe-1"></div>
+            <div class="pipe pipe-2"></div>
+            <div class="pipe pipe-3"></div>
+          </div>
+
+          <div class="intro-content">
+            <div class="magic-factory-title-badge">
+              <span class="sparkle-star">✨</span>
+              <h1>RIYA'S MAGIC SIZE FACTORY</h1>
+              <span class="sparkle-star">✨</span>
+            </div>
+            <p class="intro-subtext">The Size Machine is broken and making everything the wrong size! Help Riya & Little Star fix it by mastering <strong>SMALL to BIG</strong> and <strong>BIG to SMALL</strong>!</p>
+
+            <div class="broken-machine-preview">
+              <div class="machine-graphic" id="intro-machine-svg"></div>
+              <div class="smoke-puff puff-1">💨</div>
+              <div class="smoke-puff puff-2">💨</div>
+              <div class="broken-gear-wiggle">⚙️</div>
+            </div>
+
+            <button id="btn-start-factory" class="huge-action-btn pulse-glow">
+              <span class="btn-star">🌟</span>
+              <span>START REPAIRING!</span>
+              <span class="btn-arrow">➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. GAME 1: MAGIC GROW MACHINE (Small -> Medium -> Big) -->
+      <div id="scene-grow" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge"><span class="badge-icon">🌱</span> CONCEPT: <strong>SMALL → BIG</strong></div>
+          <h2 class="activity-title">Magic Grow Machine</h2>
+          <p class="activity-sub">Make the small object <strong>BIG</strong>!</p>
+        </div>
+
+        <div class="machine-stage">
+          <!-- Left: Item on Conveyor waiting -->
+          <div class="conveyor-station left-station">
+            <div class="station-title">Tiny Object</div>
+            <div class="conveyor-belt">
+              <div class="belt-tracks"></div>
+              <div class="object-holder" id="grow-source-slot">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+            <div class="instruction-arrow">Drag or Tap into Machine ➔</div>
+          </div>
+
+          <!-- Center: The Magic Grow Chamber -->
+          <div class="magic-chamber grow-chamber" id="grow-chamber">
+            <div class="chamber-roof">
+              <div class="chamber-light light-1"></div>
+              <div class="chamber-light light-2"></div>
+              <div class="chamber-light light-3"></div>
+            </div>
+            <div class="chamber-body">
+              <div class="chamber-window" id="grow-chamber-window">
+                <div class="glow-field"></div>
+                <div class="magic-particles-emitter" id="grow-particles"></div>
+                <div class="chamber-target-slot" id="grow-chamber-slot" data-drop-zone="grow">
+                  <div class="drop-hint-ghost">Place Small Object Here</div>
+                </div>
+              </div>
+            </div>
+            <div class="chamber-controls">
+              <div class="size-steps-meter">
+                <span class="step-pill active" id="grow-step-small">1. SMALL</span>
+                <span class="step-arrow">➔</span>
+                <span class="step-pill" id="grow-step-medium">2. MEDIUM</span>
+                <span class="step-arrow">➔</span>
+                <span class="step-pill" id="grow-step-big">3. BIG!</span>
+              </div>
+              <button id="btn-activate-grow" class="machine-lever-btn" disabled>
+                <span class="lever-knob"></span>
+                <span class="lever-text">MAGIC GROW! ✨</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Output Pedestal -->
+          <div class="conveyor-station right-station">
+            <div class="station-title">Final Big Object</div>
+            <div class="pedestal-stage" id="grow-output-pedestal">
+              <div class="pedestal-base"></div>
+              <div class="pedestal-glow"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. GAME 2: MAGIC SHRINK MACHINE (Big -> Medium -> Small) -->
+      <div id="scene-shrink" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge"><span class="badge-icon">🔹</span> CONCEPT: <strong>BIG → SMALL</strong></div>
+          <h2 class="activity-title">Magic Shrink Machine</h2>
+          <p class="activity-sub">Make the huge object <strong>SMALL</strong>!</p>
+        </div>
+
+        <div class="machine-stage">
+          <!-- Left: Big Item on Conveyor -->
+          <div class="conveyor-station left-station">
+            <div class="station-title">Huge Object</div>
+            <div class="conveyor-belt">
+              <div class="belt-tracks"></div>
+              <div class="object-holder" id="shrink-source-slot">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+            <div class="instruction-arrow">Drag or Tap into Machine ➔</div>
+          </div>
+
+          <!-- Center: The Magic Shrink Chamber -->
+          <div class="magic-chamber shrink-chamber" id="shrink-chamber">
+            <div class="chamber-roof shrink-roof">
+              <div class="compressor-piston" id="shrink-piston"></div>
+              <div class="chamber-light light-1"></div>
+              <div class="chamber-light light-2"></div>
+            </div>
+            <div class="chamber-body">
+              <div class="chamber-window" id="shrink-chamber-window">
+                <div class="glow-field-blue"></div>
+                <div class="chamber-target-slot" id="shrink-chamber-slot" data-drop-zone="shrink">
+                  <div class="drop-hint-ghost">Place Big Object Here</div>
+                </div>
+              </div>
+            </div>
+            <div class="chamber-controls">
+              <div class="size-steps-meter">
+                <span class="step-pill active" id="shrink-step-big">1. BIG</span>
+                <span class="step-arrow">➔</span>
+                <span class="step-pill" id="shrink-step-medium">2. MEDIUM</span>
+                <span class="step-arrow">➔</span>
+                <span class="step-pill" id="shrink-step-small">3. SMALL!</span>
+              </div>
+              <button id="btn-activate-shrink" class="machine-lever-btn shrink-lever" disabled>
+                <span class="lever-knob"></span>
+                <span class="lever-text">MAGIC SHRINK! ❄️</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Output Pedestal -->
+          <div class="conveyor-station right-station">
+            <div class="station-title">Cute Small Object</div>
+            <div class="pedestal-stage" id="shrink-output-pedestal">
+              <div class="pedestal-base"></div>
+              <div class="pedestal-glow"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. GAME 3: SIZE PARADE (Small to Big Ordering) -->
+      <div id="scene-parade" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge"><span class="badge-icon">📈</span> ORDERING: <strong>SMALL → BIG</strong></div>
+          <h2 class="activity-title">Size Parade: Small to Big</h2>
+          <p class="activity-sub">Arrange the mixed items from <strong>SMALLEST to BIGGEST</strong>!</p>
+        </div>
+
+        <div class="parade-stage">
+          <!-- Mixed Objects Source Deck -->
+          <div class="mixed-tray-section">
+            <div class="tray-label">🌟 Pick & Move to the Correct Slot:</div>
+            <div class="objects-tray" id="parade-source-tray">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Target Podium Slots: Small -> Medium -> Big -->
+          <div class="parade-slots-container">
+            <div class="parade-slot-wrap">
+              <div class="slot-header-pill">1. SMALL</div>
+              <div class="parade-slot slot-small" data-expected-size="small" id="parade-slot-1">
+                <div class="silhouette-guide guide-small"></div>
+                <div class="slot-drop-text">Place Small Here</div>
+              </div>
+            </div>
+
+            <div class="parade-arrow-connector">➔</div>
+
+            <div class="parade-slot-wrap">
+              <div class="slot-header-pill">2. MEDIUM</div>
+              <div class="parade-slot slot-medium" data-expected-size="medium" id="parade-slot-2">
+                <div class="silhouette-guide guide-medium"></div>
+                <div class="slot-drop-text">Place Medium Here</div>
+              </div>
+            </div>
+
+            <div class="parade-arrow-connector">➔</div>
+
+            <div class="parade-slot-wrap">
+              <div class="slot-header-pill">3. BIG</div>
+              <div class="parade-slot slot-big" data-expected-size="big" id="parade-slot-3">
+                <div class="silhouette-guide guide-big"></div>
+                <div class="slot-drop-text">Place Big Here</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="parade-actions">
+            <button id="btn-check-parade" class="check-order-btn" disabled>
+              <span>⭐ Check My Order!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. GAME 4: REVERSE SIZE PARADE (Big to Small Ordering) -->
+      <div id="scene-reverse-parade" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge"><span class="badge-icon">📉</span> ORDERING: <strong>BIG → SMALL</strong></div>
+          <h2 class="activity-title">Reverse Parade: Big to Small</h2>
+          <p class="activity-sub">Arrange the mixed items from <strong>BIGGEST to SMALLEST</strong>!</p>
+        </div>
+
+        <div class="parade-stage">
+          <!-- Mixed Objects Source Deck -->
+          <div class="mixed-tray-section">
+            <div class="tray-label">🌟 Pick & Move from Big to Small:</div>
+            <div class="objects-tray" id="rev-parade-source-tray">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Target Podium Slots: Big -> Medium -> Small -->
+          <div class="parade-slots-container">
+            <div class="parade-slot-wrap">
+              <div class="slot-header-pill">1. BIG</div>
+              <div class="parade-slot slot-big" data-expected-size="big" id="rev-slot-1">
+                <div class="silhouette-guide guide-big"></div>
+                <div class="slot-drop-text">Place Big Here</div>
+              </div>
+            </div>
+
+            <div class="parade-arrow-connector">➔</div>
+
+            <div class="parade-slot-wrap">
+              <div class="slot-header-pill">2. MEDIUM</div>
+              <div class="parade-slot slot-medium" data-expected-size="medium" id="rev-slot-2">
+                <div class="silhouette-guide guide-medium"></div>
+                <div class="slot-drop-text">Place Medium Here</div>
+              </div>
+            </div>
+
+            <div class="parade-arrow-connector">➔</div>
+
+            <div class="parade-slot-wrap">
+              <div class="slot-header-pill">3. SMALL</div>
+              <div class="parade-slot slot-small" data-expected-size="small" id="rev-slot-3">
+                <div class="silhouette-guide guide-small"></div>
+                <div class="slot-drop-text">Place Small Here</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="parade-actions">
+            <button id="btn-check-rev-parade" class="check-order-btn" disabled>
+              <span>⭐ Check My Order!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. GAME 5: SIZE TRAIN (Sorting Depot) -->
+      <div id="scene-train" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge"><span class="badge-icon">🚂</span> SORTING: <strong>SIZE CARRIAGES</strong></div>
+          <h2 class="activity-title">Magic Size Express</h2>
+          <p class="activity-sub">Sort every object into its matching carriage!</p>
+        </div>
+
+        <div class="train-depot-stage">
+          <!-- Top: Incoming conveyor with multiple items of different sizes -->
+          <div class="train-incoming-conveyor">
+            <div class="conveyor-header">
+              <span class="tag">📦 INCOMING ITEMS:</span>
+              <span class="sub" id="train-items-remaining">Items to load: 3</span>
+            </div>
+            <div class="train-conveyor-belt" id="train-incoming-items">
+              <!-- Dynamic items waiting to be loaded -->
+            </div>
+          </div>
+
+          <!-- Bottom: Magical Train with 3 size carriages -->
+          <div class="train-track-area" id="train-track-area">
+            <div class="rail-track"></div>
+            <div class="train-assembly" id="train-assembly">
+              <!-- Engine -->
+              <div class="train-car engine-car">
+                <div class="engine-smoke-stack">
+                  <div class="steam-bubble steam-1">☁️</div>
+                  <div class="steam-bubble steam-2">💨</div>
+                </div>
+                <div class="engine-cab">
+                  <div class="engine-face">🚂</div>
+                  <div class="engine-badge">SIZE EXP</div>
+                </div>
+                <div class="wheels-bar">
+                  <div class="wheel wheel-1">⚙️</div>
+                  <div class="wheel wheel-2">⚙️</div>
+                </div>
+              </div>
+
+              <!-- Carriage 1: Small -->
+              <div class="train-car carriage carriage-small" data-carriage-size="small" id="carriage-small">
+                <div class="carriage-roof">SMALL CAR</div>
+                <div class="carriage-bed" data-drop-zone="train-small">
+                  <div class="slot-marker">Small Slot</div>
+                </div>
+                <div class="wheels-bar"><div class="wheel">⚙️</div><div class="wheel">⚙️</div></div>
+              </div>
+
+              <!-- Carriage 2: Medium -->
+              <div class="train-car carriage carriage-medium" data-carriage-size="medium" id="carriage-medium">
+                <div class="carriage-roof">MEDIUM CAR</div>
+                <div class="carriage-bed" data-drop-zone="train-medium">
+                  <div class="slot-marker">Medium Slot</div>
+                </div>
+                <div class="wheels-bar"><div class="wheel">⚙️</div><div class="wheel">⚙️</div></div>
+              </div>
+
+              <!-- Carriage 3: Big -->
+              <div class="train-car carriage carriage-big" data-carriage-size="big" id="carriage-big">
+                <div class="carriage-roof">BIG CAR</div>
+                <div class="carriage-bed" data-drop-zone="train-big">
+                  <div class="slot-marker">Big Slot</div>
+                </div>
+                <div class="wheels-bar"><div class="wheel">⚙️</div><div class="wheel">⚙️</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. GAME 6: WHICH IS BIGGER / WHICH IS SMALLER (Quick Visual Challenge) -->
+      <div id="scene-compare" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge" id="compare-concept-badge"><span class="badge-icon">👀</span> VISUAL CHOICE</div>
+          <h2 class="activity-title" id="compare-title">Which one is BIG?</h2>
+          <p class="activity-sub" id="compare-sub">Tap the correct object!</p>
+        </div>
+
+        <div class="compare-arena">
+          <div class="compare-card-slot" id="compare-left-card">
+            <!-- Left object -->
+          </div>
+
+          <div class="compare-vs-badge">VS</div>
+
+          <div class="compare-card-slot" id="compare-right-card">
+            <!-- Right object -->
+          </div>
+        </div>
+
+        <div class="compare-round-indicator">
+          Challenge <span id="compare-round-curr">1</span> of 4
+        </div>
+      </div>
+
+      <!-- 8. FINAL CELEBRATION & RESTORATION WOW SCENE -->
+      <div id="scene-celebration" class="scene">
+        <div class="celebration-backdrop">
+          <div class="confetti-cannon-burst" id="confetti-layer"></div>
+          
+          <div class="celebration-content">
+            <div class="trophy-box bounce-anim">
+              <div class="trophy-icon">🏆</div>
+              <div class="rainbow-arc">🌈</div>
+            </div>
+
+            <h1 class="celebration-heading">FACTORY FULLY FIXED!</h1>
+            <h2 class="celebration-subheading">🌟 YOU ARE A SIZE MASTER! 🌟</h2>
+
+            <div class="size-transformation-demo">
+              <div class="demo-rule-card">
+                <div class="demo-rule-title">Small to Big</div>
+                <div class="demo-sequence">
+                  <span class="demo-item size-small" id="demo-grow-s">🍎</span>
+                  <span class="demo-arr">➔</span>
+                  <span class="demo-item size-medium" id="demo-grow-m">🍎</span>
+                  <span class="demo-arr">➔</span>
+                  <span class="demo-item size-big" id="demo-grow-b">🍎</span>
+                </div>
+              </div>
+
+              <div class="demo-rule-card">
+                <div class="demo-rule-title">Big to Small</div>
+                <div class="demo-sequence">
+                  <span class="demo-item size-big" id="demo-shrink-b">🎈</span>
+                  <span class="demo-arr">➔</span>
+                  <span class="demo-item size-medium" id="demo-shrink-m">🎈</span>
+                  <span class="demo-arr">➔</span>
+                  <span class="demo-item size-small" id="demo-shrink-s">🎈</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="celebration-buttons">
+              <button id="btn-goto-workshop" class="huge-action-btn workshop-btn pulse-glow">
+                <span class="btn-icon">🎨</span>
+                <span>ENTER FREE PLAY WORKSHOP</span>
+              </button>
+              <button id="btn-replay-all" class="huge-action-btn restart-all-btn">
+                <span class="btn-icon">🔄</span>
+                <span>PLAY ADVENTURE AGAIN</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. FREE PLAY WORKSHOP (Magic Size Switch) -->
+      <div id="scene-workshop" class="scene">
+        <div class="activity-header">
+          <div class="concept-badge"><span class="badge-icon">🧪</span> MAGIC SIZE WORKSHOP</div>
+          <h2 class="activity-title">Free Play: Magic Size Switch</h2>
+          <p class="activity-sub">Pick any object and explore making it <strong>SMALL</strong>, <strong>MEDIUM</strong>, and <strong>BIG</strong>!</p>
+        </div>
+
+        <div class="workshop-stage">
+          <!-- Object Picker Drawer -->
+          <div class="workshop-palette">
+            <div class="palette-label">Choose an Object:</div>
+            <div class="palette-items" id="workshop-item-picker">
+              <button class="palette-btn active" data-toy="apple">🍎 Apple</button>
+              <button class="palette-btn" data-toy="balloon">🎈 Balloon</button>
+              <button class="palette-btn" data-toy="ball">⚽ Ball</button>
+              <button class="palette-btn" data-toy="star">⭐ Star</button>
+              <button class="palette-btn" data-toy="flower">🌸 Flower</button>
+              <button class="palette-btn" data-toy="car">🚗 Toy Car</button>
+              <button class="palette-btn" data-toy="teddy">🧸 Teddy</button>
+              <button class="palette-btn" data-toy="gift">🎁 Gift</button>
+            </div>
+          </div>
+
+          <!-- Center Interactive Transformation Lab -->
+          <div class="workshop-lab">
+            <div class="lab-measurement-wall">
+              <div class="ruler-line line-big"><span class="ruler-label">BIG</span></div>
+              <div class="ruler-line line-medium"><span class="ruler-label">MEDIUM</span></div>
+              <div class="ruler-line line-small"><span class="ruler-label">SMALL</span></div>
+            </div>
+
+            <div class="lab-pedestal" id="workshop-display-stage">
+              <div class="magic-glow-aura" id="workshop-glow-aura"></div>
+              <div class="workshop-interactive-object" id="workshop-active-object">
+                <!-- Active SVG object rendered here -->
+              </div>
+              <div class="pedestal-plate"></div>
+            </div>
+
+            <!-- Current Size Badge -->
+            <div class="current-size-pill" id="workshop-size-tag">
+              Current Size: <span id="workshop-size-name" class="highlight-size">MEDIUM</span>
+            </div>
+
+            <!-- Grow & Shrink Buttons -->
+            <div class="workshop-controls">
+              <button id="btn-workshop-shrink" class="lab-action-btn shrink-btn">
+                <span class="icon">🔹</span>
+                <span class="text">SHRINK<br><small>(Make Smaller)</small></span>
+              </button>
+
+              <div class="size-level-gauge" id="workshop-level-gauge">
+                <span class="gauge-dot" data-level="small">SMALL</span>
+                <span class="gauge-dot active" data-level="medium">MEDIUM</span>
+                <span class="gauge-dot" data-level="big">BIG</span>
+              </div>
+
+              <button id="btn-workshop-grow" class="lab-action-btn grow-btn">
+                <span class="icon">🌟</span>
+                <span class="text">GROW<br><small>(Make Bigger)</small></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Back to Adventure -->
+          <div class="workshop-footer">
+            <button id="btn-exit-workshop" class="back-adventure-btn">
+              <span>➔ Back to Adventure Story</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>John's Good Habits Hero Adventure | ChotaPlay</title>
+  <meta name="description" content="An interactive and educational Good Habits adventure game for children aged 3-6. Help John brush teeth, wash hands, clean up toys, eat healthy, drink water, say please and thank you, help friends, and use the trash bin!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-app" class="game-container">
+    <!-- TOP STATUS & NAVIGATION BAR -->
+    <header class="game-header" id="game-header">
+      <div class="brand-badge">
+        <span class="brand-icon">🌟</span>
+        <span class="brand-name">CHOTAPLAY</span>
+      </div>
+
+      <!-- HABIT PROGRESS JOURNEY -->
+      <nav class="habit-journey" aria-label="Habit Journey">
+        <div class="journey-track" id="journey-track">
+          <button class="habit-step active" data-habit="0" title="Start Morning">🌅</button>
+          <button class="habit-step locked" data-habit="1" title="Brush Teeth">🪥</button>
+          <button class="habit-step locked" data-habit="2" title="Wash Hands">🧼</button>
+          <button class="habit-step locked" data-habit="3" title="Clean Toys">🧸</button>
+          <button class="habit-step locked" data-habit="4" title="Healthy Food">🍎</button>
+          <button class="habit-step locked" data-habit="5" title="Drink Water">💧</button>
+          <button class="habit-step locked" data-habit="6" title="Kind Words">❤️</button>
+          <button class="habit-step locked" data-habit="7" title="Help Friends">🤝</button>
+          <button class="habit-step locked" data-habit="8" title="Use Bin">🗑️</button>
+          <button class="habit-step locked" data-habit="9" title="Hero Celebration">👑</button>
+        </div>
+      </nav>
+
+      <!-- STAR HERO METER & CONTROLS -->
+      <div class="header-controls">
+        <div class="star-meter" id="star-meter" title="Good Habits Stars">
+          <span class="star-icon">⭐</span>
+          <span class="star-count" id="star-count">0</span>
+          <span class="star-total">/ 8</span>
+        </div>
+        <button id="btn-speak" class="icon-btn" title="Repeat Voice / Hint" aria-label="Repeat Voice">🔊</button>
+        <button id="btn-music" class="icon-btn" title="Toggle Cheerful Music" aria-label="Toggle Music">🎵</button>
+      </div>
+    </header>
+
+    <!-- MAIN GAME STAGE -->
+    <main class="game-stage" id="game-stage">
+      
+      <!-- FLOATING COMPANION: LITTLE STAR -->
+      <div id="little-star" class="little-star floating">
+        <div class="star-body">
+          <div class="star-glow"></div>
+          <svg viewBox="0 0 100 100" class="star-svg">
+            <path d="M50 5 L63 35 L95 38 L72 61 L78 93 L50 77 L22 93 L28 61 L5 38 L37 35 Z" fill="#FFE135" stroke="#FFA700" stroke-width="4" stroke-linejoin="round"/>
+            <!-- Cute Face -->
+            <circle cx="38" cy="45" r="4" fill="#3D2314"/>
+            <circle cx="36" cy="43" r="1.5" fill="#FFF"/>
+            <circle cx="62" cy="45" r="4" fill="#3D2314"/>
+            <circle cx="60" cy="43" r="1.5" fill="#FFF"/>
+            <!-- Rosy Cheeks -->
+            <ellipse cx="30" cy="52" rx="4" ry="2.5" fill="#FF708F" opacity="0.8"/>
+            <ellipse cx="70" cy="52" rx="4" ry="2.5" fill="#FF708F" opacity="0.8"/>
+            <!-- Smile -->
+            <path d="M43 53 Q50 62 57 53" fill="none" stroke="#3D2314" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <div class="star-sparkle s1">✨</div>
+          <div class="star-sparkle s2">✨</div>
+        </div>
+        <div class="speech-bubble" id="speech-bubble">
+          <p id="speech-text">Good morning, John!</p>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 0: OPENING MORNING SCENE ================= -->
+      <section class="scene active" id="scene-intro">
+        <div class="background-decor morning-decor">
+          <div class="sky-sun"></div>
+          <div class="cloud cloud-1">☁️</div>
+          <div class="cloud cloud-2">☁️</div>
+          <div class="room-window">
+            <div class="window-sunbeam"></div>
+          </div>
+          <div class="bedroom-bed">
+            <div class="pillow"></div>
+            <div class="blanket"></div>
+          </div>
+        </div>
+
+        <div class="scene-content intro-content">
+          <div class="character-holder" id="intro-john-holder">
+            <!-- John Character SVG -->
+            <div class="john-avatar waking" id="john-intro"></div>
+          </div>
+
+          <div class="intro-dialogue-card">
+            <h1 class="game-title">JOHN'S GOOD HABITS<br><span class="hero-text">HERO ADVENTURE</span></h1>
+            <p class="intro-sub">Join John & Little Star to discover fun everyday super habits!</p>
+            <button class="primary-btn pulse-glow" id="btn-start-game">
+              <span class="btn-icon">⭐</span> START GOOD HABITS! <span class="btn-icon">🚀</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 1: BRUSH YOUR TEETH ================= -->
+      <section class="scene" id="scene-habit-1">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 1: Brush Your Teeth 🪥</h2>
+          <p class="scene-instruction" id="h1-instruction">Tap the toothbrush, then brush John's teeth!</p>
+        </div>
+        
+        <div class="scene-stage bathroom-bg">
+          <div class="sink-mirror">
+            <div class="mirror-glass">
+              <div class="teeth-close-up" id="teeth-container">
+                <div class="mouth-open">
+                  <div class="teeth-top">
+                    <span class="tooth t1"></span><span class="tooth t2"></span><span class="tooth t3"></span><span class="tooth t4"></span><span class="tooth t5"></span>
+                  </div>
+                  <div class="teeth-dirt" id="teeth-dirt">
+                    <span class="germ g1">🦠</span><span class="germ g2">🟤</span><span class="germ g3">🦠</span><span class="germ g4">🟤</span>
+                  </div>
+                  <div class="teeth-bottom">
+                    <span class="tooth b1"></span><span class="tooth b2"></span><span class="tooth b3"></span><span class="tooth b4"></span><span class="tooth b5"></span>
+                  </div>
+                  <div class="foam-bubbles" id="teeth-foam"></div>
+                  <div class="sparkles-container" id="teeth-sparkles"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-tray">
+            <div class="brush-meter-wrap" id="brush-meter-wrap" style="display:none;">
+              <span class="meter-label">Sparkle Power:</span>
+              <div class="meter-bar"><div class="meter-fill" id="brush-progress-fill"></div></div>
+            </div>
+            <div class="brush-tools">
+              <div class="tool-item" id="tool-toothpaste" title="Toothpaste">
+                <div class="paste-tube">🧴 <span>Paste</span></div>
+              </div>
+              <div class="tool-item active-wiggle" id="tool-toothbrush" title="Toothbrush">
+                <div class="brush-tool-visual" id="brush-visual">🪥</div>
+                <span class="tool-label">Brush Me!</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="character-holder side-pos">
+            <div class="john-avatar sleepy" id="john-h1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 2: WASH YOUR HANDS ================= -->
+      <section class="scene" id="scene-habit-2">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 2: Wash Your Hands 🧼</h2>
+          <p class="scene-instruction" id="h2-instruction">Follow the 4 steps: Water ➔ Soap ➔ Scrub ➔ Rinse!</p>
+        </div>
+
+        <div class="scene-stage sink-stage">
+          <div class="sink-faucet-area">
+            <div class="faucet" id="faucet-handle">
+              <div class="faucet-head">🚰</div>
+              <div class="water-stream" id="water-stream"></div>
+            </div>
+          </div>
+
+          <div class="hands-container" id="hands-container">
+            <div class="hand left-hand" id="hand-left">
+              <div class="hand-shape">🖐️</div>
+              <div class="germ-spots" id="germs-left">
+                <span class="germ">🦠</span><span class="germ">🟤</span>
+              </div>
+              <div class="hand-bubbles" id="bubbles-left"></div>
+            </div>
+            <div class="hand right-hand" id="hand-right">
+              <div class="hand-shape">✋</div>
+              <div class="germ-spots" id="germs-right">
+                <span class="germ">🟤</span><span class="germ">🦠</span>
+              </div>
+              <div class="hand-bubbles" id="bubbles-right"></div>
+            </div>
+            <div class="sparkles-container" id="hands-sparkles"></div>
+          </div>
+
+          <!-- 4 Step Action buttons for washing hands -->
+          <div class="handwash-steps-tray">
+            <button class="step-btn active-step" id="btn-wash-water" data-step="1">
+              <span class="step-num">1</span> 💧 Turn Water
+            </button>
+            <button class="step-btn disabled" id="btn-wash-soap" data-step="2">
+              <span class="step-num">2</span> 🧼 Add Soap
+            </button>
+            <button class="step-btn disabled" id="btn-wash-scrub" data-step="3">
+              <span class="step-num">3</span> 🫧 Rub Hands
+            </button>
+            <button class="step-btn disabled" id="btn-wash-rinse" data-step="4">
+              <span class="step-num">4</span> ✨ Rinse Clean
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 3: KEEP TOYS IN PLACE ================= -->
+      <section class="scene" id="scene-habit-3">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 3: Clean Up Toys 🧸</h2>
+          <p class="scene-instruction" id="h3-instruction">Put all scattered toys back into the Toy Box!</p>
+        </div>
+
+        <div class="scene-stage playroom-stage">
+          <div class="toybox-dropzone" id="toybox-zone">
+            <div class="toybox-lid">📦 TOY BOX</div>
+            <div class="toybox-bin" id="toybox-interior">
+              <div class="toybox-hint">Drop toys here! ⭐</div>
+              <div class="collected-toys" id="collected-toys"></div>
+            </div>
+          </div>
+
+          <!-- Scattered draggable toys -->
+          <div class="toys-scattered-area" id="scattered-toys-area">
+            <div class="toy-item draggable" id="toy-ball" draggable="true" data-name="Soccer Ball">
+              <span class="toy-emoji">⚽</span>
+              <span class="toy-label">Ball</span>
+            </div>
+            <div class="toy-item draggable" id="toy-teddy" draggable="true" data-name="Teddy Bear">
+              <span class="toy-emoji">🧸</span>
+              <span class="toy-label">Teddy</span>
+            </div>
+            <div class="toy-item draggable" id="toy-car" draggable="true" data-name="Toy Car">
+              <span class="toy-emoji">🚗</span>
+              <span class="toy-label">Car</span>
+            </div>
+            <div class="toy-item draggable" id="toy-blocks" draggable="true" data-name="Blocks">
+              <span class="toy-emoji">🧱</span>
+              <span class="toy-label">Blocks</span>
+            </div>
+          </div>
+
+          <div class="character-holder side-pos">
+            <div class="john-avatar helper" id="john-h3"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 4: EAT HEALTHY FOOD ================= -->
+      <section class="scene" id="scene-habit-4">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 4: Eat Healthy Food 🍎</h2>
+          <p class="scene-instruction" id="h4-instruction">Choose 3 healthy foods for John's hero plate!</p>
+        </div>
+
+        <div class="scene-stage kitchen-stage">
+          <div class="dining-table">
+            <div class="plate-dropzone" id="healthy-plate">
+              <div class="plate-inner">
+                <span class="plate-label">🍽️ John's Hero Plate</span>
+                <div class="plate-food-slots" id="plate-slots"></div>
+              </div>
+            </div>
+
+            <div class="food-pantry" id="food-pantry">
+              <!-- Healthy items -->
+              <div class="food-item healthy" id="food-apple" draggable="true" data-type="healthy" data-name="Crisp Apple">
+                <span class="food-emoji">🍎</span>
+                <span class="food-name">Apple</span>
+              </div>
+              <div class="food-item healthy" id="food-banana" draggable="true" data-type="healthy" data-name="Sweet Banana">
+                <span class="food-emoji">🍌</span>
+                <span class="food-name">Banana</span>
+              </div>
+              <div class="food-item healthy" id="food-carrot" draggable="true" data-type="healthy" data-name="Crunchy Carrot">
+                <span class="food-emoji">🥕</span>
+                <span class="food-name">Carrot</span>
+              </div>
+              <!-- Treats / Unhealthy -->
+              <div class="food-item treat" id="food-candy" draggable="true" data-type="treat" data-name="Lollipop">
+                <span class="food-emoji">🍭</span>
+                <span class="food-name">Candy</span>
+              </div>
+              <div class="food-item treat" id="food-chips" draggable="true" data-type="treat" data-name="Potato Chips">
+                <span class="food-emoji">🍟</span>
+                <span class="food-name">Chips</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="character-holder side-pos">
+            <div class="john-avatar eating" id="john-h4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 5: DRINK WATER ================= -->
+      <section class="scene" id="scene-habit-5">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 5: Drink Water 💧</h2>
+          <p class="scene-instruction" id="h5-instruction">John is thirsty after playing! Tap the water bottle!</p>
+        </div>
+
+        <div class="scene-stage outdoor-stage">
+          <div class="energy-meter-box">
+            <span class="energy-label">⚡ Hydration Energy:</span>
+            <div class="energy-bar">
+              <div class="energy-fill" id="energy-fill" style="width: 20%;"></div>
+            </div>
+          </div>
+
+          <div class="water-bottle-center">
+            <button class="bottle-action-btn pulse-glow" id="btn-drink-water" aria-label="Drink Water">
+              <div class="bottle-svg-wrap">
+                <div class="bottle-icon">🍶</div>
+                <div class="water-ripples"></div>
+              </div>
+              <span class="tap-hint">Tap to Drink! 💧</span>
+            </button>
+          </div>
+
+          <div class="character-holder center-bottom">
+            <div class="john-avatar thirsty" id="john-h5"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 6: PLEASE AND THANK YOU ================= -->
+      <section class="scene" id="scene-habit-6">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 6: Please & Thank You ❤️</h2>
+          <p class="scene-instruction" id="h6-instruction">John wants to play with the robot toy. What should he say?</p>
+        </div>
+
+        <div class="scene-stage social-stage">
+          <div class="friends-interaction">
+            <div class="character-pair">
+              <div class="character-block" id="john-dialogue-wrap">
+                <div class="john-avatar asking" id="john-h6"></div>
+                <div class="speech-tag" id="john-speech-bubble">"Can I play?"</div>
+              </div>
+              <div class="character-block friend-block">
+                <div class="friend-avatar" id="friend-maya">
+                  <div class="friend-holding-toy">🤖</div>
+                </div>
+                <div class="speech-tag friend-tag" id="maya-speech-bubble">"I love sharing!"</div>
+              </div>
+            </div>
+
+            <div class="social-choices-tray" id="social-choices">
+              <button class="social-choice-btn choice-positive" id="btn-say-please">
+                <span class="choice-icon">🌸</span>
+                <span class="choice-text">"Please, may I share the toy?"</span>
+                <span class="choice-badge">Kind Words ✨</span>
+              </button>
+              <button class="social-choice-btn choice-grab" id="btn-say-grab">
+                <span class="choice-icon">✋</span>
+                <span class="choice-text">"Grab toy quickly!"</span>
+                <span class="choice-badge">Rough</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 7: HELP OTHERS ================= -->
+      <section class="scene" id="scene-habit-7">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 7: Help Friends 🤝</h2>
+          <p class="scene-instruction" id="h7-instruction">Leo dropped his tower! Tap the blocks to help pick them up!</p>
+        </div>
+
+        <div class="scene-stage helping-stage">
+          <div class="friend-helping-scene">
+            <div class="sad-friend-holder">
+              <div class="friend-avatar crying" id="friend-leo">
+                <div class="friend-body">👦🏽</div>
+                <div class="speech-tag friend-tag" id="leo-dialogue">"Oh no, my blocks fell!"</div>
+              </div>
+            </div>
+
+            <div class="fallen-blocks-area" id="fallen-blocks-area">
+              <div class="fallen-block block-item" id="fblock-1" data-id="1">🟥 Block</div>
+              <div class="fallen-block block-item" id="fblock-2" data-id="2">🟦 Block</div>
+              <div class="fallen-block block-item" id="fblock-3" data-id="3">🟨 Block</div>
+              <div class="fallen-block block-item" id="fblock-4" data-id="4">🟩 Block</div>
+            </div>
+
+            <div class="block-storage-tray" id="leo-block-box">
+              <span class="storage-label">📦 Leo's Block Tower Box</span>
+              <div class="placed-blocks-holder" id="placed-blocks"></div>
+            </div>
+          </div>
+
+          <div class="character-holder side-pos">
+            <div class="john-avatar helper" id="john-h7"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HABIT 8: USE THE BIN ================= -->
+      <section class="scene" id="scene-habit-8">
+        <div class="scene-header">
+          <h2 class="scene-title">Habit 8: Keep Our World Clean 🗑️</h2>
+          <p class="scene-instruction" id="h8-instruction">Put all trash into the green recycling bin!</p>
+        </div>
+
+        <div class="scene-stage park-stage">
+          <div class="park-grass">
+            <div class="flower f1">🌸</div>
+            <div class="flower f2">🌼</div>
+            <div class="flower f3">🌻</div>
+          </div>
+
+          <!-- Trash bin drop target -->
+          <div class="trashbin-target" id="trash-bin-target">
+            <div class="bin-lid" id="bin-lid">♻️ BIN LID</div>
+            <div class="bin-body">
+              <span class="bin-icon">🗑️</span>
+              <span class="bin-text">TRASH BIN</span>
+            </div>
+            <div class="bin-sparkles" id="bin-sparkles"></div>
+          </div>
+
+          <!-- Scattered litter -->
+          <div class="litter-items-area" id="litter-area">
+            <div class="litter-item draggable" id="litter-paper" draggable="true" data-name="Crumpled Paper">
+              <span class="litter-emoji">📄</span>
+              <span class="litter-label">Paper</span>
+            </div>
+            <div class="litter-item draggable" id="litter-banana" draggable="true" data-name="Banana Peel">
+              <span class="litter-emoji">🍌</span>
+              <span class="litter-label">Banana Peel</span>
+            </div>
+            <div class="litter-item draggable" id="litter-bottle" draggable="true" data-name="Empty Bottle">
+              <span class="litter-emoji">🥤</span>
+              <span class="litter-label">Empty Juice</span>
+            </div>
+          </div>
+
+          <div class="character-holder side-pos">
+            <div class="john-avatar hero" id="john-h8"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCENE 9: FINAL HERO CELEBRATION ================= -->
+      <section class="scene" id="scene-celebration">
+        <div class="celebration-confetti-canvas" id="confetti-holder"></div>
+        <div class="celebration-balloons" id="balloons-holder"></div>
+
+        <div class="celebration-card">
+          <div class="hero-badge-sunburst">
+            <div class="medal-icon">🌟</div>
+          </div>
+          <h1 class="victory-title">YOU ARE A<br><span class="highlight">GOOD HABITS HERO!</span></h1>
+          <p class="victory-subtitle">John practiced all 8 super habits with you today!</p>
+
+          <div class="all-stars-showcase">
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+            <span class="hero-star pulse-star">⭐</span>
+          </div>
+
+          <!-- Hero John with cape and star -->
+          <div class="hero-john-center">
+            <div class="john-avatar superhero" id="john-hero-avatar"></div>
+          </div>
+
+          <div class="celebration-actions">
+            <button class="primary-btn pulse-glow" id="btn-play-again">
+              <span>🔄</span> PLAY AGAIN! <span>🚀</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- SUCCESS POPUP MODAL FOR INTERMEDIATE HABITS -->
+    <div class="habit-success-overlay" id="habit-success-modal" style="display:none;">
+      <div class="success-card bouncy-in">
+        <div class="star-burst-anim">⭐</div>
+        <h3 class="success-title" id="success-title">Great Job!</h3>
+        <p class="success-msg" id="success-message">You earned a Good Habit Star!</p>
+        <div class="earned-star-banner">
+          <span class="big-star">⭐</span>
+          <span class="star-plus">+1 STAR</span>
+        </div>
+        <button class="primary-btn next-habit-btn" id="btn-next-habit">
+          NEXT HABIT ➔
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

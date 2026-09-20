@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vowel Magic Garden - ChotaPlay UKG Learning</title>
+  <meta name="description" content="An enchanting, interactive vowel learning game for UKG children. Learn A, E, I, O, U through magic, sound, and exploration with John & Little Star!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Particle & Magic Canvas Overlay -->
+  <canvas id="magic-canvas"></canvas>
+
+  <div id="game-container">
+    <!-- Top Utility Bar -->
+    <header class="top-nav" id="top-nav">
+      <div class="brand-badge">
+        <span class="brand-chota">CHOTA</span><span class="brand-play">PLAY</span>
+        <span class="badge-title">🌱 Vowel Magic Garden</span>
+      </div>
+
+      <!-- Vowel Progress Track -->
+      <div class="vowel-progress-tracker" id="vowel-tracker" aria-label="Vowel Progress">
+        <div class="vowel-orb" data-vowel="A" id="tracker-A">A</div>
+        <div class="tracker-connector"></div>
+        <div class="vowel-orb" data-vowel="E" id="tracker-E">E</div>
+        <div class="tracker-connector"></div>
+        <div class="vowel-orb" data-vowel="I" id="tracker-I">I</div>
+        <div class="tracker-connector"></div>
+        <div class="vowel-orb" data-vowel="O" id="tracker-O">O</div>
+        <div class="tracker-connector"></div>
+        <div class="vowel-orb" data-vowel="U" id="tracker-U">U</div>
+      </div>
+
+      <!-- Quick Audio & Control Buttons -->
+      <div class="nav-controls">
+        <button id="btn-repeat-speech" class="icon-btn" title="Listen Again" aria-label="Listen Again">
+          <svg viewBox="0 0 24 24" class="icon-svg"><path fill="currentColor" d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-2.5 0L6.5 7.5H3v9h3.5l5 4.27V3.23zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <span class="btn-text">Hear</span>
+        </button>
+        <button id="btn-sound-toggle" class="icon-btn" title="Toggle Sound" aria-label="Sound Toggle">
+          <span id="sound-icon">🔊</span>
+        </button>
+        <button id="btn-fullscreen" class="icon-btn" title="Fullscreen" aria-label="Toggle Fullscreen">
+          <svg viewBox="0 0 24 24" class="icon-svg"><path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Game World Stage -->
+    <main id="stage" class="stage-container">
+
+      <!-- SCENE 0: OPENING / TITLE SCENE -->
+      <section id="scene-intro" class="scene active-scene">
+        <div class="intro-backdrop">
+          <div class="sun-glow"></div>
+          <div class="clouds-group">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+          </div>
+          <div class="hills hill-back"></div>
+          <div class="hills hill-front"></div>
+          <div class="flowers-row">
+            <span class="flower f1">🌸</span>
+            <span class="flower f2">🌼</span>
+            <span class="flower f3">🌷</span>
+            <span class="flower f4">🌻</span>
+            <span class="flower f5">🌺</span>
+          </div>
+          <div class="butterflies">
+            <div class="butterfly b1">🦋</div>
+            <div class="butterfly b2">🦋</div>
+          </div>
+        </div>
+
+        <div class="intro-content">
+          <div class="game-logo-banner">
+            <div class="logo-subtitle">✨ Magical UKG Adventure ✨</div>
+            <h1 class="game-title">VOWEL MAGIC GARDEN</h1>
+            <div class="vowel-badge-row">
+              <span class="title-letter red">A</span>
+              <span class="title-letter green">E</span>
+              <span class="title-letter blue">I</span>
+              <span class="title-letter orange">O</span>
+              <span class="title-letter purple">U</span>
+            </div>
+          </div>
+
+          <!-- The Five Sleeping Gates Showcase -->
+          <div class="gates-intro-row">
+            <div class="intro-gate" data-letter="A">
+              <div class="gate-arch"></div>
+              <div class="gate-rune">A</div>
+              <div class="gate-status">Sleeping...</div>
+            </div>
+            <div class="intro-gate" data-letter="E">
+              <div class="gate-arch"></div>
+              <div class="gate-rune">E</div>
+              <div class="gate-status">Sleeping...</div>
+            </div>
+            <div class="intro-gate" data-letter="I">
+              <div class="gate-arch"></div>
+              <div class="gate-rune">I</div>
+              <div class="gate-status">Sleeping...</div>
+            </div>
+            <div class="intro-gate" data-letter="O">
+              <div class="gate-arch"></div>
+              <div class="gate-rune">O</div>
+              <div class="gate-status">Sleeping...</div>
+            </div>
+            <div class="intro-gate" data-letter="U">
+              <div class="gate-arch"></div>
+              <div class="gate-rune">U</div>
+              <div class="gate-status">Sleeping...</div>
+            </div>
+          </div>
+
+          <!-- Story Prompt / Call to Action -->
+          <div class="intro-action-box">
+            <button id="btn-start-game" class="magic-play-btn pulse-glow">
+              <span class="btn-sparkle">✨</span>
+              <span class="btn-main-text">START MAGIC</span>
+              <span class="btn-sparkle">✨</span>
+            </button>
+            <p class="intro-subtext">Wake up the 5 magic vowels with John & Little Star!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 1: VOWEL DISCOVERY & INTERACTION WORLD -->
+      <section id="scene-world" class="scene hidden-scene">
+        <!-- Dynamic Themed Backdrop -->
+        <div id="world-backdrop" class="world-backdrop theme-A">
+          <div class="sky-elements" id="sky-elements"></div>
+          <div class="landscape-ground" id="landscape-ground"></div>
+        </div>
+
+        <!-- World Title & Story Header -->
+        <div class="world-header">
+          <div class="world-tag" id="world-tag">🍎 Apple Garden</div>
+          <div class="instruction-banner" id="instruction-banner">
+            <span class="inst-icon">✨</span>
+            <span class="inst-text" id="instruction-text">Listen and tap the magic vowel!</span>
+          </div>
+        </div>
+
+        <!-- Center Stage Area -->
+        <div class="world-center-stage">
+          
+          <!-- STEP 1: WAKE-UP INTERACTION VIEW -->
+          <div id="view-wakeup" class="sub-view active-view">
+            <!-- Living World Centerpiece (Tree / Elephant / Igloo / Orange Tree / Umbrella) -->
+            <div class="living-centerpiece" id="living-centerpiece">
+              <!-- Dynamically populated centerpiece content -->
+            </div>
+
+            <!-- Giant Glowing Vowel Stone / Rune -->
+            <div class="magic-vowel-altar">
+              <div class="altar-glow-ring"></div>
+              <button id="btn-magic-vowel" class="magic-vowel-button" aria-label="Magic Vowel">
+                <span class="vowel-letter-display" id="vowel-letter-display">A</span>
+                <span class="tap-hint-hand">👆 Tap Me!</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: WORD ASSOCIATION CHALLENGE VIEW -->
+          <div id="view-challenge" class="sub-view hidden-view">
+            <div class="challenge-prompt">
+              <h2 class="challenge-title" id="challenge-title">Find the A word!</h2>
+              <p class="challenge-subtitle" id="challenge-subtitle">Listen: <strong id="challenge-sound-name">"A is for..."</strong></p>
+            </div>
+
+            <!-- 3 Choice Cards -->
+            <div class="choice-cards-container" id="choice-cards-container">
+              <!-- Dynamically rendered choice cards -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Celebration Banner / Overlay when step is cleared -->
+        <div id="step-celebration" class="step-celebration hidden">
+          <div class="celebration-badge">
+            <div class="badge-star-burst">🌟</div>
+            <h3 class="celeb-text" id="celeb-text">A is for Apple!</h3>
+            <button id="btn-next-step" class="btn-next-action">
+              <span>Next Magic Vowel ➔</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SCENE 2: GRAND FINALE / CONNECTED VOWEL MAGIC GARDEN -->
+      <section id="scene-finale" class="scene hidden-scene">
+        <div class="finale-backdrop">
+          <div class="rainbow-arch-grand" id="grand-rainbow"></div>
+          <div class="fireworks-layer" id="fireworks-layer"></div>
+        </div>
+
+        <div class="finale-container">
+          <div class="finale-header">
+            <div class="crown-icon">👑</div>
+            <h1 class="finale-title">VOWEL MAGIC GARDEN IS AWAKE!</h1>
+            <p class="finale-subtitle">All 5 magical vowels are glowing brightly together!</p>
+          </div>
+
+          <!-- 5 Connected Glowing Gates Showcase -->
+          <div class="all-vowels-connected-row" id="connected-vowels-row">
+            <div class="vowel-triumph-card active" data-v="A">
+              <div class="card-glow-aura red-glow"></div>
+              <div class="tri-letter">A</div>
+              <div class="tri-emoji">🍎</div>
+              <div class="tri-word">APPLE</div>
+            </div>
+            <div class="bridge-rainbow-link">🌈</div>
+            <div class="vowel-triumph-card active" data-v="E">
+              <div class="card-glow-aura green-glow"></div>
+              <div class="tri-letter">E</div>
+              <div class="tri-emoji">🐘</div>
+              <div class="tri-word">ELEPHANT</div>
+            </div>
+            <div class="bridge-rainbow-link">🌈</div>
+            <div class="vowel-triumph-card active" data-v="I">
+              <div class="card-glow-aura blue-glow"></div>
+              <div class="tri-letter">I</div>
+              <div class="tri-emoji">🏠</div>
+              <div class="tri-word">IGLOO</div>
+            </div>
+            <div class="bridge-rainbow-link">🌈</div>
+            <div class="vowel-triumph-card active" data-v="O">
+              <div class="card-glow-aura orange-glow"></div>
+              <div class="tri-letter">O</div>
+              <div class="tri-emoji">🍊</div>
+              <div class="tri-word">ORANGE</div>
+            </div>
+            <div class="bridge-rainbow-link">🌈</div>
+            <div class="vowel-triumph-card active" data-v="U">
+              <div class="card-glow-aura purple-glow"></div>
+              <div class="tri-letter">U</div>
+              <div class="tri-emoji">☂️</div>
+              <div class="tri-word">UMBRELLA</div>
+            </div>
+          </div>
+
+          <div class="finale-action-bar">
+            <button id="btn-recap-magic" class="btn-finale-primary">
+              <span>🔊 Sing & Review Vowels</span>
+            </button>
+            <button id="btn-enter-freeplay" class="btn-finale-secondary">
+              <span>🌸 Enter Free-Play Garden</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 3: FREE-PLAY / VOWEL MEMORY GARDEN -->
+      <section id="scene-freeplay" class="scene hidden-scene">
+        <div class="freeplay-backdrop">
+          <div class="freeplay-sun"></div>
+          <div class="freeplay-flowers-layer"></div>
+        </div>
+
+        <div class="freeplay-container">
+          <div class="freeplay-header">
+            <h2>🌸 Vowel Exploration Garden 🌸</h2>
+            <p>Tap any magic vowel flower to hear its sound and meet its friend!</p>
+          </div>
+
+          <!-- 5 Magic Interactive Flower Pods -->
+          <div class="flower-pads-row">
+            <button class="flower-pad-btn" data-vowel="A" id="pad-A" aria-label="Vowel A">
+              <div class="flower-petals-ring"></div>
+              <div class="flower-core">
+                <span class="flower-letter">A</span>
+              </div>
+              <div class="flower-popup-item">🍎 Apple</div>
+            </button>
+
+            <button class="flower-pad-btn" data-vowel="E" id="pad-E" aria-label="Vowel E">
+              <div class="flower-petals-ring"></div>
+              <div class="flower-core">
+                <span class="flower-letter">E</span>
+              </div>
+              <div class="flower-popup-item">🐘 Elephant</div>
+            </button>
+
+            <button class="flower-pad-btn" data-vowel="I" id="pad-I" aria-label="Vowel I">
+              <div class="flower-petals-ring"></div>
+              <div class="flower-core">
+                <span class="flower-letter">I</span>
+              </div>
+              <div class="flower-popup-item">🏠 Igloo</div>
+            </button>
+
+            <button class="flower-pad-btn" data-vowel="O" id="pad-O" aria-label="Vowel O">
+              <div class="flower-petals-ring"></div>
+              <div class="flower-core">
+                <span class="flower-letter">O</span>
+              </div>
+              <div class="flower-popup-item">🍊 Orange</div>
+            </button>
+
+            <button class="flower-pad-btn" data-vowel="U" id="pad-U" aria-label="Vowel U">
+              <div class="flower-petals-ring"></div>
+              <div class="flower-core">
+                <span class="flower-letter">U</span>
+              </div>
+              <div class="flower-popup-item">☂️ Umbrella</div>
+            </button>
+          </div>
+
+          <!-- Free-play Showcase Spotlight -->
+          <div class="spotlight-display" id="freeplay-spotlight">
+            <div class="spotlight-card" id="spotlight-card">
+              <div class="spotlight-badge" id="spotlight-badge">Tap a flower!</div>
+              <div class="spotlight-visual" id="spotlight-visual">✨</div>
+              <div class="spotlight-text" id="spotlight-text">Discover A, E, I, O, U</div>
+            </div>
+          </div>
+
+          <!-- Navigation back to adventure -->
+          <div class="freeplay-controls">
+            <button id="btn-replay-adventure" class="btn-freeplay-back">
+              <span>🔄 Replay Story Adventure</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Stage: Characters (John & Little Star) + Living Speech Bubbles -->
+    <footer class="characters-stage" id="characters-stage">
+      <!-- Speech & Story Subtitles Bubble -->
+      <div class="dialogue-bubble-box" id="dialogue-bubble-box">
+        <div class="bubble-speaker-tag" id="bubble-speaker-tag">⭐ Little Star</div>
+        <div class="bubble-speech-text" id="bubble-speech-text">
+          "Welcome to the Vowel Magic Garden! Let's bring the magic back!"
+        </div>
+      </div>
+
+      <!-- Character Visuals Container -->
+      <div class="characters-actors">
+        
+        <!-- JOHN THE HERO -->
+        <div class="character-actor actor-john" id="actor-john" title="John">
+          <div class="character-shadow"></div>
+          <div class="john-body-wrap">
+            <!-- Animated SVG John -->
+            <svg viewBox="0 0 160 220" class="character-svg john-svg" id="john-svg-elem">
+              <defs>
+                <radialGradient id="skinGrad" cx="50%" cy="40%" r="50%">
+                  <stop offset="0%" stop-color="#FFE0BD"/>
+                  <stop offset="100%" stop-color="#FCD0A1"/>
+                </radialGradient>
+                <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#3B82F6"/>
+                  <stop offset="100%" stop-color="#1D4ED8"/>
+                </linearGradient>
+                <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#1E293B"/>
+                  <stop offset="100%" stop-color="#0F172A"/>
+                </linearGradient>
+                <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#6B4226"/>
+                  <stop offset="100%" stop-color="#45220C"/>
+                </linearGradient>
+                <linearGradient id="capGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#EF4444"/>
+                  <stop offset="100%" stop-color="#B91C1C"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Legs & Shoes -->
+              <g class="john-legs">
+                <!-- Left Leg -->
+                <rect x="52" y="148" width="22" height="42" rx="8" fill="url(#pantsGrad)"/>
+                <ellipse cx="60" cy="194" rx="16" ry="10" fill="#E11D48"/>
+                <ellipse cx="60" cy="192" rx="12" ry="5" fill="#FFFFFF" opacity="0.3"/>
+                <!-- Right Leg -->
+                <rect x="86" y="148" width="22" height="42" rx="8" fill="url(#pantsGrad)"/>
+                <ellipse cx="100" cy="194" rx="16" ry="10" fill="#E11D48"/>
+                <ellipse cx="100" cy="192" rx="12" ry="5" fill="#FFFFFF" opacity="0.3"/>
+              </g>
+
+              <!-- Torso & Shirt -->
+              <g class="john-torso">
+                <rect x="45" y="85" width="70" height="70" rx="20" fill="url(#shirtGrad)"/>
+                <!-- Cute Star Badge on Shirt -->
+                <polygon points="80,105 84,115 95,115 86,122 89,132 80,126 71,132 74,122 65,115 76,115" fill="#FACC15"/>
+                <!-- Collar -->
+                <path d="M68 85 L80 100 L92 85 Z" fill="#FCD0A1"/>
+              </g>
+
+              <!-- Left Arm (Pointing/Waving) -->
+              <g class="john-arm-left" id="john-arm-l">
+                <rect x="25" y="90" width="22" height="48" rx="10" fill="url(#shirtGrad)" transform="rotate(15 25 90)"/>
+                <circle cx="28" cy="140" r="12" fill="url(#skinGrad)"/>
+              </g>
+
+              <!-- Right Arm -->
+              <g class="john-arm-right" id="john-arm-r">
+                <rect x="113" y="90" width="22" height="48" rx="10" fill="url(#shirtGrad)" transform="rotate(-15 113 90)"/>
+                <circle cx="132" cy="140" r="12" fill="url(#skinGrad)"/>
+              </g>
+
+              <!-- Head & Face -->
+              <g class="john-head" id="john-head">
+                <!-- Ears -->
+                <circle cx="42" cy="62" r="10" fill="url(#skinGrad)"/>
+                <circle cx="118" cy="62" r="10" fill="url(#skinGrad)"/>
+                
+                <!-- Face -->
+                <ellipse cx="80" cy="62" rx="38" ry="34" fill="url(#skinGrad)"/>
+                
+                <!-- Cheeks -->
+                <ellipse cx="56" cy="70" rx="8" ry="5" fill="#F87171" opacity="0.45"/>
+                <ellipse cx="104" cy="70" rx="8" ry="5" fill="#F87171" opacity="0.45"/>
+
+                <!-- Eyes -->
+                <g class="john-eyes">
+                  <ellipse cx="65" cy="58" rx="6.5" ry="8.5" fill="#1E293B"/>
+                  <circle cx="63" cy="55" r="3" fill="#FFFFFF"/>
+                  <circle cx="66" cy="61" r="1.5" fill="#FFFFFF"/>
+                  
+                  <ellipse cx="95" cy="58" rx="6.5" ry="8.5" fill="#1E293B"/>
+                  <circle cx="93" cy="55" r="3" fill="#FFFFFF"/>
+                  <circle cx="96" cy="61" r="1.5" fill="#FFFFFF"/>
+
+                  <!-- Eyebrows -->
+                  <path d="M58 48 Q65 44 72 48" stroke="#45220C" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                  <path d="M88 48 Q95 44 102 48" stroke="#45220C" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                </g>
+
+                <!-- Cute Smile -->
+                <path id="john-mouth" d="M68 74 Q80 88 92 74" stroke="#881337" stroke-width="3.5" stroke-linecap="round" fill="#E11D48"/>
+
+                <!-- Hair Behind Cap -->
+                <path d="M42 55 Q80 20 118 55 Q110 30 80 26 Q50 30 42 55 Z" fill="url(#hairGrad)"/>
+                
+                <!-- Cool Red Cap -->
+                <path d="M40 45 Q80 8 120 45 Q100 24 80 24 Q60 24 40 45 Z" fill="url(#capGrad)"/>
+                <ellipse cx="80" cy="40" rx="42" ry="12" fill="url(#capGrad)"/>
+                <path d="M75 36 Q115 28 135 44 Q105 40 75 36 Z" fill="#DC2626"/>
+                <circle cx="80" cy="22" r="5" fill="#FACC15"/>
+              </g>
+            </svg>
+            <div class="actor-label">John</div>
+          </div>
+        </div>
+
+        <!-- LITTLE STAR COMPANION -->
+        <div class="character-actor actor-star" id="actor-star" title="Little Star">
+          <div class="star-halo-glow"></div>
+          <div class="star-body-wrap">
+            <!-- Animated SVG Star -->
+            <svg viewBox="0 0 140 140" class="character-svg star-svg" id="star-svg-elem">
+              <defs>
+                <radialGradient id="starGrad" cx="50%" cy="40%" r="50%">
+                  <stop offset="0%" stop-color="#FEF08A"/>
+                  <stop offset="60%" stop-color="#FACC15"/>
+                  <stop offset="100%" stop-color="#EAB308"/>
+                </radialGradient>
+                <filter id="starGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+
+              <!-- Star Shape -->
+              <polygon class="star-main-poly" points="70,12 87,48 126,52 97,79 105,118 70,98 35,118 43,79 14,52 53,48" 
+                       fill="url(#starGrad)" stroke="#F59E0B" stroke-width="4" stroke-linejoin="round" filter="url(#starGlow)"/>
+
+              <!-- Winter Hat (Active in Igloo Scene) -->
+              <g id="star-winter-hat" class="star-hat-group hidden">
+                <path d="M48 35 Q70 5 92 35 Z" fill="#0284C7"/>
+                <rect x="42" y="32" width="56" height="12" rx="6" fill="#FFFFFF"/>
+                <circle cx="70" cy="8" r="8" fill="#FFFFFF"/>
+              </g>
+
+              <!-- Cheeks -->
+              <ellipse cx="48" cy="74" rx="7" ry="4" fill="#F43F5E" opacity="0.6"/>
+              <ellipse cx="92" cy="74" rx="7" ry="4" fill="#F43F5E" opacity="0.6"/>
+
+              <!-- Cute Anime Eyes -->
+              <g class="star-eyes">
+                <ellipse cx="53" cy="64" rx="6" ry="8" fill="#1E293B"/>
+                <circle cx="51" cy="61" r="3" fill="#FFFFFF"/>
+                <circle cx="54" cy="67" r="1.5" fill="#FFFFFF"/>
+
+                <ellipse cx="87" cy="64" rx="6" ry="8" fill="#1E293B"/>
+                <circle cx="85" cy="61" r="3" fill="#FFFFFF"/>
+                <circle cx="88" cy="67" r="1.5" fill="#FFFFFF"/>
+              </g>
+
+              <!-- Smiling Star Mouth -->
+              <path id="star-mouth" d="M60 76 Q70 88 80 76" stroke="#9A3412" stroke-width="3" stroke-linecap="round" fill="#EF4444"/>
+
+              <!-- Sparkle Star Accent -->
+              <circle cx="34" cy="38" r="3" fill="#FFFFFF"/>
+              <circle cx="106" cy="40" r="2.5" fill="#FFFFFF"/>
+            </svg>
+            <div class="actor-label">Little Star</div>
+          </div>
+        </div>
+
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

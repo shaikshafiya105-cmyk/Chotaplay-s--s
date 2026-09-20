@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="100%" height="100%">
+    <!-- Shadow -->
+    <ellipse cx="100" cy="245" rx="55" ry="10" fill="#000" opacity="0.15" />
+    
+    <!-- Trousers -->
+    <rect x="75" y="170" width="22" height="65" rx="8" fill="#1C7ED6" />
+    <rect x="103" y="170" width="22" height="65" rx="8" fill="#1C7ED6" />
+    <!-- Shoes -->
+    <ellipse cx="86" cy="235" rx="14" ry="8" fill="#343A40" />
+    <ellipse cx="114" cy="235" rx="14" ry="8" fill="#343A40" />
+
+    <!-- Uniform Shirt -->
+    <rect x="64" y="100" width="72" height="75" rx="12" fill="#339AF0" />
+    <path d="M 85 100 L 100 115 L 115 100 Z" fill="#D0EBFF" />
+    <polygon points="100,115 104,140 100,146 96,140" fill="#E03131" /> <!-- Red Tie -->
+
+    <!-- Mail Carrier Satchel Strap across chest -->
+    <line x1="68" y1="102" x2="132" y2="168" stroke="#845EF7" stroke-width="8" stroke-linecap="round" />
+    <!-- Mail Bag -->
+    <rect x="122" y="145" width="34" height="28" rx="6" fill="#7048E8" stroke="#5F3DC4" stroke-width="2" />
+    <path d="M 122 145 L 139 160 L 156 145 Z" fill="#9775FA" />
+
+    <!-- Left Arm -->
+    <rect x="44" y="105" width="20" height="50" rx="10" fill="#339AF0" />
+    <circle cx="54" cy="155" r="9" fill="#FFD8A8" />
+
+    <!-- Right Arm Holding Letter -->
+    <path d="M 132 108 Q 165 118 152 138" fill="none" stroke="#339AF0" stroke-width="18" stroke-linecap="round" />
+    <circle cx="150" cy="140" r="9" fill="#FFD8A8" />
+    <!-- Stamped Letter -->
+    <rect x="145" y="120" width="30" height="20" rx="3" fill="#FFF" stroke="#ADB5BD" stroke-width="1.5" transform="rotate(-15 145 120)" />
+    <rect x="164" y="122" width="6" height="7" fill="#FF6B6B" transform="rotate(-15 145 120)" />
+    <line x1="148" y1="130" x2="162" y2="130" stroke="#868E96" stroke-width="1.5" transform="rotate(-15 145 120)" />
+
+    <!-- Head -->
+    <circle cx="100" cy="62" r="32" fill="#FFD8A8" />
+    <ellipse cx="80" cy="72" rx="6" ry="4" fill="#FFA8A8" />
+    <ellipse cx="120" cy="72" rx="6" ry="4" fill="#FFA8A8" />
+    <!-- Eyes -->
+    <circle cx="86" cy="62" r="5" fill="#212529" />
+    <circle cx="88" cy="60" r="1.5" fill="#FFF" />
+    <circle cx="114" cy="62" r="5" fill="#212529" />
+    <circle cx="116" cy="60" r="1.5" fill="#FFF" />
+    <!-- Smile -->
+    <path d="M 90 74 Q 100 86 110 74" fill="none" stroke="#212529" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Postal Cap -->
+    <path d="M 68 50 Q 100 24 132 50 Z" fill="#1C7ED6" />
+    <path d="M 64 48 Q 100 38 136 48 Q 100 56 64 48 Z" fill="#1864AB" />
+    <!-- Horn/Envelope Emblem -->
+    <polygon points="100,32 105,37 105,43 95,43 95,37" fill="#FFD43B" />
+  </svg>

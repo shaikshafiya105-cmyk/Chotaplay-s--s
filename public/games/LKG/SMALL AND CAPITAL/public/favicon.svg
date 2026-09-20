@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="favGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE766"/>
+      <stop offset="70%" stop-color="#FFA800"/>
+      <stop offset="100%" stop-color="#FF5E00"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#5829BB"/>
+  <polygon points="50,15 61,38 85,40 67,56 73,80 50,66 27,80 33,56 15,40 39,38" fill="url(#favGrad)"/>
+  <text x="50" y="60" font-family="'Fredoka', sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" text-anchor="middle">A</text>
+</svg>

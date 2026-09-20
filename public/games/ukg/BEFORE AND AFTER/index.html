@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Riya's Number Garden - Find My Missing Friend! | ChotaPlay</title>
+  <meta name="description" content="An enchanting UKG educational game where children learn Before, After, and Between numbers 1-20 with Riya and Little Star in a magical garden!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <!-- Particle / Confetti Canvas -->
+    <canvas id="fx-canvas"></canvas>
+
+    <!-- Top Navigation & HUD -->
+    <header id="game-hud" class="hud hidden">
+      <div class="hud-left">
+        <div class="brand-badge">
+          <span class="brand-icon">🌟</span>
+          <span class="brand-text">CHOTAPLAY</span>
+        </div>
+        <div class="level-indicator" id="level-badge">
+          <span class="scene-icon" id="scene-icon">🌸</span>
+          <span class="scene-title" id="scene-title">Garden Path</span>
+        </div>
+      </div>
+
+      <div class="hud-center">
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="star-icon">⭐</span>
+            <span id="progress-text">Friends Helped: 0 / 6</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <button id="btn-repeat-voice" class="hud-btn voice-btn" title="Hear Question Again" aria-label="Hear Question Again">
+          <span class="btn-icon">🔊</span>
+          <span class="btn-text">Hear Again</span>
+        </button>
+        <button id="btn-sound-toggle" class="hud-btn sound-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <span class="btn-icon" id="sound-icon">🎵</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN GAME STAGE -->
+    <main id="main-stage">
+      
+      <!-- ================= SCENE: TITLE / OPENING ================= -->
+      <section id="title-scene" class="game-scene active-scene">
+        <div class="sky-elements">
+          <div class="sun-glow"></div>
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+          <div class="rainbow-arc"></div>
+          <div class="butterfly butterfly-float-1">🦋</div>
+          <div class="butterfly butterfly-float-2">🦋</div>
+        </div>
+
+        <div class="scenery-hills">
+          <div class="hill hill-back"></div>
+          <div class="hill hill-mid"></div>
+          <div class="hill hill-front"></div>
+        </div>
+
+        <div class="title-content-card">
+          <div class="title-header">
+            <div class="brand-pill">✨ CHOTAPLAY PRESENTS ✨</div>
+            <h1 class="main-title">
+              <span class="title-riya">RIYA'S</span>
+              <span class="title-garden">NUMBER GARDEN</span>
+            </h1>
+            <h2 class="sub-title">"FIND MY MISSING FRIEND!"</h2>
+            <div class="concept-tags">
+              <span class="concept-tag tag-before">🌱 BEFORE</span>
+              <span class="concept-tag tag-after">🦋 AFTER</span>
+              <span class="concept-tag tag-between">🌈 BETWEEN</span>
+            </div>
+          </div>
+
+          <!-- Characters Intro Showcase -->
+          <div class="intro-characters-row">
+            <div class="intro-char-wrapper riya-intro-wrap">
+              <div class="char-riya" id="title-riya-char">
+                <!-- Detailed Vector SVG Riya -->
+                <svg viewBox="0 0 160 220" class="riya-svg" id="riya-svg-title">
+                  <defs>
+                    <radialGradient id="riya-skin" cx="50%" cy="40%" r="50%">
+                      <stop offset="0%" stop-color="#FCD5B5" />
+                      <stop offset="100%" stop-color="#E5A882" />
+                    </radialGradient>
+                    <linearGradient id="riya-dress" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#FF5E7E" />
+                      <stop offset="100%" stop-color="#E61E50" />
+                    </linearGradient>
+                    <linearGradient id="riya-hair" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#3A2016" />
+                      <stop offset="100%" stop-color="#1A0D08" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Ponytail Behind -->
+                  <path d="M 35,55 Q 10,65 15,105 Q 30,115 45,85 Z" fill="url(#riya-hair)" class="riya-ponytail"/>
+                  <circle cx="38" cy="62" r="7" fill="#FFB703" />
+                  <!-- Left Leg -->
+                  <path d="M 62,160 L 60,195 Q 60,205 48,205 Q 40,205 44,195 L 52,160 Z" fill="#E5A882" />
+                  <ellipse cx="48" cy="204" rx="12" ry="7" fill="#3D5A80" />
+                  <!-- Right Leg -->
+                  <path d="M 98,160 L 100,195 Q 100,205 112,205 Q 120,205 116,195 L 108,160 Z" fill="#E5A882" />
+                  <ellipse cx="112" cy="204" rx="12" ry="7" fill="#3D5A80" />
+                  <!-- Dress Body -->
+                  <path d="M 55,108 Q 80,102 105,108 L 122,165 Q 80,178 38,165 Z" fill="url(#riya-dress)" />
+                  <path d="M 45,162 Q 80,175 115,162" stroke="#FFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.8"/>
+                  <circle cx="80" cy="125" r="5" fill="#FFEAA7"/>
+                  <circle cx="80" cy="142" r="5" fill="#FFEAA7"/>
+                  <!-- Left Arm (Waving) -->
+                  <g class="riya-left-arm">
+                    <path d="M 52,112 Q 25,95 28,75 Q 32,65 42,75 Q 45,95 60,115 Z" fill="#FCD5B5" />
+                    <circle cx="30" cy="70" r="9" fill="#FCD5B5" />
+                  </g>
+                  <!-- Right Arm -->
+                  <g class="riya-right-arm">
+                    <path d="M 108,112 Q 130,120 135,140 Q 130,150 120,142 Q 115,128 100,116 Z" fill="#FCD5B5" />
+                  </g>
+                  <!-- Neck -->
+                  <rect x="73" y="92" width="14" height="18" rx="6" fill="#E5A882" />
+                  <!-- Head -->
+                  <ellipse cx="80" cy="65" rx="35" ry="38" fill="url(#riya-skin)" />
+                  <!-- Hair Front & Bangs -->
+                  <path d="M 45,60 Q 55,25 80,25 Q 105,25 115,60 Q 105,42 80,45 Q 55,42 45,60 Z" fill="url(#riya-hair)" />
+                  <!-- Headband -->
+                  <path d="M 46,54 Q 80,36 114,54" stroke="#FFB703" stroke-width="6" stroke-linecap="round" fill="none" />
+                  <circle cx="98" cy="46" r="7" fill="#FF5E7E" />
+                  <!-- Eyes -->
+                  <g class="riya-eyes">
+                    <ellipse cx="68" cy="68" rx="5.5" ry="7.5" fill="#222" />
+                    <ellipse cx="92" cy="68" rx="5.5" ry="7.5" fill="#222" />
+                    <circle cx="66" cy="65" r="2.5" fill="#FFF" />
+                    <circle cx="90" cy="65" r="2.5" fill="#FFF" />
+                    <path d="M 62,62 Q 68,58 74,62" stroke="#222" stroke-width="2" fill="none" />
+                    <path d="M 86,62 Q 92,58 98,62" stroke="#222" stroke-width="2" fill="none" />
+                  </g>
+                  <!-- Cheeks -->
+                  <ellipse cx="60" cy="76" rx="7" ry="4.5" fill="#FF7675" opacity="0.6" />
+                  <ellipse cx="100" cy="76" rx="7" ry="4.5" fill="#FF7675" opacity="0.6" />
+                  <!-- Cute Smile -->
+                  <path d="M 72,78 Q 80,89 88,78" stroke="#D63031" stroke-width="3" stroke-linecap="round" fill="#FFF" class="riya-mouth" />
+                </svg>
+              </div>
+              <span class="char-caption">Riya</span>
+            </div>
+
+            <!-- Little Star -->
+            <div class="intro-char-wrapper star-intro-wrap">
+              <div class="char-star" id="title-star-char">
+                <svg viewBox="0 0 140 140" class="star-svg">
+                  <defs>
+                    <radialGradient id="star-gold" cx="50%" cy="40%" r="50%">
+                      <stop offset="0%" stop-color="#FFF9A6" />
+                      <stop offset="60%" stop-color="#FFD124" />
+                      <stop offset="100%" stop-color="#FFA800" />
+                    </radialGradient>
+                  </defs>
+                  <circle cx="70" cy="70" r="56" fill="#FFE57F" opacity="0.3" class="star-halo"/>
+                  <polygon points="70,10 87,48 128,52 97,80 106,122 70,100 34,122 43,80 12,52 53,48" fill="url(#star-gold)" stroke="#FF9800" stroke-width="2.5" stroke-linejoin="round"/>
+                  <circle cx="50" cy="74" r="7" fill="#FF7675" opacity="0.7"/>
+                  <circle cx="90" cy="74" r="7" fill="#FF7675" opacity="0.7"/>
+                  <ellipse cx="55" cy="62" rx="4.5" ry="6.5" fill="#2D3436"/>
+                  <ellipse cx="85" cy="62" rx="4.5" ry="6.5" fill="#2D3436"/>
+                  <circle cx="53" cy="60" r="2" fill="#FFF"/>
+                  <circle cx="83" cy="60" r="2" fill="#FFF"/>
+                  <path d="M 60,74 Q 70,86 80,74" stroke="#2D3436" stroke-width="3" stroke-linecap="round" fill="#FF5252"/>
+                  <circle cx="25" cy="30" r="3" fill="#FFF" class="twinkle-1"/>
+                  <circle cx="115" cy="32" r="4" fill="#FFF" class="twinkle-2"/>
+                  <circle cx="110" cy="105" r="3" fill="#FFF" class="twinkle-3"/>
+                </svg>
+              </div>
+              <span class="char-caption">Little Star</span>
+            </div>
+
+            <!-- Cute Number Samples -->
+            <div class="intro-numbers-preview">
+              <div class="preview-num num-sample-1">
+                <span class="pn-digit">6</span>
+                <span class="pn-eyes">👀</span>
+              </div>
+              <div class="preview-num num-sample-2">
+                <span class="pn-digit">7</span>
+                <span class="pn-eyes">😊</span>
+              </div>
+              <div class="preview-num num-sample-3">
+                <span class="pn-digit">8</span>
+                <span class="pn-eyes">🌟</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Story Dialogue Box -->
+          <div class="intro-story-box">
+            <div class="story-speaker-avatar">⭐</div>
+            <div class="story-bubble-text" id="intro-dialogue-text">
+              <p class="story-line-1"><strong>Little Star:</strong> "Riya! Look! The number friends are lost in the garden!"</p>
+              <p class="story-line-2"><strong>Riya:</strong> "Let's help them find who comes <em>Before</em>, <em>After</em>, and <em>Between</em>!"</p>
+            </div>
+          </div>
+
+          <!-- START ADVENTURE BUTTON -->
+          <div class="start-btn-container">
+            <button id="btn-start-game" class="btn-super-pulse">
+              <span class="btn-shine"></span>
+              <span class="btn-sparkle-l">✨</span>
+              <span class="btn-main-text">START ADVENTURE</span>
+              <span class="btn-sparkle-r">✨</span>
+            </button>
+            <p class="start-hint">Tap to play with voice & sound!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCENE: GAMEPLAY ACTIVE STAGE ================= -->
+      <section id="gameplay-scene" class="game-scene hidden">
+        
+        <!-- Dynamic Environment Backdrop -->
+        <div id="dynamic-backdrop" class="backdrop-garden-path">
+          <div class="scene-sky">
+            <div class="animated-clouds">
+              <div class="bg-cloud cloud-a"></div>
+              <div class="bg-cloud cloud-b"></div>
+            </div>
+            <div class="flying-butterflies-container" id="butterflies-layer">
+              <!-- Butterflies dynamically added -->
+            </div>
+          </div>
+
+          <!-- Scene Specific Environment Visuals (Bridge, Pond, Meadow) -->
+          <div class="environment-middle" id="env-middle-layer"></div>
+
+          <div class="environment-ground" id="env-ground-layer">
+            <div class="ground-grass"></div>
+            <div class="ground-flowers" id="ground-flowers-row">
+              <div class="deco-flower f1">🌸</div>
+              <div class="deco-flower f2">🌼</div>
+              <div class="deco-flower f3">🌷</div>
+              <div class="deco-flower f4">🌻</div>
+              <div class="deco-flower f5">🌸</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assistant Character Dialogue Row -->
+        <div class="assistant-bar">
+          <!-- Riya Stage Character -->
+          <div class="stage-character stage-riya" id="stage-riya">
+            <div class="char-riya-avatar" id="gameplay-riya-avatar">
+              <svg viewBox="0 0 140 180" class="riya-stage-svg" id="riya-stage-svg">
+                <path d="M 30,45 Q 8,55 12,85 Q 25,95 38,70 Z" fill="#2B170E" class="riya-ponytail"/>
+                <circle cx="32" cy="50" r="5" fill="#FFB703" />
+                <path d="M 45,90 Q 70,85 95,90 L 110,140 Q 70,150 30,140 Z" fill="#FF5E7E" />
+                <rect x="63" y="75" width="14" height="15" rx="5" fill="#E5A882" />
+                <ellipse cx="70" cy="50" rx="30" ry="32" fill="#FCD5B5" />
+                <path d="M 40,48 Q 50,20 70,20 Q 90,20 100,48 Q 90,32 70,35 Q 50,32 40,48 Z" fill="#2B170E" />
+                <path d="M 42,42 Q 70,28 98,42" stroke="#FFB703" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <circle cx="85" cy="35" r="5" fill="#FF5E7E" />
+                <g class="riya-stage-eyes">
+                  <circle cx="58" cy="52" r="4.5" fill="#222" />
+                  <circle cx="82" cy="52" r="4.5" fill="#222" />
+                  <circle cx="56" cy="50" r="1.5" fill="#FFF" />
+                  <circle cx="80" cy="50" r="1.5" fill="#FFF" />
+                </g>
+                <circle cx="50" cy="60" r="5" fill="#FF7675" opacity="0.6"/>
+                <circle cx="90" cy="60" r="5" fill="#FF7675" opacity="0.6"/>
+                <path d="M 62,62 Q 70,72 78,62" stroke="#D63031" stroke-width="2.5" stroke-linecap="round" fill="#FFF" id="riya-stage-mouth"/>
+                <g id="riya-stage-arm" class="riya-arm-point">
+                  <path d="M 95,92 Q 120,80 130,70" stroke="#FCD5B5" stroke-width="9" stroke-linecap="round" fill="none" />
+                  <circle cx="130" cy="70" r="6" fill="#FCD5B5" />
+                </g>
+              </svg>
+            </div>
+            <span class="badge-char-name">Riya</span>
+          </div>
+
+          <!-- Interactive Dialogue Speech Bubble -->
+          <div class="speech-bubble-container" id="main-speech-bubble">
+            <div class="speech-bubble-tail"></div>
+            <div class="speech-speaker-tag" id="speech-speaker-tag">⭐ Little Star:</div>
+            <div class="speech-bubble-content">
+              <span id="speech-main-text" class="speech-highlight">"Who comes BEFORE 7?"</span>
+            </div>
+          </div>
+
+          <!-- Little Star Stage Character -->
+          <div class="stage-character stage-star" id="stage-star">
+            <div class="char-star-avatar" id="gameplay-star-avatar">
+              <svg viewBox="0 0 100 100" class="star-stage-svg">
+                <polygon points="50,6 62,35 93,38 70,58 77,88 50,72 23,88 30,58 7,38 38,35" fill="#FFD124" stroke="#FF9800" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="36" cy="50" r="4.5" fill="#FF7675" opacity="0.6"/>
+                <circle cx="64" cy="50" r="4.5" fill="#FF7675" opacity="0.6"/>
+                <ellipse cx="40" cy="42" rx="3.5" ry="4.5" fill="#222"/>
+                <ellipse cx="60" cy="42" rx="3.5" ry="4.5" fill="#222"/>
+                <circle cx="38" cy="40" r="1.5" fill="#FFF"/>
+                <circle cx="58" cy="40" r="1.5" fill="#FFF"/>
+                <path d="M 44,52 Q 50,60 56,52" stroke="#222" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+            <span class="badge-char-name">Little Star</span>
+          </div>
+        </div>
+
+        <!-- Central Question Stage Board -->
+        <div class="question-stage-board" id="question-board">
+          <div class="question-mechanic-banner" id="mechanic-badge">
+            <span class="mechanic-icon" id="mechanic-icon">🌱</span>
+            <span class="mechanic-text" id="mechanic-title">BEFORE PUZZLE</span>
+          </div>
+
+          <!-- Sequence Track -->
+          <div class="sequence-track" id="sequence-track">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Gentle Helper Message for retry / guidance -->
+          <div class="helper-hint-toast hidden" id="helper-hint-toast">
+            <span class="hint-icon">💡</span>
+            <span id="helper-hint-text">Let's look carefully!</span>
+          </div>
+        </div>
+
+        <!-- Candidate / Option Tray -->
+        <div class="candidate-tray-section">
+          <div class="tray-label-pill" id="tray-instruction-label">
+            👆 Tap or Drag the correct number friend:
+          </div>
+          <div class="candidate-cards-container" id="candidate-cards-container">
+            <!-- 3 Candidate Number Friends dynamically generated -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= SCENE: GRAND FINALE ================= -->
+      <section id="finale-scene" class="game-scene hidden">
+        <div class="finale-curtain"></div>
+        <div class="finale-content-card">
+          <div class="celebration-hero-header">
+            <div class="trophy-bounce">🏆</div>
+            <h1 class="finale-headline">🌟 NUMBER FRIEND HERO! 🌟</h1>
+            <p class="finale-subtext">You helped all the missing number friends find their special places!</p>
+          </div>
+
+          <!-- Concept Reinforcement Review Panel -->
+          <div class="concept-review-bar">
+            <div class="review-item">
+              <span class="review-badge badge-before">BEFORE</span>
+              <span class="review-eq">6 ➜ <strong>7</strong></span>
+              <span class="review-sub">6 comes before 7!</span>
+            </div>
+            <div class="review-item">
+              <span class="review-badge badge-after">AFTER</span>
+              <span class="review-eq"><strong>12</strong> ➜ 13</span>
+              <span class="review-sub">13 comes after 12!</span>
+            </div>
+            <div class="review-item">
+              <span class="review-badge badge-between">BETWEEN</span>
+              <span class="review-eq">8 ➜ <strong class="glow-txt">9</strong> ➜ 10</span>
+              <span class="review-sub">9 is between 8 & 10!</span>
+            </div>
+          </div>
+
+          <!-- Grand 1 to 20 Number Friends Dancing Parade Grid -->
+          <div class="parade-container">
+            <div class="parade-title">🎉 All 20 Number Friends Dancing in the Garden! (Tap any number):</div>
+            <div class="parade-grid" id="parade-grid-1-20">
+              <!-- 1 to 20 Number Friends generated in script.js -->
+            </div>
+          </div>
+
+          <!-- Final Action Buttons -->
+          <div class="finale-buttons-row">
+            <button id="btn-play-again" class="btn-super-pulse btn-replay">
+              <span class="btn-icon">🔄</span>
+              <span class="btn-main-text">PLAY ADVENTURE AGAIN</span>
+            </button>
+            <button id="btn-free-explore" class="hud-btn btn-explore-dance">
+              <span class="btn-icon">💃</span>
+              <span class="btn-text">Dance Party Mode!</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Floating Sparkle Elements Layer -->
+    <div id="flying-particles-layer"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

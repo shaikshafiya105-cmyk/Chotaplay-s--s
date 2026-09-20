@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+    <defs>
+      <radialGradient id="btnGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFF3BF" />
+        <stop offset="50%" stop-color="#FFD43B" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#FFA94D" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="btnPlate" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4DABF7" />
+        <stop offset="100%" stop-color="#1971C2" />
+      </linearGradient>
+      <linearGradient id="btnRed" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FF6B6B" />
+        <stop offset="60%" stop-color="#FA5252" />
+        <stop offset="100%" stop-color="#C92A2A" />
+      </linearGradient>
+      <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#0b3860" flood-opacity="0.4" />
+      </filter>
+    </defs>
+    
+    <!-- Outer Pulsing Halo -->
+    <circle cx="120" cy="120" r="110" fill="url(#btnGlow)" class="btn-halo" />
+    
+    <!-- Button Base Rim -->
+    <circle cx="120" cy="122" r="92" fill="#1864AB" />
+    <circle cx="120" cy="120" r="90" fill="url(#btnPlate)" filter="url(#dropShadow)" />
+    <circle cx="120" cy="120" r="82" fill="#E7F5FF" stroke="#A5D8FF" stroke-width="4" />
+    
+    <!-- Big Red Glowing Press Center -->
+    <circle cx="120" cy="124" r="70" fill="#911818" />
+    <circle cx="120" cy="118" r="68" fill="url(#btnRed)" />
+    
+    <!-- Gloss highlight -->
+    <ellipse cx="120" cy="80" rx="42" ry="18" fill="#FFF" opacity="0.4" />
+    
+    <!-- Glowing Star Emblem -->
+    <polygon points="120,72 131,98 158,98 136,115 144,142 120,126 96,142 104,115 82,98 109,98"
+             fill="#FFEC99" stroke="#E67700" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="120" cy="110" r="8" fill="#FFF" opacity="0.8" />
+    
+    <!-- Text Badge -->
+    <rect x="65" y="152" width="110" height="26" rx="13" fill="#FFE066" stroke="#F59F00" stroke-width="2" />
+    <text x="120" y="170" font-family="'Fredoka', 'Quicksand', sans-serif" font-weight="900" font-size="16" fill="#D9480F" text-anchor="middle" letter-spacing="1">HELP!</text>
+  </svg>

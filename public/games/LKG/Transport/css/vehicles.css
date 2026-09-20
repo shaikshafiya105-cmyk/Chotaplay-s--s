@@ -1,0 +1,658 @@
+/* ==============================================================
+   CHOTAPLAY — RIYA'S TRAFFIC RESCUE
+   Vehicles & Interactive Transport Zones Styling
+   ============================================================== */
+
+/* Base Zone Container */
+.transport-zone {
+  position: absolute;
+  z-index: 20;
+}
+
+/* Common Drop / Snap Targets */
+.snap-target {
+  border: 3px dashed #FFD54F;
+  border-radius: 12px;
+  background: rgba(255, 249, 196, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.snap-target:hover, .snap-target.hover-active {
+  border-color: #00E676;
+  background: rgba(200, 230, 201, 0.6);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.6);
+}
+
+.snap-target.completed {
+  border-style: solid;
+  border-color: #4CAF50;
+  background: transparent;
+  pointer-events: none;
+}
+
+.snap-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  animation: pulseIndicator 1.8s infinite ease-in-out;
+}
+
+.snap-icon {
+  font-size: 20px;
+}
+
+.snap-text {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  color: #E65100;
+  text-shadow: 0 1px 2px #FFF;
+}
+
+.snap-glow {
+  position: absolute;
+  inset: -5px;
+  border-radius: 12px;
+  background: radial-gradient(circle, rgba(255, 215, 64, 0.4) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.snap-target.glow-hint .snap-glow {
+  opacity: 1;
+  animation: pulseGlow 1.2s infinite alternate;
+}
+
+/* ==============================================================
+   ZONE 1: ROAD PUZZLE (Car -> House)
+   ============================================================== */
+.zone-road {
+  bottom: 22%;
+  left: 8%;
+  width: 440px;
+  height: 90px;
+}
+
+.road-path-network {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.road-segment {
+  height: 52px;
+  background: var(--c-road-asphalt);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 3px solid #78909C;
+  border-bottom: 3px solid #78909C;
+}
+
+.road-stripes {
+  width: 100%;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #FFF59D 0px, #FFF59D 20px, transparent 20px, transparent 35px);
+}
+
+.road-start {
+  width: 130px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.road-drop-zone {
+  width: 110px;
+  height: 52px;
+}
+
+.road-end {
+  width: 140px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Vehicle: Car */
+.vehicle-car {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  width: 76px;
+  height: 46px;
+  z-index: 25;
+  transition: transform 0.1s linear;
+}
+
+.car-sprite {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+
+.car-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.car-wheel-smoke {
+  position: absolute;
+  bottom: -2px;
+  left: -8px;
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+}
+
+.vehicle-car.driving .car-wheel-smoke {
+  opacity: 1;
+  animation: wheelSmoke 0.6s infinite ease-out;
+}
+
+/* ==============================================================
+   ZONE 2: TRAFFIC LIGHT INTERSECTION (Bus)
+   ============================================================== */
+.zone-traffic {
+  bottom: 42%;
+  left: 28%;
+  width: 320px;
+  height: 140px;
+}
+
+.bus-road-track {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  background: var(--c-road-asphalt);
+  border-top: 3px solid #78909C;
+  border-bottom: 3px solid #78909C;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.zebra-crossing {
+  position: absolute;
+  right: 90px;
+  width: 34px;
+  height: 100%;
+  background: repeating-linear-gradient(0deg, #FFFFFF 0px, #FFFFFF 8px, transparent 8px, transparent 14px);
+}
+
+.stop-line {
+  position: absolute;
+  right: 126px;
+  width: 6px;
+  height: 100%;
+  background: #FFF;
+}
+
+/* Interactive Traffic Light */
+.traffic-light-post {
+  position: absolute;
+  top: 0;
+  right: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 30;
+  transition: transform 0.15s ease;
+}
+
+.traffic-light-post:hover {
+  transform: scale(1.08);
+}
+
+.traffic-light-head {
+  width: 34px;
+  height: 72px;
+  background: #212121;
+  border: 2.5px solid #616161;
+  border-radius: 12px;
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.light-bulb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  opacity: 0.25;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.light-red {
+  background: #F44336;
+}
+
+.light-red.active {
+  opacity: 1;
+  box-shadow: 0 0 16px #FF5252, 0 0 30px #F44336;
+  background: #FF1744;
+}
+
+.light-yellow {
+  background: #FFEB3B;
+}
+
+.light-green {
+  background: #00E676;
+}
+
+.light-green.active {
+  opacity: 1;
+  box-shadow: 0 0 18px #00E676, 0 0 32px #00C853;
+  background: #00E676;
+}
+
+.bulb-label {
+  display: none;
+}
+
+.traffic-light-pole {
+  width: 6px;
+  height: 48px;
+  background: #424242;
+  border-radius: 2px;
+}
+
+.traffic-light-hint-badge {
+  position: absolute;
+  top: -24px;
+  white-space: nowrap;
+  background: #FFD54F;
+  border: 2px solid #FFA000;
+  color: #3E2723;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  animation: bounceHint 1.6s infinite ease-in-out;
+}
+
+/* Bus Vehicle */
+.vehicle-bus {
+  position: absolute;
+  bottom: 22px;
+  left: 20px;
+  width: 105px;
+  height: 52px;
+  z-index: 25;
+  transition: transform 0.1s linear;
+}
+
+.bus-sprite {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+}
+
+.bus-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ==============================================================
+   ZONE 3: TRAIN TRACK PUZZLE (Train -> Station)
+   ============================================================== */
+.zone-train {
+  top: 22%;
+  left: 4%;
+  width: 360px;
+  height: 100px;
+}
+
+.railway-network {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.railway-segment {
+  height: 44px;
+  background: var(--c-rail-ballast);
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.railway-segment .ties {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #5D4037 0px, #5D4037 8px, transparent 8px, transparent 18px);
+}
+
+.railway-segment .rails {
+  position: absolute;
+  width: 100%;
+  height: 24px;
+  border-top: 3px solid #ECEFF1;
+  border-bottom: 3px solid #ECEFF1;
+}
+
+.rail-start {
+  width: 120px;
+}
+
+.rail-drop-zone {
+  width: 110px;
+  height: 44px;
+}
+
+.rail-end {
+  width: 110px;
+}
+
+/* Train Vehicle */
+.vehicle-train {
+  position: absolute;
+  top: 15px;
+  left: 5px;
+  width: 115px;
+  height: 54px;
+  z-index: 25;
+  transition: transform 0.1s linear;
+}
+
+.train-sprite {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+}
+
+.train-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.train-steam-emitter {
+  position: absolute;
+  top: -16px;
+  right: 18px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.vehicle-train.chuffing .train-steam-emitter {
+  opacity: 1;
+}
+
+.steam-puff {
+  position: absolute;
+  font-size: 14px;
+  animation: puffSteam 1.5s infinite ease-out;
+}
+.p-1 { animation-delay: 0s; }
+.p-2 { animation-delay: 0.5s; }
+.p-3 { animation-delay: 1s; }
+
+/* ==============================================================
+   ZONE 4: BOAT ROUTE (Boat -> Island)
+   ============================================================== */
+.zone-boat {
+  bottom: 22%;
+  right: 4%;
+  width: 320px;
+  height: 130px;
+}
+
+.boat-dock {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  z-index: 10;
+}
+
+.dock-planks {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 900;
+  color: #FFF;
+  background: #795548;
+  padding: 4px 10px;
+  border-radius: 4px 0 0 4px;
+  border: 1.5px solid #4E342E;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.water-route-network {
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  width: 280px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.water-route-start {
+  width: 70px;
+}
+
+.water-drop-zone {
+  width: 120px;
+  height: 56px;
+  border-radius: 18px;
+}
+
+.water-route-end {
+  width: 70px;
+}
+
+/* Boat Vehicle */
+.vehicle-boat {
+  position: absolute;
+  top: 18px;
+  left: 15px;
+  width: 90px;
+  height: 56px;
+  z-index: 25;
+  transition: transform 0.1s linear;
+  animation: boatBob 2.5s infinite ease-in-out;
+}
+
+.boat-sprite {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.boat-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.boat-wake {
+  position: absolute;
+  bottom: -4px;
+  left: -15px;
+  opacity: 0;
+}
+
+.vehicle-boat.sailing .boat-wake {
+  opacity: 1;
+}
+
+.wake-ripple {
+  display: inline-block;
+  width: 20px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  animation: rippleSpread 1s infinite ease-out;
+}
+
+/* ==============================================================
+   ZONE 5: AIRPLANE RUNWAY (Airplane -> Sky)
+   ============================================================== */
+.zone-airplane {
+  top: 22%;
+  right: 6%;
+  width: 320px;
+  height: 100px;
+}
+
+.runway-strip {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  width: 260px;
+  height: 48px;
+  background: #37474F;
+  border-radius: 8px;
+  border: 2px solid #546E7A;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.runway-centerline {
+  position: absolute;
+  width: 80%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #FFF 0px, #FFF 14px, transparent 14px, transparent 24px);
+}
+
+.runway-threshold {
+  font-family: monospace;
+  font-size: 14px;
+  color: #FFF;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.runway-number {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 900;
+  color: #FFF;
+  margin-left: auto;
+}
+
+.runway-lights {
+  position: absolute;
+  bottom: -6px;
+  left: 10px;
+  width: calc(100% - 20px);
+  display: flex;
+  justify-content: space-between;
+}
+
+.r-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFEB3B;
+  box-shadow: 0 0 6px #FFEB3B;
+  transition: all 0.3s ease;
+}
+
+.runway-strip.lit .r-light {
+  background: #00E676;
+  box-shadow: 0 0 12px #00E676, 0 0 20px #00E676;
+  animation: runwayStrobe 0.8s infinite alternate;
+}
+
+.takeoff-control-pad {
+  position: absolute;
+  top: -30px;
+  left: 30px;
+  z-index: 35;
+}
+
+.btn-takeoff {
+  background: linear-gradient(135deg, #FF9100 0%, #FF6D00 100%);
+  color: #FFF;
+  border: 2.5px solid #FFF;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 109, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: pulseButton 1.8s infinite ease-in-out;
+  transition: transform 0.15s ease;
+}
+
+.btn-takeoff:hover {
+  transform: scale(1.08);
+}
+
+.btn-takeoff:active {
+  transform: scale(0.95);
+}
+
+/* Airplane Vehicle */
+.vehicle-airplane {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  width: 105px;
+  height: 64px;
+  z-index: 28;
+  cursor: pointer;
+  transition: transform 0.1s linear;
+}
+
+.airplane-sprite {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+}
+
+.airplane-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.jet-contrail {
+  position: absolute;
+  top: 25px;
+  left: -25px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+}
+
+.vehicle-airplane.flying .jet-contrail {
+  opacity: 1;
+  animation: contrailPuff 0.6s infinite linear;
+}

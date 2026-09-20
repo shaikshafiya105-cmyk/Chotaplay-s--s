@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chotaplay: Riya's Magic Word Carnival | UKG Educational Game</title>
+  <meta name="description" content="Learn ONE, MANY, THIS, THAT, THESE, and THOSE with Riya and Little Star at the Magic Word Carnival. Interactive UKG English game.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-app">
+    <!-- TOP CARNIVAL HEADER / HUD -->
+    <header id="carnival-hud">
+      <div class="hud-left">
+        <div class="brand-badge">
+          <span class="brand-chota">CHOTA</span><span class="brand-play">PLAY</span>
+        </div>
+        <button id="btn-home" class="hud-icon-btn" title="Back to Carnival Entrance" aria-label="Carnival Home">
+          🎪
+        </button>
+      </div>
+
+      <div class="hud-center">
+        <div id="zone-indicator-badge" class="zone-badge">
+          <span id="zone-icon">🎡</span>
+          <span id="zone-title">Magic Word Carnival</span>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <div class="stars-counter" title="Magic Stars Collected">
+          <span class="star-icon">⭐</span>
+          <span id="stars-count">0</span>
+        </div>
+        <button id="btn-sound" class="hud-icon-btn" title="Sound On/Off" aria-label="Toggle Sound">
+          🔊
+        </button>
+        <button id="btn-repeat-voice" class="hud-icon-btn" title="Repeat Voice" aria-label="Repeat Audio">
+          🗣️
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN GAME CONTAINER / STAGE -->
+    <main id="game-container">
+      <!-- DYNAMIC CARNIVAL BACKGROUND LAYERS -->
+      <div class="carnival-sky">
+        <div class="sun-glow"></div>
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="carnival-hills"></div>
+        <div class="ferris-wheel-distant">
+          <div class="wheel-rim"></div>
+          <div class="wheel-spoke spoke-1"></div>
+          <div class="wheel-spoke spoke-2"></div>
+          <div class="wheel-spoke spoke-3"></div>
+          <div class="wheel-spoke spoke-4"></div>
+          <div class="cab cab-1">🚡</div>
+          <div class="cab cab-2">🚡</div>
+          <div class="cab cab-3">🚡</div>
+          <div class="cab cab-4">🚡</div>
+        </div>
+        <div class="carnival-tents">
+          <div class="tent tent-left"></div>
+          <div class="tent tent-right"></div>
+          <div class="tent tent-center"></div>
+        </div>
+        <div class="bunting-flags">
+          <span class="flag f-red"></span>
+          <span class="flag f-yellow"></span>
+          <span class="flag f-blue"></span>
+          <span class="flag f-green"></span>
+          <span class="flag f-pink"></span>
+          <span class="flag f-orange"></span>
+          <span class="flag f-purple"></span>
+          <span class="flag f-red"></span>
+          <span class="flag f-yellow"></span>
+          <span class="flag f-blue"></span>
+        </div>
+        <div class="fairy-lights">
+          <span class="bulb b-1"></span>
+          <span class="bulb b-2"></span>
+          <span class="bulb b-3"></span>
+          <span class="bulb b-4"></span>
+          <span class="bulb b-5"></span>
+          <span class="bulb b-6"></span>
+          <span class="bulb b-7"></span>
+          <span class="bulb b-8"></span>
+        </div>
+      </div>
+
+      <!-- CARNIVAL GROUND / STAGE FLOOR -->
+      <div class="carnival-ground"></div>
+
+      <!-- PERSPECTIVE DISTANCE MARKERS (FOR NEAR / FAR AWARENESS) -->
+      <div id="distance-guide" class="distance-guide hidden">
+        <div class="guide-far"><span>🔭 FAR AWAY</span></div>
+        <div class="guide-near"><span>📍 RIGHT HERE (NEAR)</span></div>
+      </div>
+
+      <!-- CHARACTER: LITTLE STAR (COMPANION) -->
+      <div id="character-star" class="character-star">
+        <div class="star-body">
+          <svg viewBox="0 0 100 100" class="star-svg">
+            <defs>
+              <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFF275"/>
+                <stop offset="50%" stop-color="#FFD124"/>
+                <stop offset="100%" stop-color="#FF9F1C"/>
+              </linearGradient>
+              <filter id="starGlow">
+                <feGaussianBlur stdDeviation="3" result="glow"/>
+                <feComposite in="SourceGraphic" in2="glow" operator="over"/>
+              </filter>
+            </defs>
+            <!-- 5-Pointed Star Shape -->
+            <polygon points="50,5 64,36 98,36 70,57 81,90 50,70 19,90 30,57 2,36 36,36" fill="url(#starGrad)" filter="url(#starGlow)" stroke="#F39C12" stroke-width="2.5"/>
+            <!-- Star Face -->
+            <ellipse cx="40" cy="48" rx="4.5" ry="6" fill="#2C3E50"/>
+            <ellipse cx="60" cy="48" rx="4.5" ry="6" fill="#2C3E50"/>
+            <ellipse cx="38.5" cy="46" rx="1.8" ry="2.2" fill="#FFFFFF"/>
+            <ellipse cx="58.5" cy="46" rx="1.8" ry="2.2" fill="#FFFFFF"/>
+            <!-- Cheeks -->
+            <circle cx="31" cy="56" r="4.5" fill="#FF758F" opacity="0.7"/>
+            <circle cx="69" cy="56" r="4.5" fill="#FF758F" opacity="0.7"/>
+            <!-- Happy Mouth -->
+            <path d="M 42 56 Q 50 66 58 56" fill="none" stroke="#2C3E50" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="star-sparkles">✨</div>
+      </div>
+
+      <!-- CHARACTER: RIYA (MAIN CHARACTER) -->
+      <div id="character-riya" class="character-riya">
+        <div class="riya-container">
+          <!-- Stylized High-Quality Scalable Riya Character -->
+          <svg viewBox="0 0 180 260" class="riya-svg" id="riya-svg-el">
+            <defs>
+              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FFE0BD"/>
+                <stop offset="100%" stop-color="#FCD5A4"/>
+              </linearGradient>
+              <linearGradient id="dressGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FF9EC6"/>
+                <stop offset="100%" stop-color="#FF6B9E"/>
+              </linearGradient>
+              <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#4A2511"/>
+                <stop offset="100%" stop-color="#2D1407"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Pigtails / Hair Back -->
+            <g class="riya-hair-back">
+              <!-- Left Pigtail -->
+              <path d="M 45 60 C 20 50, 0 80, 10 130 C 18 150, 35 140, 48 100 Z" fill="url(#hairGrad)"/>
+              <!-- Right Pigtail -->
+              <path d="M 135 60 C 160 50, 180 80, 170 130 C 162 150, 145 140, 132 100 Z" fill="url(#hairGrad)"/>
+              <!-- Hair ties / Ribbons -->
+              <circle cx="45" cy="65" r="8" fill="#54A0FF"/>
+              <circle cx="135" cy="65" r="8" fill="#54A0FF"/>
+              <!-- Flower clip left -->
+              <circle cx="45" cy="55" r="6" fill="#FED330"/>
+              <circle cx="45" cy="55" r="2.5" fill="#FA8231"/>
+              <!-- Flower clip right -->
+              <circle cx="135" cy="55" r="6" fill="#FED330"/>
+              <circle cx="135" cy="55" r="2.5" fill="#FA8231"/>
+            </g>
+
+            <!-- Legs & Shoes -->
+            <g class="riya-legs">
+              <!-- Left Leg -->
+              <rect x="70" y="195" width="14" height="40" rx="7" fill="url(#skinGrad)"/>
+              <!-- Left Sock -->
+              <rect x="69" y="222" width="16" height="10" rx="3" fill="#FFFFFF"/>
+              <!-- Left Shoe -->
+              <path d="M 65 232 C 65 228, 85 228, 87 232 L 87 242 C 87 245, 63 245, 65 242 Z" fill="#FFFFFF" stroke="#E056FD" stroke-width="2"/>
+              <circle cx="76" cy="235" r="3" fill="#FF758F"/>
+
+              <!-- Right Leg -->
+              <rect x="96" y="195" width="14" height="40" rx="7" fill="url(#skinGrad)"/>
+              <!-- Right Sock -->
+              <rect x="95" y="222" width="16" height="10" rx="3" fill="#FFFFFF"/>
+              <!-- Right Shoe -->
+              <path d="M 91 232 C 91 228, 111 228, 113 232 L 113 242 C 113 245, 89 245, 91 242 Z" fill="#FFFFFF" stroke="#E056FD" stroke-width="2"/>
+              <circle cx="102" cy="235" r="3" fill="#FF758F"/>
+            </g>
+
+            <!-- Dress -->
+            <g class="riya-dress">
+              <!-- Dress Skirt & Top -->
+              <path d="M 72 120 L 50 195 C 70 205, 110 205, 130 195 L 108 120 Z" fill="url(#dressGrad)"/>
+              <!-- Dress Flowers / Polka Dots -->
+              <circle cx="70" cy="155" r="3.5" fill="#FFF" opacity="0.9"/>
+              <circle cx="110" cy="155" r="3.5" fill="#FFF" opacity="0.9"/>
+              <circle cx="90" cy="175" r="4" fill="#FFF" opacity="0.9"/>
+              <circle cx="65" cy="185" r="3" fill="#FFF" opacity="0.9"/>
+              <circle cx="115" cy="185" r="3" fill="#FFF" opacity="0.9"/>
+              <!-- Collar -->
+              <path d="M 72 120 C 80 128, 90 128, 90 124 C 90 128, 100 128, 108 120 Z" fill="#FFFFFF"/>
+            </g>
+
+            <!-- Arms -->
+            <g class="riya-arms">
+              <!-- Left Arm (Holding / Pointing / Resting) -->
+              <g id="riya-arm-left" class="arm-left">
+                <path d="M 72 124 C 55 135, 45 155, 52 170 C 56 178, 64 175, 66 166 C 62 152, 70 140, 78 132 Z" fill="url(#skinGrad)"/>
+                <!-- Bracelet -->
+                <circle cx="53" cy="168" r="4" fill="#10AC84"/>
+                <circle cx="51" cy="164" r="4" fill="#FF9F43"/>
+              </g>
+
+              <!-- Right Arm (Waving / Pointing Up) -->
+              <g id="riya-arm-right" class="arm-right">
+                <path d="M 108 124 C 128 115, 145 95, 150 75 C 153 67, 143 65, 138 72 C 130 88, 118 108, 102 130 Z" fill="url(#skinGrad)"/>
+                <!-- Bracelet -->
+                <circle cx="144" cy="78" r="4" fill="#54A0FF"/>
+                <circle cx="147" cy="82" r="4" fill="#EE5253"/>
+                <!-- Waving Hand -->
+                <circle cx="147" cy="68" r="6" fill="url(#skinGrad)"/>
+              </g>
+            </g>
+
+            <!-- Head & Face -->
+            <g class="riya-head">
+              <!-- Neck -->
+              <rect x="83" y="108" width="14" height="15" fill="url(#skinGrad)"/>
+              <!-- Head Contour -->
+              <ellipse cx="90" cy="72" rx="38" ry="36" fill="url(#skinGrad)"/>
+
+              <!-- Hair Front & Bangs -->
+              <path d="M 54 62 C 54 35, 126 35, 126 62 C 126 50, 110 46, 90 48 C 70 46, 54 50, 54 62 Z" fill="url(#hairGrad)"/>
+              <!-- Cute curved bangs -->
+              <path d="M 56 56 Q 72 75 88 56 Q 106 75 124 56 C 120 45, 60 45, 56 56 Z" fill="url(#hairGrad)"/>
+
+              <!-- Eyes -->
+              <g class="riya-eyes">
+                <!-- Left Eye -->
+                <ellipse cx="76" cy="74" rx="6" ry="7.5" fill="#3D1C06"/>
+                <circle cx="74" cy="71" r="2.5" fill="#FFFFFF"/>
+                <circle cx="78" cy="77" r="1.2" fill="#FFFFFF"/>
+                <!-- Left Eyelash -->
+                <path d="M 71 68 Q 76 65 82 68" fill="none" stroke="#2D1407" stroke-width="2"/>
+
+                <!-- Right Eye -->
+                <ellipse cx="104" cy="74" rx="6" ry="7.5" fill="#3D1C06"/>
+                <circle cx="102" cy="71" r="2.5" fill="#FFFFFF"/>
+                <circle cx="106" cy="77" r="1.2" fill="#FFFFFF"/>
+                <!-- Right Eyelash -->
+                <path d="M 99 68 Q 104 65 110 68" fill="none" stroke="#2D1407" stroke-width="2"/>
+              </g>
+
+              <!-- Cheeks Blush -->
+              <ellipse cx="68" cy="83" rx="7" ry="4.5" fill="#FF6B81" opacity="0.65"/>
+              <ellipse cx="112" cy="83" rx="7" ry="4.5" fill="#FF6B81" opacity="0.65"/>
+
+              <!-- Cute Nose -->
+              <circle cx="90" cy="79" r="2" fill="#F39C12" opacity="0.5"/>
+
+              <!-- Sweet Smile -->
+              <path id="riya-mouth" d="M 82 86 Q 90 95 98 86" fill="none" stroke="#D63031" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- DYNAMIC INTERACTION ZONES CONTAINER -->
+      <div id="scene-viewport" class="scene-viewport">
+
+        <!-- ========================================================= -->
+        <!-- SCREEN 0: CARNIVAL ENTRANCE & OPENING STORY -->
+        <!-- ========================================================= -->
+        <section id="screen-intro" class="game-screen active">
+          <div class="carnival-arch">
+            <div class="arch-lights">✨ 🌟 🎈 🎪 🎈 🌟 ✨</div>
+            <h1 class="carnival-title">
+              <span class="title-word magic-pop">MAGIC</span>
+              <span class="title-word word-pop">WORD</span>
+              <span class="title-word carnival-pop">CARNIVAL</span>
+            </h1>
+            <div class="arch-subtitle">ONE • MANY • THIS • THAT • THESE • THOSE</div>
+          </div>
+
+          <!-- Story Dialogue Box -->
+          <div class="story-dialogue-card" id="intro-dialogue-box">
+            <div class="dialogue-avatar" id="dialogue-speaker-icon">⭐</div>
+            <div class="dialogue-content">
+              <div class="dialogue-speaker" id="dialogue-speaker-name">Little Star:</div>
+              <div class="dialogue-text" id="dialogue-text-msg">"Riya! Look at the magic carnival!"</div>
+            </div>
+            <button id="btn-next-dialogue" class="btn-bubble-next" aria-label="Next Story Step">▶</button>
+          </div>
+
+          <div class="intro-action-container">
+            <button id="btn-start-carnival" class="btn-carnival-primary bounce-pulse">
+              <span class="btn-emoji">🎪</span>
+              <span class="btn-text">START CARNIVAL!</span>
+              <span class="btn-sparkle">✨</span>
+            </button>
+          </div>
+
+          <div class="quick-zones-bar">
+            <span class="qz-label">Jump to Zone:</span>
+            <button class="btn-chip" data-goto-zone="1">1. One & Many</button>
+            <button class="btn-chip" data-goto-zone="2">2. THIS</button>
+            <button class="btn-chip" data-goto-zone="3">3. THAT</button>
+            <button class="btn-chip" data-goto-zone="4">4. THESE</button>
+            <button class="btn-chip" data-goto-zone="5">5. THOSE</button>
+            <button class="btn-chip" data-goto-zone="6">6. Magic Grid</button>
+            <button class="btn-chip" data-goto-zone="7">7. Free Play</button>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 1: ONE & MANY (MAGIC MACHINE & SORTING BASKETS) -->
+        <!-- ========================================================= -->
+        <section id="screen-zone1" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">ZONE 1</span>
+            <span class="zone-name">ONE & MANY MACHINE</span>
+          </div>
+
+          <!-- PART A: MAGIC OBJECT MACHINE DEMO -->
+          <div id="z1-machine-stage" class="z1-substage">
+            <div class="magic-machine-wrapper">
+              <div class="machine-tube">
+                <div class="machine-funnel"></div>
+                <div class="machine-lights">
+                  <span class="m-light red"></span>
+                  <span class="m-light yellow"></span>
+                  <span class="m-light green"></span>
+                </div>
+              </div>
+
+              <!-- Output Display Pod -->
+              <div class="machine-pedestal">
+                <div class="machine-glass-chamber" id="z1-chamber">
+                  <div id="z1-item-display" class="interactive-display-items">
+                    <!-- Populated by JS: single balloon or 4 balloons -->
+                  </div>
+                </div>
+                <div class="pedestal-base">
+                  <span class="pedestal-glow"></span>
+                  <span class="machine-label">MAGIC MACHINE</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Big Interactive Word Prompt -->
+            <div class="machine-interaction-box">
+              <div class="prompt-speech-bubble" id="z1-speech-prompt">
+                "How many balloons?"
+              </div>
+
+              <div class="word-choice-container" id="z1-choice-buttons">
+                <!-- Choice Buttons: ONE or MANY -->
+              </div>
+            </div>
+          </div>
+
+          <!-- PART B: SORTING BASKETS CHALLENGE -->
+          <div id="z1-sorting-stage" class="z1-substage hidden">
+            <div class="sorting-instructions">
+              Put the object into the correct magical basket!
+            </div>
+
+            <!-- Floating Item to Sort -->
+            <div class="item-spawner-area">
+              <div id="z1-active-item" class="active-sort-item bounce-slow" title="Tap to pick or drag to basket">
+                <!-- Current item rendered here -->
+              </div>
+              <div class="sort-hint-tag" id="z1-item-label">1 Apple</div>
+            </div>
+
+            <!-- Two Glowing Magical Baskets -->
+            <div class="baskets-container">
+              <div id="basket-one" class="magic-basket basket-one" data-target="one">
+                <div class="basket-rim"></div>
+                <div class="basket-body">
+                  <div class="basket-badge">ONE (1)</div>
+                  <div class="basket-icon-preview">🎈</div>
+                  <div class="basket-items-dropped" id="basket-one-items"></div>
+                </div>
+              </div>
+
+              <div id="basket-many" class="magic-basket basket-many" data-target="many">
+                <div class="basket-rim"></div>
+                <div class="basket-body">
+                  <div class="basket-badge">MANY (More than 1)</div>
+                  <div class="basket-icon-preview">🎈🎈🎈</div>
+                  <div class="basket-items-dropped" id="basket-many-items"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 2: THIS (MAGIC MIRROR - ONE NEARBY OBJECT) -->
+        <!-- ========================================================= -->
+        <section id="screen-zone2" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">ZONE 2</span>
+            <span class="zone-name">THIS — ONE NEARBY OBJECT</span>
+          </div>
+
+          <div class="zone-interactive-scene distance-near-focus">
+            <!-- Close-Up Pedestal near Riya in the Foreground -->
+            <div class="pedestal-foreground-area">
+              <div class="near-tag-badge">📍 NEAR RIYA (RIGHT HERE)</div>
+              <div class="magic-pedestal-near" id="z2-pedestal">
+                <div class="glow-spotlight"></div>
+                <div class="pedestal-top"></div>
+                <div id="z2-object-holder" class="interactive-near-item">
+                  <!-- e.g. 1 Balloon / 1 Apple / 1 Ball / 1 Book / 1 Star / 1 Toy -->
+                </div>
+                <div class="pedestal-pillar"></div>
+              </div>
+            </div>
+
+            <!-- Sentence & Word Selection Deck -->
+            <div class="educational-sentence-deck">
+              <div class="grammar-rule-hint">
+                <span class="rule-chip one-chip">ONE OBJECT</span>
+                <span class="rule-plus">+</span>
+                <span class="rule-chip near-chip">NEARBY (CLOSE)</span>
+                <span class="rule-eq">=</span>
+                <span class="rule-chip result-chip">THIS</span>
+              </div>
+
+              <div class="sentence-display-card" id="z2-sentence-card">
+                <span class="sentence-word target-highlight" id="z2-word-target">THIS</span>
+                <span class="sentence-word">is</span>
+                <span class="sentence-word">a</span>
+                <span class="sentence-word noun-word" id="z2-noun-target">balloon.</span>
+              </div>
+
+              <div class="action-buttons-group">
+                <button id="btn-action-this" class="btn-magic-word btn-this bounce-pulse" data-word="THIS">
+                  <span class="word-btn-title">THIS ✨</span>
+                  <span class="word-btn-desc">1 Nearby Object</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 3: THAT (MAGIC TELESCOPE - ONE DISTANT OBJECT) -->
+        <!-- ========================================================= -->
+        <section id="screen-zone3" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">ZONE 3</span>
+            <span class="zone-name">THAT — ONE DISTANT OBJECT</span>
+          </div>
+
+          <div class="zone-interactive-scene distance-far-focus">
+            <!-- Distant Sky & Carnival Hills with Obvious Small Scale -->
+            <div class="far-horizon-area">
+              <div class="far-tag-badge">🔭 FAR AWAY (OVER THERE)</div>
+              
+              <!-- Telescope Reticle / Spotlight Beam -->
+              <div class="telescope-beam" id="z3-telescope-beam"></div>
+
+              <div class="distant-object-container" id="z3-distant-holder">
+                <div id="z3-object-holder" class="interactive-far-item scale-small">
+                  <!-- e.g. 1 Kite / 1 Balloon / 1 Star / 1 Ball far in the sky -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Telescope Viewfinder Overlay -->
+            <div class="telescope-stand-prop">
+              <div class="telescope-lens">🔭</div>
+              <div class="telescope-label">MAGIC TELESCOPE</div>
+            </div>
+
+            <!-- Sentence & Word Selection Deck -->
+            <div class="educational-sentence-deck">
+              <div class="grammar-rule-hint">
+                <span class="rule-chip one-chip">ONE OBJECT</span>
+                <span class="rule-plus">+</span>
+                <span class="rule-chip far-chip">FAR AWAY (DISTANCE)</span>
+                <span class="rule-eq">=</span>
+                <span class="rule-chip result-chip">THAT</span>
+              </div>
+
+              <div class="sentence-display-card" id="z3-sentence-card">
+                <span class="sentence-word target-highlight" id="z3-word-target">THAT</span>
+                <span class="sentence-word">is</span>
+                <span class="sentence-word">a</span>
+                <span class="sentence-word noun-word" id="z3-noun-target">kite.</span>
+              </div>
+
+              <div class="action-buttons-group">
+                <button id="btn-action-that" class="btn-magic-word btn-that bounce-pulse" data-word="THAT">
+                  <span class="word-btn-title">THAT 🔭</span>
+                  <span class="word-btn-desc">1 Distant Object</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 4: THESE (MAGIC TABLE - MANY NEARBY OBJECTS) -->
+        <!-- ========================================================= -->
+        <section id="screen-zone4" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">ZONE 4</span>
+            <span class="zone-name">THESE — MANY NEARBY OBJECTS</span>
+          </div>
+
+          <div class="zone-interactive-scene distance-near-focus">
+            <!-- Wide Carnival Table in Foreground right next to Riya -->
+            <div class="table-foreground-area">
+              <div class="near-tag-badge">📍 MANY RIGHT HERE (NEAR)</div>
+              <div class="magic-carnival-table">
+                <div class="table-cloth"></div>
+                <div id="z4-objects-cluster" class="cluster-near-items">
+                  <!-- e.g. 🎈 🎈 🎈 🎈 (3 or 4 balloons, apples, balls, books) -->
+                </div>
+                <div class="table-legs"></div>
+              </div>
+            </div>
+
+            <!-- Sentence & Word Selection Deck -->
+            <div class="educational-sentence-deck">
+              <div class="grammar-rule-hint">
+                <span class="rule-chip many-chip">MANY OBJECTS</span>
+                <span class="rule-plus">+</span>
+                <span class="rule-chip near-chip">NEARBY (CLOSE)</span>
+                <span class="rule-eq">=</span>
+                <span class="rule-chip result-chip">THESE</span>
+              </div>
+
+              <div class="sentence-display-card" id="z4-sentence-card">
+                <span class="sentence-word target-highlight" id="z4-word-target">THESE</span>
+                <span class="sentence-word">are</span>
+                <span class="sentence-word noun-word" id="z4-noun-target">balloons.</span>
+              </div>
+
+              <div class="action-buttons-group">
+                <button id="btn-action-these" class="btn-magic-word btn-these bounce-pulse" data-word="THESE">
+                  <span class="word-btn-title">THESE ✨🎈</span>
+                  <span class="word-btn-desc">Many Nearby Objects</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 5: THOSE (MAGICAL TELESCOPE PARADE - MANY DISTANT OBJECTS) -->
+        <!-- ========================================================= -->
+        <section id="screen-zone5" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">ZONE 5</span>
+            <span class="zone-name">THOSE — MANY DISTANT OBJECTS</span>
+          </div>
+
+          <div class="zone-interactive-scene distance-far-focus">
+            <!-- Distant Sky Parade with Many Objects Floating High Far Away -->
+            <div class="far-horizon-area sky-parade-area">
+              <div class="far-tag-badge">🔭 MANY FAR AWAY (OVER THERE)</div>
+              
+              <div class="rainbow-arc" id="z5-rainbow-arc"></div>
+
+              <div class="distant-cluster-container" id="z5-distant-cluster">
+                <!-- e.g. 4 small balloons/stars/kites floating far away -->
+              </div>
+            </div>
+
+            <!-- Telescope Viewfinder Deck -->
+            <div class="telescope-stand-prop">
+              <div class="telescope-lens">🔭✨</div>
+              <div class="telescope-label">PARADE TELESCOPE</div>
+            </div>
+
+            <!-- Sentence & Word Selection Deck -->
+            <div class="educational-sentence-deck">
+              <div class="grammar-rule-hint">
+                <span class="rule-chip many-chip">MANY OBJECTS</span>
+                <span class="rule-plus">+</span>
+                <span class="rule-chip far-chip">FAR AWAY (DISTANCE)</span>
+                <span class="rule-eq">=</span>
+                <span class="rule-chip result-chip">THOSE</span>
+              </div>
+
+              <div class="sentence-display-card" id="z5-sentence-card">
+                <span class="sentence-word target-highlight" id="z5-word-target">THOSE</span>
+                <span class="sentence-word">are</span>
+                <span class="sentence-word noun-word" id="z5-noun-target">balloons.</span>
+              </div>
+
+              <div class="action-buttons-group">
+                <button id="btn-action-those" class="btn-magic-word btn-those bounce-pulse" data-word="THOSE">
+                  <span class="word-btn-title">THOSE 🌈✨</span>
+                  <span class="word-btn-desc">Many Distant Objects</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 6: THE MAGIC GRID (COMPREHENSIVE VISUAL SYNTHESIS) -->
+        <!-- ========================================================= -->
+        <section id="screen-grid" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">ZONE 6</span>
+            <span class="zone-name">THE MAGIC 4-WORD GRID</span>
+          </div>
+
+          <div class="magic-grid-wrapper">
+            <div class="grid-intro-banner">
+              Tap any magic card to see and hear how it works!
+            </div>
+
+            <!-- 2x2 Grid Cards -->
+            <div class="magic-four-grid">
+              <!-- CARD 1: ONE + NEAR -> THIS -->
+              <div class="grid-card card-this" data-grid-type="this">
+                <div class="card-header">
+                  <span class="badge-quantity">1 ONE</span>
+                  <span class="badge-plus">+</span>
+                  <span class="badge-distance">📍 NEAR</span>
+                </div>
+                <div class="card-visual-demo">
+                  <span class="visual-obj size-large">🎈</span>
+                  <span class="visual-near-hand">👉</span>
+                </div>
+                <div class="card-magic-word">THIS</div>
+                <div class="card-sentence">"This is a balloon."</div>
+              </div>
+
+              <!-- CARD 2: ONE + FAR -> THAT -->
+              <div class="grid-card card-that" data-grid-type="that">
+                <div class="card-header">
+                  <span class="badge-quantity">1 ONE</span>
+                  <span class="badge-plus">+</span>
+                  <span class="badge-distance">🔭 FAR</span>
+                </div>
+                <div class="card-visual-demo">
+                  <span class="visual-far-telescope">🔭</span>
+                  <span class="visual-obj size-small">🎈</span>
+                </div>
+                <div class="card-magic-word">THAT</div>
+                <div class="card-sentence">"That is a balloon."</div>
+              </div>
+
+              <!-- CARD 3: MANY + NEAR -> THESE -->
+              <div class="grid-card card-these" data-grid-type="these">
+                <div class="card-header">
+                  <span class="badge-quantity">🎈 MANY</span>
+                  <span class="badge-plus">+</span>
+                  <span class="badge-distance">📍 NEAR</span>
+                </div>
+                <div class="card-visual-demo">
+                  <span class="visual-obj size-large">🎈🎈🎈</span>
+                  <span class="visual-near-hand">👉</span>
+                </div>
+                <div class="card-magic-word">THESE</div>
+                <div class="card-sentence">"These are balloons."</div>
+              </div>
+
+              <!-- CARD 4: MANY + FAR -> THOSE -->
+              <div class="grid-card card-those" data-grid-type="those">
+                <div class="card-header">
+                  <span class="badge-quantity">🎈 MANY</span>
+                  <span class="badge-plus">+</span>
+                  <span class="badge-distance">🔭 FAR</span>
+                </div>
+                <div class="card-visual-demo">
+                  <span class="visual-far-telescope">🔭</span>
+                  <span class="visual-obj size-small">🎈🎈🎈</span>
+                </div>
+                <div class="card-magic-word">THOSE</div>
+                <div class="card-sentence">"Those are balloons."</div>
+              </div>
+            </div>
+
+            <!-- Dynamic Live Visual Stage below grid -->
+            <div class="grid-live-preview" id="grid-live-stage">
+              <div class="live-preview-sky" id="grid-preview-sky">
+                <div id="grid-preview-objects">🎈</div>
+              </div>
+              <div class="live-preview-caption" id="grid-preview-text">
+                Tap a card above to bring the magic words to life!
+              </div>
+            </div>
+
+            <div class="grid-actions">
+              <button id="btn-goto-celebration" class="btn-carnival-primary bounce-pulse">
+                🌟 SEE GRAND CELEBRATION! 🌟
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 7: FINAL WOW CELEBRATION & HERO CEREMONY -->
+        <!-- ========================================================= -->
+        <section id="screen-celebration" class="game-screen">
+          <!-- Canvas for Confetti & Fireworks -->
+          <canvas id="confetti-canvas"></canvas>
+
+          <div class="celebration-content">
+            <div class="celebration-badge-hero">
+              <div class="hero-trophy">🏆</div>
+              <h2 class="hero-title">🌟 MAGIC WORD HERO 🌟</h2>
+              <p class="hero-subtitle">You fixed all the carnival magic words!</p>
+            </div>
+
+            <!-- 6 Mastered Magic Tokens -->
+            <div class="mastered-tokens-row">
+              <div class="token-chip chip-1">ONE 1️⃣</div>
+              <div class="token-chip chip-2">MANY 🎈🎈</div>
+              <div class="token-chip chip-3">THIS 📍1</div>
+              <div class="token-chip chip-4">THAT 🔭1</div>
+              <div class="token-chip chip-5">THESE 📍🎈🎈</div>
+              <div class="token-chip chip-6">THOSE 🔭🎈🎈</div>
+            </div>
+
+            <div class="celebration-dialogue">
+              <div class="dialogue-box-final">
+                <p><strong>Riya:</strong> "Yay! Now I know my magic words!"</p>
+                <p><strong>Little Star:</strong> "You are a true Magic Word Carnival Champion!"</p>
+              </div>
+            </div>
+
+            <div class="celebration-buttons">
+              <button id="btn-goto-freeplay" class="btn-carnival-primary bounce-pulse">
+                🎮 OPEN FREE PLAY PLAYGROUND!
+              </button>
+              <button id="btn-replay-adventure" class="btn-carnival-secondary">
+                🔄 PLAY ADVENTURE AGAIN
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ZONE 8: FREE PLAY PLAYGROUND -->
+        <!-- ========================================================= -->
+        <section id="screen-freeplay" class="game-screen">
+          <div class="zone-header-banner">
+            <span class="zone-number">FREE PLAY</span>
+            <span class="zone-name">MAGIC CARNIVAL PLAYGROUND</span>
+          </div>
+
+          <div class="freeplay-layout">
+            <!-- Sandbox Visual Stage -->
+            <div class="freeplay-stage" id="freeplay-stage-view">
+              <div class="stage-guide-horizon">
+                <span class="horizon-badge">🔭 FAR SKY</span>
+              </div>
+              <div class="stage-guide-foreground">
+                <span class="fg-badge">📍 NEARBY STAGE</span>
+              </div>
+
+              <!-- Playground Displayed Objects -->
+              <div id="freeplay-display-container" class="freeplay-items-holder">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Dynamic Result Sentence Bar -->
+            <div class="freeplay-sentence-bar">
+              <div class="freeplay-spoken-sentence" id="freeplay-sentence-text">
+                "This is a balloon."
+              </div>
+              <button id="btn-freeplay-speak" class="btn-speak-icon" title="Listen Sentence" aria-label="Listen to sentence">
+                🔊 Listen
+              </button>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="freeplay-controls">
+              <!-- Quantity Choice -->
+              <div class="control-group">
+                <span class="ctrl-label">1. QUANTITY:</span>
+                <div class="ctrl-toggle-buttons">
+                  <button class="btn-toggle active" data-quantity="one">ONE (1)</button>
+                  <button class="btn-toggle" data-quantity="many">MANY (4)</button>
+                </div>
+              </div>
+
+              <!-- Distance Choice -->
+              <div class="control-group">
+                <span class="ctrl-label">2. DISTANCE:</span>
+                <div class="ctrl-toggle-buttons">
+                  <button class="btn-toggle active" data-distance="near">NEAR 📍</button>
+                  <button class="btn-toggle" data-distance="far">FAR 🔭</button>
+                </div>
+              </div>
+
+              <!-- Object Choice Palette -->
+              <div class="control-group palette-group">
+                <span class="ctrl-label">3. CHOOSE TOY:</span>
+                <div class="object-palette" id="freeplay-palette">
+                  <button class="palette-item active" data-obj="balloon" title="Balloon">🎈</button>
+                  <button class="palette-item" data-obj="apple" title="Apple">🍎</button>
+                  <button class="palette-item" data-obj="star" title="Star">⭐</button>
+                  <button class="palette-item" data-obj="kite" title="Kite">🪁</button>
+                  <button class="palette-item" data-obj="ball" title="Ball">⚽</button>
+                  <button class="palette-item" data-obj="toy" title="Teddy Toy">🧸</button>
+                  <button class="palette-item" data-obj="cupcake" title="Cupcake">🧁</button>
+                  <button class="palette-item" data-obj="flower" title="Flower">🌸</button>
+                </div>
+              </div>
+
+              <div class="freeplay-extra-actions">
+                <button id="btn-freeplay-random" class="btn-chip btn-random">
+                  🎲 SURPRISE ME!
+                </button>
+                <button id="btn-freeplay-exit" class="btn-chip">
+                  🎪 BACK TO CARNIVAL
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div> <!-- /scene-viewport -->
+
+      <!-- CELEBRATION OVERLAY / TOAST NOTIFICATION -->
+      <div id="feedback-toast" class="feedback-toast hidden">
+        <div class="toast-icon">✨</div>
+        <div class="toast-text">Great Job!</div>
+      </div>
+    </main>
+
+    <!-- BOTTOM PROGRESS / ZONE NAVIGATION FOOTER -->
+    <footer id="carnival-footer">
+      <div class="footer-zone-progress">
+        <div class="progress-step step-intro active" data-zone="0" title="Entrance">🎪</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="1" title="One & Many">1️⃣</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="2" title="This">📍1</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="3" title="That">🔭1</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="4" title="These">📍🎈</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="5" title="Those">🔭🎈</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="6" title="Magic Grid">🔲</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-zone="7" title="Hero Celebration">🏆</div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ChotaPlay — Riya's Traffic Rescue</title>
+  <meta name="description" content="Help Riya and Little Star repair Happy Transport Town in this fun, interactive educational transport game for kids aged 3-6!">
+  
+  <!-- Google Fonts for playful child-friendly typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;900&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/town.css">
+  <link rel="stylesheet" href="css/vehicles.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Fullscreen Game Container -->
+  <div id="game-app" class="game-container">
+    
+    <!-- TOP HEADER / HUD -->
+    <header class="game-header">
+      <div class="brand-badge">
+        <span class="brand-logo">✨ ChotaPlay</span>
+        <h1 class="game-title">Riya's Traffic Rescue</h1>
+      </div>
+
+      <!-- Transport Progress Tracker -->
+      <div class="progress-tracker" id="progress-tracker" aria-label="Transport Town Repair Progress">
+        <div class="progress-badge" id="badge-road" title="Road (Car)">
+          <span class="badge-icon">🚗</span>
+          <span class="badge-check">✓</span>
+        </div>
+        <div class="progress-badge" id="badge-traffic" title="Traffic Light (Bus)">
+          <span class="badge-icon">🚦</span>
+          <span class="badge-check">✓</span>
+        </div>
+        <div class="progress-badge" id="badge-train" title="Train Track (Train)">
+          <span class="badge-icon">🚂</span>
+          <span class="badge-check">✓</span>
+        </div>
+        <div class="progress-badge" id="badge-boat" title="Water Route (Boat)">
+          <span class="badge-icon">🚢</span>
+          <span class="badge-check">✓</span>
+        </div>
+        <div class="progress-badge" id="badge-airplane" title="Runway (Airplane)">
+          <span class="badge-icon">✈️</span>
+          <span class="badge-check">✓</span>
+        </div>
+      </div>
+
+      <!-- Quick Audio & Reset Controls -->
+      <div class="header-controls">
+        <button id="btn-sound" class="btn-icon" aria-label="Toggle Sound" title="Sound FX">
+          <span class="icon">🔊</span>
+        </button>
+        <button id="btn-music" class="btn-icon" aria-label="Toggle Music" title="Background Music">
+          <span class="icon">🎵</span>
+        </button>
+        <button id="btn-hint" class="btn-icon" aria-label="Hint / Repeat Voice" title="Voice Guidance">
+          <span class="icon">💡</span>
+        </button>
+        <button id="btn-reset-parent" class="btn-icon btn-subtle" aria-label="Reset Town" title="Restart Game">
+          <span class="icon">🔄</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN INTERACTIVE TOWN VIEWPORT -->
+    <main class="town-viewport" id="town-viewport">
+      
+      <!-- BACKGROUND LAYERS: Sky, Mountains, Hills, Ocean -->
+      <div class="town-backdrop">
+        <!-- Sky & Floating Clouds -->
+        <div class="sky-layer">
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+          <div class="cloud cloud-4"></div>
+          <div class="sun-container">
+            <div class="sun-core"></div>
+            <div class="sun-rays"></div>
+          </div>
+          <div class="flying-birds">
+            <span class="bird bird-1">🐦</span>
+            <span class="bird bird-2">🐦</span>
+          </div>
+        </div>
+
+        <!-- Mountain Backing -->
+        <div class="mountain-range">
+          <div class="mountain mountain-1"></div>
+          <div class="mountain mountain-2"></div>
+          <div class="mountain mountain-3"></div>
+        </div>
+
+        <!-- Rolling Hills / Green Land -->
+        <div class="landscape-base">
+          <div class="green-pasture pasture-left"></div>
+          <div class="green-pasture pasture-center"></div>
+          <div class="green-pasture pasture-right"></div>
+          <!-- Ocean Bay (Bottom Right) -->
+          <div class="ocean-bay" id="ocean-bay">
+            <div class="water-waves wave-1"></div>
+            <div class="water-waves wave-2"></div>
+            <div class="water-sparkles"></div>
+            <!-- Sandy Beach Shore -->
+            <div class="sandy-beach"></div>
+            <!-- Tropical Island -->
+            <div class="island" id="island-target">
+              <div class="island-sand"></div>
+              <div class="palm-tree palm-1">🌴</div>
+              <div class="palm-tree palm-2">🌴</div>
+              <div class="island-flag">🚩</div>
+              <div class="island-glow"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOWN INFRASTRUCTURE & SCENERY -->
+      <div class="town-world" id="town-world">
+        
+        <!-- DECORATIVE BUILDINGS & TREES -->
+        <div class="scenery-layer">
+          <!-- School Building -->
+          <div class="building building-school" id="building-school">
+            <div class="building-roof"></div>
+            <div class="building-body">
+              <div class="school-sign">🏫 SCHOOL</div>
+              <div class="school-windows">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="school-door"></div>
+            </div>
+          </div>
+
+          <!-- Cozy House (Road Target) -->
+          <div class="building building-house" id="target-house">
+            <div class="house-chimney">
+              <div class="chimney-smoke"></div>
+            </div>
+            <div class="house-roof"></div>
+            <div class="house-body">
+              <div class="house-window" id="house-window"></div>
+              <div class="house-door"></div>
+            </div>
+            <div class="house-flowerbed">🌸🌼🌷</div>
+            <div class="house-glow-ring" id="house-glow"></div>
+          </div>
+
+          <!-- Train Station (Railway Target) -->
+          <div class="building building-station" id="target-station">
+            <div class="station-clock">🕒</div>
+            <div class="station-roof"></div>
+            <div class="station-body">
+              <div class="station-sign">🚉 CENTRAL STATION</div>
+              <div class="station-platform"></div>
+            </div>
+            <div class="station-party-balloons" id="station-balloons">🎈🎉🎈</div>
+          </div>
+
+          <!-- Airport Terminal & Hangar -->
+          <div class="building building-airport" id="airport-area">
+            <div class="control-tower">
+              <div class="tower-radar">📡</div>
+              <div class="tower-cabin"></div>
+              <div class="tower-stem"></div>
+            </div>
+            <div class="hangar-building">
+              <div class="hangar-roof"></div>
+              <div class="hangar-door">✈️ AIRPORT</div>
+            </div>
+            <div class="windsock">🎏</div>
+          </div>
+
+          <!-- Trees & Nature Elements -->
+          <div class="tree tree-1">🌳</div>
+          <div class="tree tree-2">🌲</div>
+          <div class="tree tree-3">🌳</div>
+          <div class="tree tree-4">🌲</div>
+          <div class="tree tree-5">🌳</div>
+          <div class="tree tree-6">🌳</div>
+          <div class="flower-patch patch-1">🌷🌸🌼</div>
+          <div class="flower-patch patch-2">🌼🌷🌸</div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- ZONE 1: ROAD PUZZLE (Car -> House) -->
+        <!-- ============================================================== -->
+        <div class="transport-zone zone-road" id="zone-road">
+          <!-- Road Track Segments -->
+          <div class="road-path-network">
+            <!-- Road Start segment -->
+            <div class="road-segment road-fixed road-start">
+              <div class="road-asphalt"></div>
+              <div class="road-stripes"></div>
+            </div>
+            <!-- Missing Road Gap (Drop Target) -->
+            <div class="road-drop-zone snap-target" id="road-snap-target" data-accept="road-piece-straight">
+              <div class="snap-indicator">
+                <span class="snap-icon">🛣️</span>
+                <span class="snap-text">Fix Road!</span>
+              </div>
+              <div class="snap-glow"></div>
+            </div>
+            <!-- Road End segment leading to House -->
+            <div class="road-segment road-fixed road-end">
+              <div class="road-asphalt"></div>
+              <div class="road-stripes"></div>
+            </div>
+          </div>
+
+          <!-- Car Vehicle (Waiting to drive) -->
+          <div class="vehicle-entity vehicle-car" id="vehicle-car">
+            <div class="car-sprite">
+              <svg viewBox="0 0 100 60" class="car-svg">
+                <defs>
+                  <linearGradient id="carGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FF5252" />
+                    <stop offset="100%" stop-color="#D50000" />
+                  </linearGradient>
+                  <linearGradient id="windowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#E0F7FA" />
+                    <stop offset="100%" stop-color="#80DEEA" />
+                  </linearGradient>
+                </defs>
+                <path d="M 15 35 Q 20 18 35 15 L 65 15 Q 80 18 85 35 L 95 38 Q 98 42 98 46 L 2 46 Q 2 42 5 38 Z" fill="url(#carGrad)" stroke="#B71C1C" stroke-width="2"/>
+                <!-- Windows -->
+                <path d="M 28 32 L 35 20 L 48 20 L 48 32 Z" fill="url(#windowGrad)"/>
+                <path d="M 52 32 L 52 20 L 65 20 L 72 32 Z" fill="url(#windowGrad)"/>
+                <!-- Headlight & Tail Light -->
+                <rect x="94" y="36" width="4" height="6" rx="2" fill="#FFEE58"/>
+                <rect x="2" y="36" width="4" height="6" rx="2" fill="#FF8A80"/>
+                <!-- Wheels -->
+                <circle cx="28" cy="48" r="10" fill="#37474F"/>
+                <circle cx="28" cy="48" r="5" fill="#CFD8DC"/>
+                <circle cx="72" cy="48" r="10" fill="#37474F"/>
+                <circle cx="72" cy="48" r="5" fill="#CFD8DC"/>
+              </svg>
+            </div>
+            <div class="car-headlight-beam"></div>
+            <div class="car-wheel-smoke"></div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- ZONE 2: TRAFFIC LIGHT INTERSECTION (Bus) -->
+        <!-- ============================================================== -->
+        <div class="transport-zone zone-traffic" id="zone-traffic">
+          <!-- Crossroad / Loop -->
+          <div class="bus-road-track">
+            <div class="road-asphalt"></div>
+            <div class="road-stripes"></div>
+            <div class="zebra-crossing"></div>
+            <div class="stop-line"></div>
+          </div>
+
+          <!-- Interactive Traffic Light Post -->
+          <div class="traffic-light-post" id="traffic-light-post" role="button" aria-label="Tap traffic light to switch between Red and Green">
+            <div class="traffic-light-head">
+              <div class="light-bulb light-red active" id="light-red" data-state="red">
+                <span class="bulb-glow"></span>
+                <span class="bulb-label">STOP</span>
+              </div>
+              <div class="light-bulb light-yellow" id="light-yellow"></div>
+              <div class="light-bulb light-green" id="light-green" data-state="green">
+                <span class="bulb-glow"></span>
+                <span class="bulb-label">GO</span>
+              </div>
+            </div>
+            <div class="traffic-light-pole"></div>
+            <div class="traffic-light-hint-badge">
+              <span>👆 TAP LIGHT!</span>
+            </div>
+          </div>
+
+          <!-- Bus Vehicle -->
+          <div class="vehicle-entity vehicle-bus" id="vehicle-bus">
+            <div class="bus-sprite">
+              <svg viewBox="0 0 130 65" class="bus-svg">
+                <defs>
+                  <linearGradient id="busGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#FFD54F" />
+                    <stop offset="100%" stop-color="#FFB300" />
+                  </linearGradient>
+                </defs>
+                <!-- Bus Body -->
+                <rect x="5" y="8" width="120" height="42" rx="10" fill="url(#busGrad)" stroke="#E65100" stroke-width="2"/>
+                <!-- Windows -->
+                <rect x="15" y="15" width="20" height="15" rx="3" fill="#E0F7FA"/>
+                <rect x="42" y="15" width="20" height="15" rx="3" fill="#E0F7FA"/>
+                <rect x="69" y="15" width="20" height="15" rx="3" fill="#E0F7FA"/>
+                <rect x="96" y="15" width="22" height="18" rx="3" fill="#E0F7FA"/>
+                <!-- Side Stripe -->
+                <rect x="5" y="35" width="120" height="5" fill="#0288D1"/>
+                <!-- Lights -->
+                <rect x="122" y="32" width="4" height="8" rx="2" fill="#FFEE58"/>
+                <rect x="4" y="32" width="4" height="8" rx="2" fill="#E53935"/>
+                <!-- Wheels -->
+                <circle cx="30" cy="52" r="11" fill="#37474F"/>
+                <circle cx="30" cy="52" r="5" fill="#ECEFF1"/>
+                <circle cx="95" cy="52" r="11" fill="#37474F"/>
+                <circle cx="95" cy="52" r="5" fill="#ECEFF1"/>
+              </svg>
+            </div>
+            <div class="bus-smoke"></div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- ZONE 3: TRAIN TRACK PUZZLE (Train -> Station) -->
+        <!-- ============================================================== -->
+        <div class="transport-zone zone-train" id="zone-train">
+          <!-- Railway Track Line -->
+          <div class="railway-network">
+            <!-- Train Start Section -->
+            <div class="railway-segment rail-start">
+              <div class="ballast"></div>
+              <div class="ties"></div>
+              <div class="rails"></div>
+            </div>
+            <!-- Missing Rail Gap (Drop Target) -->
+            <div class="rail-drop-zone snap-target" id="rail-snap-target" data-accept="rail-piece-straight">
+              <div class="snap-indicator">
+                <span class="snap-icon">🛤️</span>
+                <span class="snap-text">Fix Track!</span>
+              </div>
+              <div class="snap-glow"></div>
+            </div>
+            <!-- Rail End Section leading to Station -->
+            <div class="railway-segment rail-end">
+              <div class="ballast"></div>
+              <div class="ties"></div>
+              <div class="rails"></div>
+            </div>
+          </div>
+
+          <!-- Train Steam Engine -->
+          <div class="vehicle-entity vehicle-train" id="vehicle-train">
+            <div class="train-sprite">
+              <svg viewBox="0 0 140 65" class="train-svg">
+                <defs>
+                  <linearGradient id="trainGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#42A5F5" />
+                    <stop offset="100%" stop-color="#1565C0" />
+                  </linearGradient>
+                  <linearGradient id="cabGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#AB47BC" />
+                    <stop offset="100%" stop-color="#6A1B9A" />
+                  </linearGradient>
+                </defs>
+                <!-- Steam Boiler -->
+                <rect x="40" y="20" width="55" height="28" rx="6" fill="url(#trainGrad)" stroke="#0D47A1" stroke-width="2"/>
+                <!-- Smokestack -->
+                <rect x="80" y="8" width="10" height="14" rx="2" fill="#263238"/>
+                <polygon points="76,8 94,8 88,14 82,14" fill="#E91E63"/>
+                <!-- Driver Cab -->
+                <rect x="5" y="10" width="38" height="38" rx="4" fill="url(#cabGrad)" stroke="#4A148C" stroke-width="2"/>
+                <rect x="12" y="15" width="20" height="15" rx="3" fill="#E0F7FA"/>
+                <!-- Front cowcatcher / bumper -->
+                <polygon points="95,44 110,48 95,50" fill="#FFC107"/>
+                <circle cx="100" cy="34" r="5" fill="#FFEB3B"/>
+                <!-- Train Wheels & Connecting Rod -->
+                <circle cx="22" cy="50" r="11" fill="#D32F2F" stroke="#212121" stroke-width="2"/>
+                <circle cx="22" cy="50" r="4" fill="#FFFFFF"/>
+                <circle cx="50" cy="50" r="11" fill="#D32F2F" stroke="#212121" stroke-width="2"/>
+                <circle cx="50" cy="50" r="4" fill="#FFFFFF"/>
+                <circle cx="78" cy="50" r="11" fill="#D32F2F" stroke="#212121" stroke-width="2"/>
+                <circle cx="78" cy="50" r="4" fill="#FFFFFF"/>
+                <!-- Piston Rod -->
+                <line x1="22" y1="50" x2="78" y2="50" stroke="#FFD54F" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <!-- Puffing Steam Emitter -->
+            <div class="train-steam-emitter" id="train-steam-emitter">
+              <span class="steam-puff p-1">☁️</span>
+              <span class="steam-puff p-2">☁️</span>
+              <span class="steam-puff p-3">☁️</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- ZONE 4: BOAT ROUTE (Boat -> Island) -->
+        <!-- ============================================================== -->
+        <div class="transport-zone zone-boat" id="zone-boat">
+          <!-- Dock / Pier -->
+          <div class="boat-dock">
+            <div class="dock-planks">⚓ DOCK</div>
+            <div class="dock-bollard"></div>
+          </div>
+
+          <!-- Ocean Water Route Gap (Drop Target) -->
+          <div class="water-route-network">
+            <div class="water-route-start"></div>
+            <div class="water-drop-zone snap-target" id="water-snap-target" data-accept="water-piece-buoy">
+              <div class="snap-indicator">
+                <span class="snap-icon">🌊</span>
+                <span class="snap-text">Add Water Route!</span>
+              </div>
+              <div class="snap-glow"></div>
+            </div>
+            <div class="water-route-end"></div>
+          </div>
+
+          <!-- Boat Vehicle -->
+          <div class="vehicle-entity vehicle-boat" id="vehicle-boat">
+            <div class="boat-sprite">
+              <svg viewBox="0 0 110 70" class="boat-svg">
+                <defs>
+                  <linearGradient id="hullGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#FFFFFF" />
+                    <stop offset="100%" stop-color="#E0E0E0" />
+                  </linearGradient>
+                  <linearGradient id="cabinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#00BCD4" />
+                    <stop offset="100%" stop-color="#00838F" />
+                  </linearGradient>
+                </defs>
+                <!-- Boat Hull -->
+                <path d="M 5 35 L 20 60 Q 55 64 90 60 L 105 35 Z" fill="url(#hullGrad)" stroke="#B0BEC5" stroke-width="2"/>
+                <path d="M 12 48 Q 55 52 98 48 L 90 60 Q 55 64 20 60 Z" fill="#E91E63"/>
+                <!-- Cabin -->
+                <rect x="25" y="16" width="50" height="22" rx="4" fill="url(#cabinGrad)" stroke="#006064" stroke-width="2"/>
+                <circle cx="37" cy="26" r="5" fill="#FFF" stroke="#FFC107" stroke-width="2"/>
+                <circle cx="50" cy="26" r="5" fill="#FFF" stroke="#FFC107" stroke-width="2"/>
+                <circle cx="63" cy="26" r="5" fill="#FFF" stroke="#FFC107" stroke-width="2"/>
+                <!-- Chimney -->
+                <rect x="42" y="6" width="8" height="12" rx="2" fill="#FF5722"/>
+                <!-- Life Ring -->
+                <circle cx="85" cy="42" r="6" fill="#FFF" stroke="#F44336" stroke-width="3"/>
+                <circle cx="85" cy="42" r="2" fill="#FFF"/>
+              </svg>
+            </div>
+            <!-- Water Splash / Wake -->
+            <div class="boat-wake">
+              <span class="wake-ripple r-1"></span>
+              <span class="wake-ripple r-2"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- ZONE 5: AIRPLANE RUNWAY (Airplane -> Sky) -->
+        <!-- ============================================================== -->
+        <div class="transport-zone zone-airplane" id="zone-airplane">
+          <!-- Runway Strip -->
+          <div class="runway-strip" id="runway-strip">
+            <div class="runway-tarmac">
+              <div class="runway-centerline"></div>
+              <div class="runway-threshold">|||||</div>
+              <div class="runway-number">09</div>
+            </div>
+            <!-- Runway Edge Lights -->
+            <div class="runway-lights" id="runway-lights">
+              <span class="r-light"></span>
+              <span class="r-light"></span>
+              <span class="r-light"></span>
+              <span class="r-light"></span>
+              <span class="r-light"></span>
+              <span class="r-light"></span>
+            </div>
+          </div>
+
+          <!-- Interactive Takeoff Control Pad -->
+          <div class="takeoff-control-pad" id="takeoff-control-pad">
+            <button class="btn-takeoff" id="btn-takeoff" aria-label="Press to Launch Airplane">
+              <span class="btn-takeoff-icon">🛫</span>
+              <span class="btn-takeoff-text">CLEAR RUNWAY & FLY!</span>
+            </button>
+          </div>
+
+          <!-- Airplane Vehicle -->
+          <div class="vehicle-entity vehicle-airplane" id="vehicle-airplane">
+            <div class="airplane-sprite">
+              <svg viewBox="0 0 130 80" class="airplane-svg">
+                <defs>
+                  <linearGradient id="planeBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#FFFFFF" />
+                    <stop offset="100%" stop-color="#ECEFF1" />
+                  </linearGradient>
+                  <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#4CAF50" />
+                    <stop offset="100%" stop-color="#2E7D32" />
+                  </linearGradient>
+                </defs>
+                <!-- Wings Behind/Bottom -->
+                <polygon points="55,42 35,76 52,76 75,44" fill="url(#wingGrad)" stroke="#1B5E20" stroke-width="1.5"/>
+                <!-- Fuselage -->
+                <path d="M 12 36 Q 2 38 12 40 L 98 44 Q 124 40 124 37 Q 124 34 98 30 L 12 34 Z" fill="url(#planeBody)" stroke="#78909C" stroke-width="2"/>
+                <!-- Cockpit Windshield -->
+                <path d="M 105 34 Q 118 36 112 38 L 98 38 L 98 34 Z" fill="#00E5FF"/>
+                <!-- Passenger Windows -->
+                <circle cx="85" cy="36" r="2.5" fill="#80DEEA"/>
+                <circle cx="73" cy="36" r="2.5" fill="#80DEEA"/>
+                <circle cx="61" cy="36" r="2.5" fill="#80DEEA"/>
+                <circle cx="49" cy="36" r="2.5" fill="#80DEEA"/>
+                <circle cx="37" cy="36" r="2.5" fill="#80DEEA"/>
+                <!-- Tail Fin -->
+                <polygon points="12,35 6,10 22,10 32,35" fill="url(#wingGrad)" stroke="#1B5E20" stroke-width="1.5"/>
+                <!-- Top Wing -->
+                <polygon points="55,36 35,2 52,2 75,34" fill="url(#wingGrad)" stroke="#1B5E20" stroke-width="1.5"/>
+                <!-- Engine Turbine -->
+                <rect x="52" y="44" width="18" height="8" rx="4" fill="#455A64"/>
+              </svg>
+            </div>
+            <!-- Jet Contrail -->
+            <div class="jet-contrail" id="jet-contrail">
+              <span class="contrail-puff">💨</span>
+              <span class="contrail-puff">✨</span>
+              <span class="contrail-puff">💨</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end town-world -->
+
+      <!-- ============================================================== -->
+      <!-- CHARACTERS STAGE: RIYA & LITTLE STAR -->
+      <!-- ============================================================== -->
+      <div class="character-stage" id="character-stage">
+        
+        <!-- Animated Riya Character -->
+        <div class="riya-container" id="riya-character" role="img" aria-label="Riya the friendly guide">
+          <!-- Speech Bubble above Riya -->
+          <div class="speech-bubble" id="riya-speech-bubble" aria-live="polite">
+            <p class="speech-text" id="speech-text">"Let's fix Happy Transport Town together!"</p>
+            <div class="speech-tail"></div>
+          </div>
+
+          <!-- Riya Illustrated Avatar (Stylized Vector / Rich Sprite) -->
+          <div class="riya-avatar state-idle" id="riya-avatar">
+            <svg viewBox="0 0 140 200" class="riya-svg">
+              <defs>
+                <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FFDFC4" />
+                  <stop offset="100%" stop-color="#F0B892" />
+                </linearGradient>
+                <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4A2810" />
+                  <stop offset="100%" stop-color="#2D1505" />
+                </linearGradient>
+                <linearGradient id="dressGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FFA8C5" />
+                  <stop offset="100%" stop-color="#F48FB1" />
+                </linearGradient>
+              </defs>
+              
+              <!-- Pigtails / Hair Back -->
+              <circle cx="32" cy="70" r="24" fill="url(#hairGrad)"/>
+              <circle cx="108" cy="70" r="24" fill="url(#hairGrad)"/>
+              <circle cx="28" cy="90" r="18" fill="url(#hairGrad)"/>
+              <circle cx="112" cy="90" r="18" fill="url(#hairGrad)"/>
+              <!-- Hair Ties & Hair Clips -->
+              <circle cx="42" cy="62" r="6" fill="#FF4081"/>
+              <circle cx="98" cy="62" r="6" fill="#00E676"/>
+              <polygon points="38,48 44,45 42,53" fill="#FFEB3B"/>
+              <polygon points="102,48 96,45 98,53" fill="#FF4081"/>
+
+              <!-- Legs & Shoes -->
+              <rect x="52" y="152" width="12" height="30" rx="6" fill="url(#skinGrad)"/>
+              <rect x="76" y="152" width="12" height="30" rx="6" fill="url(#skinGrad)"/>
+              <!-- Socks -->
+              <rect x="50" y="168" width="16" height="12" rx="3" fill="#FFF"/>
+              <rect x="74" y="168" width="16" height="12" rx="3" fill="#FFF"/>
+              <!-- Shoes -->
+              <path d="M 46 178 Q 46 192 68 192 L 68 178 Z" fill="#FFF" stroke="#E91E63" stroke-width="2"/>
+              <path d="M 72 178 L 72 192 Q 94 192 94 178 Z" fill="#FFF" stroke="#E91E63" stroke-width="2"/>
+              <circle cx="58" cy="182" r="2" fill="#E91E63"/>
+              <circle cx="82" cy="182" r="2" fill="#E91E63"/>
+
+              <!-- Dress -->
+              <path d="M 52 108 L 30 156 Q 70 166 110 156 L 88 108 Z" fill="url(#dressGrad)" stroke="#D81B60" stroke-width="1.5"/>
+              <!-- Dress Floral Pattern -->
+              <circle cx="50" cy="130" r="3" fill="#FFF"/><circle cx="50" cy="130" r="1" fill="#FFEB3B"/>
+              <circle cx="70" cy="140" r="3" fill="#FFF"/><circle cx="70" cy="140" r="1" fill="#FFEB3B"/>
+              <circle cx="90" cy="130" r="3" fill="#FFF"/><circle cx="90" cy="130" r="1" fill="#FFEB3B"/>
+              <circle cx="65" cy="120" r="3" fill="#FFF"/><circle cx="65" cy="120" r="1" fill="#FFEB3B"/>
+              <!-- Collar -->
+              <path d="M 55 106 Q 70 114 85 106" fill="none" stroke="#FFF" stroke-width="4" stroke-linecap="round"/>
+
+              <!-- Arms / Hands -->
+              <g class="riya-arm-left">
+                <!-- Left Hand holding notebook -->
+                <path d="M 52 112 Q 35 125 40 142" stroke="url(#skinGrad)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                <!-- Notebook -->
+                <rect x="25" y="132" width="18" height="22" rx="3" fill="#FFFDE7" stroke="#795548" stroke-width="1.5"/>
+                <line x1="28" y1="138" x2="40" y2="138" stroke="#E91E63" stroke-width="1.5"/>
+                <line x1="28" y1="144" x2="38" y2="144" stroke="#2196F3" stroke-width="1.5"/>
+              </g>
+
+              <g class="riya-arm-right" id="riya-waving-arm">
+                <!-- Right Hand Waving / Pointing -->
+                <path d="M 88 112 Q 108 105 118 85" stroke="url(#skinGrad)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                <circle cx="120" cy="82" r="7" fill="url(#skinGrad)"/>
+                <!-- Colorful bracelets -->
+                <ellipse cx="112" cy="94" rx="4" ry="2" fill="#00E5FF"/>
+                <ellipse cx="110" cy="98" rx="4" ry="2" fill="#FF4081"/>
+              </g>
+
+              <!-- Neck -->
+              <rect x="64" y="96" width="12" height="14" fill="url(#skinGrad)"/>
+
+              <!-- Head & Face -->
+              <circle cx="70" cy="68" r="32" fill="url(#skinGrad)"/>
+
+              <!-- Hair Front & Bangs -->
+              <path d="M 38 64 Q 70 38 102 64 Q 96 46 70 44 Q 44 46 38 64 Z" fill="url(#hairGrad)"/>
+              <path d="M 44 56 Q 58 72 68 56 Q 78 72 96 56" fill="url(#hairGrad)"/>
+
+              <!-- Cheeks (Blush) -->
+              <ellipse cx="50" cy="74" rx="6" ry="3.5" fill="#FF8A80" opacity="0.6"/>
+              <ellipse cx="90" cy="74" rx="6" ry="3.5" fill="#FF8A80" opacity="0.6"/>
+
+              <!-- Eyes -->
+              <g class="riya-eyes" id="riya-eyes">
+                <ellipse cx="54" cy="66" rx="6" ry="8" fill="#3E2723"/>
+                <ellipse cx="52" cy="63" rx="2.5" ry="3.5" fill="#FFF"/>
+                <circle cx="56" cy="70" r="1.5" fill="#FFF"/>
+                <ellipse cx="86" cy="66" rx="6" ry="8" fill="#3E2723"/>
+                <ellipse cx="84" cy="63" rx="2.5" ry="3.5" fill="#FFF"/>
+                <circle cx="88" cy="70" r="1.5" fill="#FFF"/>
+              </g>
+
+              <!-- Mouth -->
+              <path id="riya-mouth" d="M 62 78 Q 70 88 78 78" stroke="#C2185B" stroke-width="3" stroke-linecap="round" fill="#E91E63"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Floating Little Star Companion -->
+        <div class="littlestar-container" id="littlestar-character" role="img" aria-label="Little Star helper">
+          <div class="star-glow-halo"></div>
+          <div class="star-sprite">
+            <svg viewBox="0 0 100 100" class="star-svg">
+              <defs>
+                <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFF59D" />
+                  <stop offset="50%" stop-color="#FFEB3B" />
+                  <stop offset="100%" stop-color="#FFA000" />
+                </linearGradient>
+              </defs>
+              <!-- 5-Point Star Body -->
+              <polygon points="50,5 64,36 98,36 71,58 81,92 50,71 19,92 29,58 2,36 36,36" fill="url(#starGrad)" stroke="#FF8F00" stroke-width="2.5"/>
+              <!-- Cute Eyes -->
+              <circle cx="40" cy="46" r="4" fill="#37474F"/>
+              <circle cx="39" cy="44" r="1.5" fill="#FFF"/>
+              <circle cx="60" cy="46" r="4" fill="#37474F"/>
+              <circle cx="59" cy="44" r="1.5" fill="#FFF"/>
+              <!-- Star Cheeks -->
+              <circle cx="33" cy="52" r="3" fill="#FF8A80" opacity="0.7"/>
+              <circle cx="67" cy="52" r="3" fill="#FF8A80" opacity="0.7"/>
+              <!-- Star Smile -->
+              <path d="M 45 54 Q 50 60 55 54" stroke="#E65100" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="star-sparkle-trail">
+            <span class="sparkle s-1">✨</span>
+            <span class="sparkle s-2">⭐</span>
+          </div>
+        </div>
+
+      </div><!-- end character-stage -->
+
+      <!-- ============================================================== -->
+      <!-- TODDLER-FRIENDLY INTERACTIVE PUZZLE TRAY (Bottom Toolbar) -->
+      <!-- ============================================================== -->
+      <div class="puzzle-dock" id="puzzle-dock">
+        <div class="dock-header">
+          <span class="dock-title">🛠️ Helper Tools</span>
+          <span class="dock-subtitle">Drag or tap a piece to fix the town!</span>
+        </div>
+        
+        <div class="puzzle-tray" id="puzzle-tray">
+          <!-- Piece 1: Straight Road Piece -->
+          <div class="puzzle-piece" id="piece-road" draggable="true" data-type="road-piece-straight" title="Road Piece">
+            <div class="piece-preview road-piece-preview">
+              <div class="mini-road"></div>
+            </div>
+            <span class="piece-label">🚗 Road</span>
+          </div>
+
+          <!-- Piece 2: Railway Track Piece -->
+          <div class="puzzle-piece" id="piece-rail" draggable="true" data-type="rail-piece-straight" title="Train Track Piece">
+            <div class="piece-preview rail-piece-preview">
+              <div class="mini-rail"></div>
+            </div>
+            <span class="piece-label">🚂 Track</span>
+          </div>
+
+          <!-- Piece 3: Water Route Buoy Piece -->
+          <div class="puzzle-piece" id="piece-water" draggable="true" data-type="water-piece-buoy" title="Water Route Buoy">
+            <div class="piece-preview water-piece-preview">
+              <div class="mini-water"></div>
+            </div>
+            <span class="piece-label">🌊 Water</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- GRAND CELEBRATION OVERLAY ("START TRANSPORT TOWN" WOW MOMENT) -->
+      <!-- ============================================================== -->
+      <div class="grand-wow-overlay" id="grand-wow-overlay" aria-hidden="true">
+        <div class="wow-card">
+          <div class="wow-stars">✨ 🌟 🎊 🌟 ✨</div>
+          <h2 class="wow-title">🎉 ALL SYSTEMS REPAIRED! 🎉</h2>
+          <p class="wow-message">Riya says: <em>"Let's start the whole Happy Transport Town!"</em></p>
+          
+          <button class="btn-grand-start" id="btn-grand-start">
+            <span class="start-btn-icon">🚦</span>
+            <span class="start-btn-text">START TRANSPORT TOWN!</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Full-Screen Particle Canvas -->
+      <canvas id="particle-canvas" class="particle-canvas"></canvas>
+
+      <!-- Post-Celebration Educational Summary Banner -->
+      <div class="education-summary-card" id="education-summary-card" aria-hidden="true">
+        <div class="summary-content">
+          <button class="btn-close-summary" id="btn-close-summary" aria-label="Close">✖</button>
+          <div class="summary-avatar">👧✨</div>
+          <h3 class="summary-title">You Did It, Super Helper!</h3>
+          <div class="summary-grid">
+            <div class="summary-item"><span class="sum-icon">🚗 🚌</span> <span class="sum-text">Cars & Buses travel on <strong>Roads</strong></span></div>
+            <div class="summary-item"><span class="sum-icon">🚂</span> <span class="sum-text">Trains travel on <strong>Tracks</strong></span></div>
+            <div class="summary-item"><span class="sum-icon">🚢</span> <span class="sum-text">Boats travel on <strong>Water</strong></span></div>
+            <div class="summary-item"><span class="sum-icon">✈️</span> <span class="sum-text">Airplanes fly in the <strong>Sky</strong></span></div>
+            <div class="summary-item"><span class="sum-icon">🔴 🟢</span> <span class="sum-text">Red means <strong>STOP</strong>, Green means <strong>GO</strong>!</span></div>
+          </div>
+          <button class="btn-play-again" id="btn-play-again">🔄 Play Town Again!</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/characters.js"></script>
+  <script src="js/mechanics/road.js"></script>
+  <script src="js/mechanics/traffic.js"></script>
+  <script src="js/mechanics/train.js"></script>
+  <script src="js/mechanics/boat.js"></script>
+  <script src="js/mechanics/airplane.js"></script>
+  <script src="js/town.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

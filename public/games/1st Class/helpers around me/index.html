@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Star's Helper Button — ChotaPlay: Helpers Around Me</title>
+  <meta name="description" content="A colorful, funny, and interactive preschool adventure game teaching community helpers through real-life actions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Full App Container -->
+  <div id="game-app" class="game-app">
+
+    <!-- Top Navigation & Progress Bar -->
+    <header id="game-header" class="game-header">
+      <div class="header-left">
+        <button id="btn-home" class="header-btn" title="Town Map" aria-label="Helper Town Map">
+          <span class="btn-icon">🏘️</span>
+          <span class="btn-text">Helper Town</span>
+        </button>
+      </div>
+
+      <!-- Star Collection Tracker -->
+      <div id="star-tracker" class="star-tracker" aria-label="Helper Stars Collected">
+        <span class="tracker-label">HELPER STARS:</span>
+        <div id="star-slots" class="star-slots">
+          <span class="star-slot" data-index="0">⭐</span>
+          <span class="star-slot" data-index="1">⭐</span>
+          <span class="star-slot" data-index="2">⭐</span>
+          <span class="star-slot" data-index="3">⭐</span>
+          <span class="star-slot" data-index="4">⭐</span>
+          <span class="star-slot" data-index="5">⭐</span>
+          <span class="star-slot" data-index="6">⭐</span>
+        </div>
+        <span id="star-count-text" class="star-count-text">0 / 7</span>
+      </div>
+
+      <!-- Audio & Voice Toggles -->
+      <div class="header-right">
+        <button id="btn-audio" class="header-btn icon-only" title="Toggle Sound FX" aria-label="Sound Effects">
+          <span id="audio-icon" class="btn-icon">🔊</span>
+        </button>
+        <button id="btn-voice" class="header-btn icon-only" title="Toggle Spoken Voice" aria-label="Voice Read Aloud">
+          <span id="voice-icon" class="btn-icon">🗣️</span>
+        </button>
+        <button id="btn-reset" class="header-btn icon-only" title="Restart / Reset" aria-label="Reset Progress">
+          <span class="btn-icon">🔄</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN STAGE SCREENS -->
+    <main id="stage-viewport" class="stage-viewport">
+
+      <!-- ================= 1. START SCREEN ================= -->
+      <section id="screen-start" class="game-screen active">
+        <div class="start-backdrop">
+          <div class="sun-glow"></div>
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+          <div class="town-skyline"></div>
+        </div>
+
+        <div class="start-content">
+          <div class="logo-group">
+            <div class="chotaplay-tag">CHOTAPLAY PRESENTS</div>
+            <h1 class="game-title">
+              <span class="title-star">⭐</span>
+              <span class="title-word-1">STAR'S</span>
+              <span class="title-word-2">HELPER</span>
+              <span class="title-word-3">BUTTON</span>
+            </h1>
+            <p class="game-subtitle">"Let's Help Our Town!"</p>
+          </div>
+
+          <!-- Characters Spotlight on Start Screen -->
+          <div class="start-characters-stage">
+            <div class="char-box riya-box" id="start-riya">
+              <img src="assets/characters/riya.png" alt="Riya" class="char-img riya-img">
+              <span class="char-name-badge">Riya</span>
+            </div>
+
+            <!-- Big Magical Glowing Help Button in Center -->
+            <div class="start-star-help-box" id="start-star-btn">
+              <div class="floating-star-mascot">
+                <img src="assets/characters/little_star.svg" alt="Little Star" class="star-mascot-img">
+              </div>
+              <button id="start-help-btn" class="big-magical-help-btn" aria-label="Start Adventure Help Button">
+                <img src="assets/helpers/help_button.svg" alt="Help Button" class="help-btn-svg">
+              </button>
+            </div>
+
+            <div class="char-box john-box" id="start-john">
+              <img src="assets/characters/john.png" alt="John" class="char-img john-img">
+              <span class="char-name-badge">John</span>
+            </div>
+          </div>
+
+          <div class="start-action-row">
+            <button id="btn-start-adventure" class="chota-btn btn-primary btn-bounce">
+              <span class="btn-sparkle">✨</span>
+              <span>START ADVENTURE</span>
+              <span class="btn-sparkle">🚀</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. HELPER TOWN MAP SCREEN ================= -->
+      <section id="screen-town-map" class="game-screen">
+        <div class="town-map-container">
+          <div class="town-map-header">
+            <h2>Welcome to Helper Town! 🏘️</h2>
+            <p>Click on any helper zone to explore and help our friends!</p>
+          </div>
+
+          <div class="town-map-grid" id="town-map-districts">
+            <!-- 7 Town Districts populated dynamically via JavaScript -->
+          </div>
+
+          <div class="town-map-footer">
+            <button id="btn-resume-mission" class="chota-btn btn-primary">
+              <span>▶ CONTINUE MISSION</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. MISSION GAMEPLAY ARENA ================= -->
+      <section id="screen-gameplay" class="game-screen">
+
+        <!-- Dynamic Mission Background Scenery -->
+        <div id="mission-scenery" class="mission-scenery">
+          <div class="scene-sky"></div>
+          <div class="scene-backdrop-elements" id="scene-backdrop-elements"></div>
+          <div class="scene-ground"></div>
+        </div>
+
+        <!-- Dialogue & Speech Bubble Area -->
+        <div id="speech-bubble-container" class="speech-bubble-container">
+          <div class="speaker-badge" id="speaker-badge">
+            <span id="speaker-avatar" class="speaker-avatar">⭐</span>
+            <span id="speaker-name" class="speaker-name">Little Star</span>
+          </div>
+          <div class="speech-content-box">
+            <p id="speech-text" class="speech-text">"Let's explore Helper Town!"</p>
+            <button id="btn-speak-again" class="btn-speak-replay" title="Listen again" aria-label="Listen again">🔊</button>
+          </div>
+        </div>
+
+        <!-- Center Problem & Helper Action Arena -->
+        <div id="mission-action-stage" class="mission-action-stage">
+          
+          <!-- Stage Layer: Problem State -->
+          <div id="stage-problem-layer" class="stage-layer">
+            <!-- Injected problem props (e.g. traffic jam, sick patient, campfire, messy classroom, letter, litter, broken car) -->
+          </div>
+
+          <!-- Stage Layer: Helper Action Simulation -->
+          <div id="stage-helper-layer" class="stage-layer hidden">
+            <!-- Injected animated helper and performing tool/vehicle -->
+          </div>
+
+          <!-- Stage Layer: WOW Transformation Effect -->
+          <div id="stage-wow-layer" class="stage-layer hidden">
+            <!-- Magical sparkles, blooming flowers, moving cars, restored classroom, heart glow -->
+          </div>
+
+          <!-- Floating Funny Wrong Choice Reaction Overlay -->
+          <div id="stage-wrong-reaction" class="stage-wrong-reaction hidden">
+            <div class="wrong-bubble-card">
+              <div class="wrong-character-preview" id="wrong-char-preview"></div>
+              <p id="wrong-dialogue-text">"Is the car feeling sick? 😄 Think again!"</p>
+              <button id="btn-try-again" class="chota-btn btn-secondary">
+                <span>🔄 Try Again!</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permanent Main Characters Base on Stage -->
+        <div class="stage-characters-ground">
+          <div id="stage-riya" class="char-actor riya-actor">
+            <img src="assets/characters/riya.png" alt="Riya" class="char-img">
+          </div>
+
+          <!-- Interactive Glowing Help Button (appears during PROBLEM state) -->
+          <div id="stage-help-button-wrapper" class="stage-help-button-wrapper hidden">
+            <div class="help-btn-guide-star">
+              <img src="assets/characters/little_star.svg" alt="Little Star">
+            </div>
+            <button id="btn-stage-help" class="stage-magical-help-btn" aria-label="Help Button">
+              <img src="assets/helpers/help_button.svg" alt="Help Button">
+            </button>
+            <div class="help-btn-pulse-ring"></div>
+            <div class="help-prompt-label">CLICK TO HELP! 👆</div>
+          </div>
+
+          <div id="stage-john" class="char-actor john-actor">
+            <img src="assets/characters/john.png" alt="John" class="char-img">
+          </div>
+        </div>
+
+        <!-- Helper Selection Choice Panel (3 Large Visual Cards) -->
+        <div id="helper-choice-panel" class="helper-choice-panel hidden">
+          <div class="choice-prompt-header">
+            <span class="prompt-icon">🤔</span>
+            <span class="prompt-title">Who can help?</span>
+          </div>
+          <div id="helper-cards-grid" class="helper-cards-grid">
+            <!-- Populated with 3 helper choices dynamically -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= 4. REWARD MODAL OVERLAY ================= -->
+      <section id="screen-reward-modal" class="game-screen-modal hidden">
+        <div class="reward-card">
+          <div class="reward-sparkle-halo"></div>
+          <div class="reward-star-anim">
+            <img src="assets/characters/little_star.svg" alt="Helper Star" class="reward-star-img">
+          </div>
+          <h2 class="reward-title">WOW! GREAT JOB! 🎉</h2>
+          <p id="reward-subtitle" class="reward-subtitle">You helped the traffic move safely!</p>
+          
+          <div class="reward-progress-box">
+            <span class="progress-badge-label">HELPER STARS EARNED:</span>
+            <div class="progress-star-display" id="reward-star-display">
+              <!-- Stars -->
+            </div>
+            <span id="reward-fraction-text" class="reward-fraction-text">1 / 7</span>
+          </div>
+
+          <button id="btn-next-mission" class="chota-btn btn-primary btn-bounce">
+            <span>NEXT MISSION 🚀</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= 5. GRAND CINEMATIC FINALE SCREEN ================= -->
+      <section id="screen-finale" class="game-screen">
+        <div class="finale-cinema-container" id="finale-cinema">
+          
+          <!-- Cinematic Confetti & Sparkles Canvas -->
+          <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+          <div class="finale-content">
+            <div class="finale-super-star-box">
+              <div class="giant-glowing-star">
+                <img src="assets/characters/little_star.svg" alt="Super Star" class="super-star-img">
+                <div class="super-star-crown">👑</div>
+              </div>
+            </div>
+
+            <h1 class="finale-title">🌟 HELPER HERO! 🌟</h1>
+            <p class="finale-subtitle">7 / 7 MISSIONS COMPLETE!</p>
+            
+            <div class="finale-dialogue-card">
+              <div class="dialogue-line"><strong>⭐ Little Star:</strong> "Look! You helped our entire town!"</div>
+              <div class="dialogue-line"><strong>👧 Riya:</strong> "Every helper matters!"</div>
+              <div class="dialogue-line"><strong>👦 John:</strong> "We did it together!"</div>
+            </div>
+
+            <!-- Town Panorama with all 7 working helpers -->
+            <div class="finale-town-celebration-strip">
+              <div class="helper-mini-badge" title="Traffic Police"><img src="assets/helpers/traffic_police.svg" alt="Traffic Police"><span>Traffic Flowing! 🚦</span></div>
+              <div class="helper-mini-badge" title="Doctor"><img src="assets/helpers/doctor.svg" alt="Doctor"><span>Patients Happy! ❤️</span></div>
+              <div class="helper-mini-badge" title="Firefighter"><img src="assets/helpers/firefighter.svg" alt="Firefighter"><span>Town Safe! 🚒</span></div>
+              <div class="helper-mini-badge" title="Teacher"><img src="assets/helpers/teacher.svg" alt="Teacher"><span>School Neat! 📚</span></div>
+              <div class="helper-mini-badge" title="Postal Worker"><img src="assets/helpers/postal_worker.svg" alt="Postal Worker"><span>Letters Delivered! ✉️</span></div>
+              <div class="helper-mini-badge" title="Sanitation Worker"><img src="assets/helpers/sanitation_worker.svg" alt="Sanitation Worker"><span>Streets Clean! 🌸</span></div>
+              <div class="helper-mini-badge" title="Mechanic"><img src="assets/helpers/mechanic.svg" alt="Mechanic"><span>Cars Repaired! 🚗</span></div>
+            </div>
+
+            <div class="finale-actions">
+              <button id="btn-play-again" class="chota-btn btn-primary btn-bounce">
+                <span>🎉 PLAY AGAIN!</span>
+              </button>
+              <button id="btn-view-town" class="chota-btn btn-secondary">
+                <span>🏘️ VISIT HELPER TOWN</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Parts Adventure</title>
+<style>
+  :root {
+    --bg-color: #f0f4f8;
+    --panel-bg: #ffffff;
+    --text-main: #2c3e50;
+    --accent-blue: #4a90e2;
+    --correct-green: #2ecc71;
+    --wrong-red: #e74c3c;
+  }
+
+  * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  
+  body {
+    margin: 0; padding: 20px; height: 100vh;
+    background: linear-gradient(135deg, #f7f2ff, #e9f8ff 50%, #fff6df);
+    color: var(--text-main); 
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  button { cursor: pointer; border: none; outline: none; transition: 0.2s; font-family: inherit; }
+
+  /* --- SCREEN FLOW LOGIC --- */
+  .screen { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
+  .screen.active { display: flex; }
+
+  /* --- MENU CARDS --- */
+  .menu-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 5px solid rgba(109, 125, 252, 0.25);
+    border-radius: 30px; padding: 50px; text-align: center;
+    box-shadow: 0 20px 60px rgba(69, 72, 120, 0.15);
+    max-width: 800px; width: 100%;
+  }
+  .menu-card h1 { font-size: 48px; margin: 0 0 20px 0; color: #5d63c9; }
+  .menu-card p { font-size: 20px; color: #7f8c8d; margin-bottom: 30px; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff80b8, #8d7bff); color: #fff;
+    padding: 20px 50px; border-radius: 999px; font-size: 26px; font-weight: 900;
+    box-shadow: 0 10px 0 #6354bd;
+  }
+  .btn-primary:active { transform: translateY(6px); box-shadow: 0 4px 0 #6354bd; }
+
+  .options-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
+  .option-btn {
+    flex: 1; min-width: 160px; padding: 25px; border-radius: 20px;
+    background: #fff; border: 4px solid #e2e4ff; color: var(--text-main);
+    font-size: 24px; font-weight: 900; box-shadow: 0 8px 0 #d7d9f3;
+  }
+  .option-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #d7d9f3; }
+  .option-btn.selected { background: #817bff; color: #fff; border-color: #817bff; box-shadow: 0 8px 0 #5e59c9; }
+
+  .next-btn {
+    background: #48cfa0; color: #fff; padding: 18px 50px; border-radius: 999px;
+    font-size: 24px; font-weight: 900; box-shadow: 0 8px 0 #2fa77d;
+  }
+  .next-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+  .next-btn:not(:disabled):active { transform: translateY(6px); box-shadow: 0 2px 0 #2fa77d; }
+
+  /* --- GAME SCREEN CARD --- */
+  .game-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 5px solid rgba(109, 125, 252, 0.25); border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(69, 72, 120, 0.15);
+    width: 100%; max-width: 1300px; height: 95vh;
+    display: flex; flex-direction: column; padding: 20px;
+  }
+
+  .game-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 15px; border-bottom: 3px solid #e1e8ed; margin-bottom: 15px; flex-shrink: 0;
+  }
+  .game-header h2 { margin: 0; font-size: 24px; color: var(--text-main); }
+  .pill-group { display: flex; gap: 10px; align-items: center; }
+  .pill { padding: 8px 16px; border-radius: 999px; background: #f2efff; font-weight: bold; color: #5d63c9; }
+  .back-btn { background: #fff; border: 3px solid #e4e5f5; padding: 8px 16px; border-radius: 12px; font-weight: bold; color: var(--text-main); }
+  
+  .view-toggles { display: flex; gap: 8px; background: #fff; padding: 5px; border-radius: 12px; border: 3px solid #e4e5f5; }
+  .view-btn { padding: 8px 16px; border-radius: 8px; font-weight: 900; background: transparent; color: #596078; }
+  .view-btn.active { background: #7978e9; color: #fff; }
+
+  .game-content { display: flex; flex: 1; gap: 20px; min-height: 0; }
+
+  /* --- LEFT PANEL --- */
+  .left-panel {
+    flex: 0 0 350px;
+    background: #f8f9fa; border: 4px dashed #bdc3c7; border-radius: 20px;
+    padding: 30px 20px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .left-panel h3 { margin: 0; font-size: 18px; color: #95a5a6; text-transform: uppercase; }
+  .left-panel h4 { margin: 20px 0; font-size: 42px; font-weight: 900; color: var(--accent-blue); line-height: 1.1; }
+  .hear-btn {
+    background: #e8f4fd; color: var(--accent-blue); padding: 12px 25px; border-radius: 999px; 
+    font-weight: 900; font-size: 18px; border: 2px solid #bce0fd;
+  }
+  .hear-btn:active { transform: translateY(3px); }
+
+  /* --- RIGHT PANEL --- */
+  .right-panel {
+    flex: 1; background: #fff; border-radius: 20px; border: 4px solid #e8e5ff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 10px; position: relative; overflow: hidden;
+  }
+
+  .image-container {
+    position: relative; display: inline-block;
+    max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9;
+  }
+  .body-image {
+    display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none;
+  }
+
+  /* --- COMPLETELY INVISIBLE HOTSPOTS --- */
+  .hotspot {
+    position: absolute; 
+    transform: translate(-50%, -50%); 
+    width: 20px; 
+    height: 20px; 
+    border-radius: 50%; 
+    background: transparent; 
+    border: none; 
+    box-shadow: none;
+    z-index: 10; 
+    cursor: pointer; 
+    transition: 0.2s;
+  }
+  
+  .hotspot::after {
+    content: ''; position: absolute;
+    top: -15px; left: -15px; right: -15px; bottom: -15px;
+    border-radius: 50%;
+  }
+
+  /* Mouse Hover Animation (Only blink when hovered) */
+  .hotspot:hover { 
+    animation: veryLightBlueBlink 0.8s infinite alternate; 
+  }
+
+  /* Right answer */
+  .hotspot.correct {
+    background: rgba(46, 204, 113, 0.7) !important; 
+    border: 3px solid #fff !important;
+    box-shadow: 0 0 20px var(--correct-green); 
+    animation: pulse 1s infinite; z-index: 20;
+  }
+
+  /* Wrong answer */
+  .hotspot.wrong {
+    background: rgba(231, 76, 60, 0.7) !important; 
+    border: 3px solid #fff !important;
+    box-shadow: 0 0 20px var(--wrong-red); 
+    animation: shake 0.4s; z-index: 20;
+  }
+
+  /* --- SMALL SIZED POINTERS FOR FACE & INTERNAL ORGANS --- */
+  .hotspot[data-part="nose"],
+  .hotspot[data-part="lips"],
+  .hotspot[data-part="teeth"],
+  .hotspot[data-part="tongue"],
+  .hotspot[data-part="chin"],
+  .hotspot[data-part="heart"],
+  .hotspot[data-part="lungs"],
+  .hotspot[data-part="stomachI"],
+  .hotspot[data-part="liver"],
+  .hotspot[data-part="intestines"] {
+    width: 10px;  
+    height: 10px;
+  }
+
+  /* --- REDUCE INVISIBLE TOUCH AREA TO PREVENT OVERLAPPING --- */
+  .hotspot[data-part="nose"]::after,
+  .hotspot[data-part="lips"]::after,
+  .hotspot[data-part="teeth"]::after,
+  .hotspot[data-part="tongue"]::after,
+  .hotspot[data-part="chin"]::after,
+  .hotspot[data-part="heart"]::after,
+  .hotspot[data-part="lungs"]::after,
+  .hotspot[data-part="stomachI"]::after,
+  .hotspot[data-part="liver"]::after,
+  .hotspot[data-part="intestines"]::after {
+    top: -2px; left: -2px; right: -2px; bottom: -2px; 
+  }
+
+  /* --- ANIMATIONS (Very dim and light blue) --- */
+  @keyframes veryLightBlueBlink {
+    0% { 
+      background: rgba(74, 144, 226, 0.05); 
+      box-shadow: 0 0 5px rgba(74, 144, 226, 0.1); 
+    }
+    100% { 
+      background: rgba(74, 144, 226, 0.25); 
+      box-shadow: 0 0 12px rgba(74, 144, 226, 0.3); 
+    }
+  }
+  @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } }
+  @keyframes shake { 0%, 100% { transform: translate(-50%, -50%); } 25% { transform: translate(calc(-50% - 5px), -50%); } 75% { transform: translate(calc(-50% + 5px), -50%); } }
+
+  /* --- FOOTER --- */
+  .game-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px; flex-shrink: 0; padding-top: 15px;
+  }
+  .status-text { font-size: 26px; font-weight: 900; }
+  .status-text.success { color: var(--correct-green); }
+  .status-text.error { color: var(--wrong-red); }
+
+  .game-next-btn {
+    background: var(--correct-green); color: white; padding: 15px 40px; border-radius: 12px; 
+    font-weight: 900; font-size: 22px; visibility: hidden; box-shadow: 0 6px 0 #27ae60;
+  }
+  .game-next-btn.visible { visibility: visible; }
+  .game-next-btn:active { transform: translateY(6px); box-shadow: none; }
+
+  /* OVERLAY */
+  .overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.95); z-index: 30; display: none; align-items: center; justify-content: center; border-radius: 25px; }
+  .overlay.show { display: flex; }
+  .result-box { text-align: center; }
+  .result-box h2 { font-size: 48px; color: var(--correct-green); margin-bottom: 20px; }
+
+</style>
+</head>
+<body>
+
+  <!-- WELCOME SCREEN -->
+  <div id="screen-welcome" class="screen active">
+    <div class="menu-card">
+      <h1>✨ Body Parts Adventure ✨</h1>
+      <p>Listen, Find, and Learn!</p>
+      <button class="btn-primary" onclick="showScreen('screen-class')">LET'S PLAY 🚀</button>
+    </div>
+  </div>
+
+  <!-- CLASS SCREEN -->
+  <div id="screen-class" class="screen">
+    <div class="menu-card">
+      <h1>👩‍🏫 Choose the Class</h1>
+      <div class="options-row">
+        <button class="option-btn class-btn" onclick="selectClass('LKG', this)">LKG</button>
+        <button class="option-btn class-btn" onclick="selectClass('UKG', this)">UKG</button>
+        <button class="option-btn class-btn" onclick="selectClass('1st', this)">1st Class</button>
+      </div>
+      <button id="btn-next-class" class="next-btn" disabled onclick="showScreen('screen-mode')">CONTINUE →</button>
+    </div>
+  </div>
+
+  <!-- MODE SCREEN -->
+  <div id="screen-mode" class="screen">
+    <div class="menu-card">
+      <h1>🧠 What are we learning?</h1>
+      <div class="options-row">
+        <button class="option-btn mode-btn" onclick="selectMode('external', this)">🧍 External</button>
+        <button class="option-btn mode-btn" onclick="selectMode('internal', this)">❤️ Internal</button>
+      </div>
+      <button id="btn-next-mode" class="next-btn" disabled onclick="startGame()">START GAME →</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <div class="game-card">
+      
+      <div class="game-header">
+        <div class="pill-group">
+          <button class="back-btn" onclick="showScreen('screen-mode')">← Back</button>
+          <h2>🌟 Body Adventure</h2>
+        </div>
+        <div class="pill-group">
+          <div class="pill"><span id="lbl-class"></span> • <span id="lbl-mode"></span></div>
+          <div class="view-toggles">
+            <button id="view-front" class="view-btn active" onclick="setView('front')">FRONT</button>
+            <button id="view-back" class="view-btn" onclick="setView('back')">BACK</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-content">
+        <div class="left-panel">
+          <h3>👂 Listen & Find</h3>
+          <h4 id="question-text">Find the NOSE 👃</h4>
+          <button class="hear-btn" onclick="speakQuestion()">🔊 Hear Question</button>
+        </div>
+
+        <div class="right-panel">
+          <div class="image-container" id="image-container">
+            <img class="body-image" id="body-image" src="" alt="Body Image" />
+          </div>
+        </div>
+      </div>
+
+      <div class="game-footer">
+        <div id="status-text" class="status-text">👉 Tap the correct dot!</div>
+        <button id="game-next-btn" class="game-next-btn" onclick="nextQuestion()">NEXT QUESTION →</button>
+      </div>
+
+      <div id="overlay-victory" class="overlay">
+        <div class="result-box">
+          <h2>🎉🏆 Great Job!</h2>
+          <button class="btn-primary" onclick="showScreen('screen-class')">PLAY AGAIN</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+// --- ASSETS ---
+const IMAGES = {
+  external: { front: 'external - front view_2.png', back: 'external - rear view_2.png' },
+  internal: { front: 'internal ukg -front.jpeg', back: 'internal - rear view_2.png' } 
+};
+
+// --- UPDATED PRECISE DOT COORDINATES (With Internal Screenshot Values) ---
+const HOTSPOTS = {
+  external: {
+    front: {
+      hair: [{x: 50, y: 13}], 
+      eyes: [{x: 47, y: 27}, {x: 53, y: 27}],
+      nose: [{x: 50, y: 29.5}],
+      lips: [{x: 48.5, y: 33.5}], 
+      teeth: [{x: 50, y: 32}], 
+      tongue: [{x: 50, y: 34.75}], 
+      ears: [{x: 43, y: 30}, {x: 57, y: 30}],
+      chin: [{x: 50, y: 38}],
+      neck: [{x: 50, y: 40}],
+      shoulders: [{x: 46, y: 41}, {x: 54, y: 41}],
+      arms: [{x: 42, y: 42}, {x: 58, y: 42}],
+      elbow: [{x: 39, y: 40}, {x: 61, y: 40}],
+      wrist: [{x: 35, y: 38}, {x: 65, y: 38}],
+      fingers: [{x: 32, y: 36}, {x: 69, y: 36}],
+      stomach: [{x: 50, y: 57}],
+      hip: [{x: 46, y: 64}, {x: 54, y: 64}],
+      legs: [{x: 47, y: 72}, {x: 53, y: 72}],
+      knee: [{x: 45, y: 77}, {x: 55, y: 77}],
+      ankle: [{x: 46, y: 88}, {x: 54, y: 88}],
+      feet: [{x: 44, y: 92}, {x: 56, y: 92}],
+      toes: [{x: 42, y: 94}, {x: 58, y: 94}]
+    },
+    back: {
+      hair: [{x: 50, y: 15}],
+      back: [{x: 50, y: 48}]
+    }
+  },
+  internal: {
+    front: {
+      brain: [{x: 50, y: 17}],
+      heart: [{x: 50.5, y: 48.5}], /* Changed as per screenshot */
+      lungs: [{x: 47.5, y: 51.5}, {x: 53.5, y: 51.5}], /* Changed as per screenshot */
+      stomachI: [{x: 52, y: 58}], /* Changed as per screenshot */
+      liver: [{x: 49, y: 56.5}], /* Changed as per screenshot */
+      intestines: [{x: 50, y: 64}] /* Changed as per screenshot */
+    },
+    back: {
+      spine: [{x: 50, y: 35}, {x: 50, y: 45}], 
+      kidneys: [{x: 46, y: 55}, {x: 54, y: 55}]
+    }
+  }
+};
+
+const VOCAB = {
+  LKG: {
+    external: [
+      ['Hair','hair','front','💇'],['Eyes','eyes','front','👀'],['Nose','nose','front','👃'],
+      ['Lips','lips','front','👄'],['Ears','ears','front','👂'],['Neck','neck','front','🧣'],
+      ['Shoulders','shoulders','front','🤷'],['Fingers','fingers','front','☝️'],
+      ['Knees','knee','front','🦵'],['Feet','feet','front','🦶'],['Toes','toes','front','👣']
+    ]
+  },
+  UKG: {
+    external: [
+      ['Hair','hair','front','💇'],['Eyes','eyes','front','👀'],['Nose','nose','front','👃'],
+      ['Teeth','teeth','front','😬'],['Tongue','tongue','front','👅'],['Ears','ears','front','👂'],
+      ['Shoulders','shoulders','front','🤷'],['Elbow','elbow','front','💪'],['Arms','arms','front','💪'],
+      ['Fingers','fingers','front','☝️'],['Stomach','stomach','front','👕'],['Legs','legs','front','🦵'],
+      ['Knees','knee','front','🦵'],['Ankles','ankle','front','🧦'],['Feet','feet','front','🦶'],['Back','back','back','🎒']
+    ],
+    internal: [
+      ['Heart','heart','front','❤️'],['Lungs','lungs','front','🫁'],['Stomach','stomachI','front','🥪'],
+      ['Brain','brain','front','🧠'],['Kidneys','kidneys','back','💧'],['Intestines','intestines','front','🐛']
+    ]
+  },
+  '1st': {
+    external: [
+      ['Hair','hair','front','💇'],['Eyes','eyes','front','👀'],['Nose','nose','front','👃'],
+      ['Lips','lips','front','👄'],['Chin','chin','front','👇'],['Ears','ears','front','👂'],
+      ['Neck','neck','front','🧣'],['Shoulders','shoulders','front','🤷'],['Arms','arms','front','💪'],
+      ['Elbows','elbow','front','💪'],['Wrists','wrist','front','⌚'],['Fingers','fingers','front','☝️'],
+      ['Hips','hip','front','👖'],['Legs','legs','front','🦵'],['Knees','knee','front','🦵'],
+      ['Ankles','ankle','front','🧦'],['Feet','feet','front','🦶'],['Toes','toes','front','👣'],['Back','back','back','🎒']
+    ],
+    internal: [
+      ['Brain','brain','front','🧠'],['Heart','heart','front','❤️'],['Lungs','lungs','front','🫁'],
+      ['Stomach','stomachI','front','🥪'],['Intestines','intestines','front','🐛'],['Liver','liver','front','🩸'],
+      ['Kidneys','kidneys','back','💧'],['Spine','spine','back','🦴']
+    ]
+  }
+};
+
+let userClass = '';
+let userMode = '';
+let view = 'front';
+let questions = [];
+let qIndex = 0;
+let answered = false;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function selectClass(c, btn) {
+  userClass = c;
+  document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('btn-next-class').disabled = false;
+}
+
+function selectMode(m, btn) {
+  if (userClass === 'LKG' && m === 'internal') {
+    alert("LKG curriculum only uses external body parts!");
+    return;
+  }
+  userMode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('btn-next-mode').disabled = false;
+}
+
+function startGame() {
+  document.getElementById('lbl-class').textContent = userClass;
+  document.getElementById('lbl-mode').textContent = userMode === 'external' ? 'External' : 'Internal';
+  document.getElementById('overlay-victory').classList.remove('show');
+  
+  questions = [...VOCAB[userClass][userMode]].sort(() => Math.random() - 0.5);
+  qIndex = 0;
+  
+  showScreen('screen-game');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[qIndex];
+  
+  document.getElementById('question-text').textContent = `Find the ${q[0].toUpperCase()} ${q[3]}`;
+  
+  const statusTxt = document.getElementById('status-text');
+  statusTxt.textContent = '👉 Tap the correct dot!';
+  statusTxt.className = 'status-text';
+  document.getElementById('game-next-btn').classList.remove('visible');
+
+  if (q[2] !== view) setView(q[2]);
+  else renderBody();
+  
+  setTimeout(speakQuestion, 300);
+}
+
+function setView(v) {
+  view = v;
+  document.getElementById('view-front').classList.toggle('active', v === 'front');
+  document.getElementById('view-back').classList.toggle('active', v === 'back');
+  renderBody();
+}
+
+function renderBody() {
+  const container = document.getElementById('image-container');
+  container.querySelectorAll('.hotspot').forEach(el => el.remove());
+
+  document.getElementById('body-image').src = IMAGES[userMode][view];
+
+  const spotsData = HOTSPOTS[userMode][view];
+  if (!spotsData) return;
+
+  for (const partKey in spotsData) {
+    const boxes = spotsData[partKey];
+    boxes.forEach(coords => {
+      const spot = document.createElement('div');
+      spot.className = 'hotspot';
+      spot.dataset.part = partKey;
+      
+      spot.style.left = `${coords.x}%`;
+      spot.style.top = `${coords.y}%`;
+      
+      spot.onclick = function() { checkPart(this); };
+      container.appendChild(spot);
+    });
+  }
+}
+
+function checkPart(el) {
+  if (answered) return;
+  const target = questions[qIndex][1]; 
+  const clicked = el.dataset.part;
+  const statusTxt = document.getElementById('status-text');
+  
+  if (clicked === target) {
+    answered = true;
+    statusTxt.textContent = '🎉 Correct! Great job!';
+    statusTxt.className = 'status-text success';
+    
+    document.querySelectorAll(`.hotspot[data-part="${clicked}"]`).forEach(h => h.classList.add('correct'));
+    document.getElementById('game-next-btn').classList.add('visible');
+    playSuccess();
+    
+    if (qIndex === questions.length - 1) {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'CHOTAPLAY_GAME_COMPLETE' }, '*');
+        }
+      } catch (err) {}
+      setTimeout(() => document.getElementById('overlay-victory').classList.add('show'), 1200);
+    }
+  } else {
+    statusTxt.textContent = '💡 Try again!';
+    statusTxt.className = 'status-text error';
+    el.classList.add('wrong');
+    setTimeout(() => el.classList.remove('wrong'), 400); 
+    playError();
+  }
+}
+
+function nextQuestion() {
+  qIndex++;
+  loadQuestion();
+}
+
+function speakQuestion() {
+  const q = questions[qIndex]; 
+  if ('speechSynthesis' in window && q) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(`Find the ${q[0]}`);
+    u.rate = 0.85; u.pitch = 1.1; 
+    speechSynthesis.speak(u);
+  }
+}
+
+function playSuccess() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 1046.5].forEach((f, i) => {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.frequency.value = f; osc.type = 'sine';
+      osc.connect(gain); gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.1);
+      gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.1 + 0.02);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.1 + 0.2);
+      osc.start(ctx.currentTime + i * 0.1); osc.stop(ctx.currentTime + i * 0.1 + 0.2);
+    });
+  } catch(e) {}
+}
+
+function playError() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = 'triangle'; osc.frequency.value = 220;
+    osc.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.3);
+    osc.start(); osc.stop(ctx.currentTime + 0.3);
+  } catch(e) {}
+}
+</script>
+</body>
+</html>

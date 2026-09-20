@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>John's School Day Adventure | CHOTAPLAY</title>
+  <meta name="description" content="Join John and Little Star on a magical school day adventure! Explore classroom discovery, art, puzzles, playground fun, lunch time, and friendly social play for ages 3-6.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Main Game Container -->
+  <div id="game-app" class="game-wrapper">
+
+    <!-- Top HUD Header (Brand, Navigation & Audio Controls) -->
+    <header class="game-header">
+      <div class="brand-badge" id="brand-badge">
+        <span class="brand-icon">🌟</span>
+        <span class="brand-name">CHOTAPLAY</span>
+      </div>
+
+      <div class="hud-center">
+        <div class="star-tracker" id="star-tracker" title="School Day Stars">
+          <span class="star-badge" id="star-1" data-zone="classroom">⭐</span>
+          <span class="star-badge" id="star-2" data-zone="art">⭐</span>
+          <span class="star-badge" id="star-3" data-zone="puzzle">⭐</span>
+          <span class="star-badge" id="star-4" data-zone="playground">⭐</span>
+          <span class="star-badge" id="star-5" data-zone="lunch">⭐</span>
+          <span class="star-badge" id="star-6" data-zone="friends">⭐</span>
+          <span class="star-count" id="star-count-text">0/6 Stars</span>
+        </div>
+      </div>
+
+      <div class="hud-controls">
+        <button id="btn-sound" class="hud-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <span class="hud-btn-icon">🔊</span>
+        </button>
+        <button id="btn-home" class="hud-btn hidden" title="Back to School Gate" aria-label="School Gate">
+          <span class="hud-btn-icon">🏫</span>
+          <span class="hud-btn-label">School</span>
+        </button>
+        <button id="btn-bell" class="hud-btn bell-btn" title="Ring School Bell" aria-label="School Bell">
+          <span class="hud-btn-icon bell-swing">🔔</span>
+          <span class="hud-btn-label">Bell</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Speech Bubble for Voice & Visual Dialogue -->
+    <div id="dialogue-box" class="dialogue-container hidden" aria-live="polite">
+      <div class="dialogue-avatar" id="dialogue-avatar">⭐</div>
+      <div class="dialogue-bubble">
+        <div class="dialogue-speaker" id="dialogue-speaker">Little Star</div>
+        <div class="dialogue-text" id="dialogue-text">Welcome to school!</div>
+      </div>
+      <button id="dialogue-replay" class="dialogue-audio-btn" title="Hear again" aria-label="Hear again">🔊</button>
+    </div>
+
+    <!-- MAIN GAME SCREEN STAGE -->
+    <main id="game-stage" class="game-stage">
+
+      <!-- ================= SCENE 0: MORNING HOME SCENE ================= -->
+      <section id="scene-morning" class="scene active">
+        <div class="sky-background morning-sky">
+          <!-- Interactive Sun -->
+          <div class="sun-container interactive" id="morning-sun" title="Tap the Sun!">
+            <div class="sun-body">
+              <div class="sun-face">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="smile"></span>
+              </div>
+            </div>
+            <div class="sun-rays"></div>
+          </div>
+          <!-- Drifting Clouds -->
+          <div class="cloud cloud-1 interactive" id="cloud-1">☁️</div>
+          <div class="cloud cloud-2 interactive" id="cloud-2">☁️</div>
+          <div class="cloud cloud-3 interactive" id="cloud-3">☁️</div>
+          <!-- Chirping Flying Bird -->
+          <div class="flying-bird bird-1" id="morning-bird">🐦</div>
+        </div>
+
+        <div class="morning-ground">
+          <div class="ground-hill hill-left"></div>
+          <div class="ground-hill hill-right"></div>
+          <div class="house-container" id="morning-house">
+            <div class="house-roof"></div>
+            <div class="house-chimney"><div class="smoke-puff"></div></div>
+            <div class="house-walls">
+              <div class="house-window"><div class="window-cross"></div></div>
+              <div class="house-door"><div class="door-knob"></div></div>
+            </div>
+            <div class="garden-flowers">
+              <span class="flower f1">🌸</span>
+              <span class="flower f2">🌻</span>
+              <span class="flower f3">🌷</span>
+            </div>
+          </div>
+
+          <!-- Characters on Home Lawn -->
+          <div class="morning-characters">
+            <!-- John Character -->
+            <div class="character-wrapper john-wrapper" id="morning-john">
+              <div class="character-avatar john-avatar" id="avatar-john-morning">
+                <!-- Vector John Avatar -->
+                <div class="john-body-art">
+                  <div class="john-head">
+                    <div class="john-hair"></div>
+                    <div class="john-face">
+                      <div class="john-eyes"><span class="j-eye"></span><span class="j-eye"></span></div>
+                      <div class="john-cheeks"><span class="j-cheek"></span><span class="j-cheek"></span></div>
+                      <div class="john-smile"></div>
+                    </div>
+                  </div>
+                  <div class="john-torso">
+                    <div class="john-shirt">
+                      <span class="rocket-emblem">🚀</span>
+                    </div>
+                    <div class="john-arms">
+                      <div class="john-arm left wave-arm"></div>
+                      <div class="john-arm right"></div>
+                    </div>
+                  </div>
+                  <div class="john-shorts"></div>
+                  <div class="john-legs">
+                    <div class="john-leg left"><div class="john-shoe"></div></div>
+                    <div class="john-leg right"><div class="john-shoe"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="character-name-tag">John</div>
+            </div>
+
+            <!-- Little Star Companion -->
+            <div class="character-wrapper star-wrapper" id="morning-star">
+              <div class="star-avatar float-anim" id="avatar-star-morning">
+                <div class="star-shape">⭐</div>
+                <div class="star-glow"></div>
+              </div>
+              <div class="character-name-tag">Little Star</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Big Start Action Banner -->
+        <div class="start-banner-container">
+          <div class="title-logo">
+            <h1 class="main-title">JOHN'S SCHOOL DAY ADVENTURE</h1>
+            <p class="sub-title">✨ School is Fun, Creative & Full of Friends! ✨</p>
+          </div>
+          <button id="btn-start-adventure" class="big-cta-btn pulse-glow">
+            <span class="btn-icon">🎒</span>
+            <span class="btn-text">START SCHOOL DAY!</span>
+            <span class="btn-sparkle">✨</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= SCENE 1: SCHOOL BUS JOURNEY ================= -->
+      <section id="scene-bus" class="scene hidden">
+        <div class="sky-background bus-sky">
+          <div class="bus-sun">☀️</div>
+          <div class="bus-clouds">
+            <div class="cloud b-cloud-1 interactive">☁️</div>
+            <div class="cloud b-cloud-2 interactive">☁️</div>
+          </div>
+          <div class="flying-birds">
+            <span class="f-bird b1">🐦</span>
+            <span class="f-bird b2">🕊️</span>
+          </div>
+        </div>
+
+        <!-- Parallax Scenery -->
+        <div class="bus-scenery-layer mountains-layer"></div>
+        <div class="bus-scenery-layer trees-layer">
+          <div class="scenery-tree t1">🌳</div>
+          <div class="scenery-tree t2">🌲</div>
+          <div class="scenery-tree t3">🌳</div>
+          <div class="scenery-tree t4">🌲</div>
+          <div class="scenery-tree t5">🌳</div>
+        </div>
+
+        <!-- Moving Road -->
+        <div class="bus-road-layer">
+          <div class="road-surface">
+            <div class="road-lines-stream"></div>
+          </div>
+        </div>
+
+        <!-- The School Bus Vehicle -->
+        <div class="bus-vehicle-container" id="school-bus-vehicle">
+          <div class="bus-body">
+            <!-- Roof / Lights -->
+            <div class="bus-roof-lights">
+              <span class="roof-lamp red-lamp"></span>
+              <span class="roof-lamp yellow-lamp"></span>
+              <span class="roof-lamp red-lamp"></span>
+            </div>
+            <!-- School Bus Banner -->
+            <div class="bus-sign-bar">SCHOOL BUS</div>
+            <!-- Windows with Passengers -->
+            <div class="bus-windows-row">
+              <div class="bus-window driver-window">
+                <div class="bus-driver">👨‍✈️</div>
+              </div>
+              <div class="bus-window passenger-window window-john">
+                <div class="passenger-john wave-anim">👦</div>
+              </div>
+              <div class="bus-window passenger-window">
+                <div class="passenger-friend">👧</div>
+              </div>
+            </div>
+            <!-- Bus Lower Chassis -->
+            <div class="bus-chassis">
+              <div class="bus-grill"></div>
+              <div class="bus-headlight interactive" id="bus-horn-tap" title="Tap Horn!">
+                <span class="headlight-bulb">💡</span>
+                <span class="honk-hint">HONK! 📢</span>
+              </div>
+            </div>
+            <!-- Wheels -->
+            <div class="bus-wheels">
+              <div class="wheel wheel-front wheel-spin"><div class="rim"></div></div>
+              <div class="wheel wheel-rear wheel-spin"><div class="rim"></div></div>
+            </div>
+          </div>
+
+          <!-- Little Star flying beside bus -->
+          <div class="bus-star-companion float-fly-anim">
+            <div class="star-shape">⭐</div>
+            <div class="sparkle-tail">✨✨</div>
+          </div>
+        </div>
+
+        <!-- Journey Controls & Prompt -->
+        <div class="bus-journey-prompt">
+          <div class="bus-status-bubble" id="bus-status-text">
+            🎶 "The wheels on the bus go round and round!" 🎶
+          </div>
+          <button id="btn-arrive-school" class="big-cta-btn arrive-btn pulse-glow">
+            <span>🏫 ARRIVE AT SCHOOL! ➔</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= SCENE 2: SCHOOL GATE (MAIN HUB) ================= -->
+      <section id="scene-school-gate" class="scene hidden">
+        <div class="sky-background school-sky">
+          <div class="gate-sun">☀️</div>
+          <div class="gate-cloud gc-1">☁️</div>
+          <div class="gate-cloud gc-2">☁️</div>
+          <!-- Welcome Banner Arch -->
+          <div class="welcome-arch">
+            <div class="arch-ribbon">
+              <span class="arch-star">⭐</span>
+              <span class="arch-title">WELCOME TO SUNNY HILL SCHOOL!</span>
+              <span class="arch-star">⭐</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- School Building & Yard Background -->
+        <div class="school-yard-backdrop">
+          <div class="school-main-facade">
+            <div class="school-clock-tower">
+              <div class="school-clock">
+                <div class="clock-hand hour-hand"></div>
+                <div class="clock-hand minute-hand"></div>
+              </div>
+              <div class="clock-bell-top interactive" id="gate-bell-tap">🔔</div>
+            </div>
+            <div class="school-roof-eaves"></div>
+          </div>
+        </div>
+
+        <!-- 6 Interactive School Activity Portals Grid -->
+        <div class="school-zones-hub">
+          <h2 class="hub-heading">Choose Where To Play & Discover! 👇</h2>
+          
+          <div class="zones-grid">
+            <!-- 1. Classroom -->
+            <button class="zone-card card-classroom" id="card-classroom" data-zone="classroom">
+              <div class="zone-card-badge" id="badge-classroom">⭐</div>
+              <div class="zone-card-icon-wrap">
+                <span class="zone-icon">🏫</span>
+                <span class="zone-mini-float">🔤 1️⃣</span>
+              </div>
+              <div class="zone-card-content">
+                <h3 class="zone-title">Classroom</h3>
+                <p class="zone-desc">Letters, Numbers & Shapes!</p>
+                <span class="zone-tag tag-discovery">DISCOVERY</span>
+              </div>
+            </button>
+
+            <!-- 2. Art Corner -->
+            <button class="zone-card card-art" id="card-art" data-zone="art">
+              <div class="zone-card-badge" id="badge-art">⭐</div>
+              <div class="zone-card-icon-wrap">
+                <span class="zone-icon">🎨</span>
+                <span class="zone-mini-float">🖌️ ✨</span>
+              </div>
+              <div class="zone-card-content">
+                <h3 class="zone-title">Art Corner</h3>
+                <p class="zone-desc">Paint & Color Magical Pictures!</p>
+                <span class="zone-tag tag-creativity">CREATIVITY</span>
+              </div>
+            </button>
+
+            <!-- 3. Puzzle Corner -->
+            <button class="zone-card card-puzzle" id="card-puzzle" data-zone="puzzle">
+              <div class="zone-card-badge" id="badge-puzzle">⭐</div>
+              <div class="zone-card-icon-wrap">
+                <span class="zone-icon">🧩</span>
+                <span class="zone-mini-float">🚌 💡</span>
+              </div>
+              <div class="zone-card-content">
+                <h3 class="zone-title">Puzzle Corner</h3>
+                <p class="zone-desc">Snap & Build the School Bus!</p>
+                <span class="zone-tag tag-thinking">THINKING</span>
+              </div>
+            </button>
+
+            <!-- 4. Playground -->
+            <button class="zone-card card-playground" id="card-playground" data-zone="playground">
+              <div class="zone-card-badge" id="badge-playground">⭐</div>
+              <div class="zone-card-icon-wrap">
+                <span class="zone-icon">🛝</span>
+                <span class="zone-mini-float">⚽ 🤸</span>
+              </div>
+              <div class="zone-card-content">
+                <h3 class="zone-title">Playground</h3>
+                <p class="zone-desc">Slide, Swing, Kick Ball & Seesaw!</p>
+                <span class="zone-tag tag-active">ACTIVE PLAY</span>
+              </div>
+            </button>
+
+            <!-- 5. Lunch Corner -->
+            <button class="zone-card card-lunch" id="card-lunch" data-zone="lunch">
+              <div class="zone-card-badge" id="badge-lunch">⭐</div>
+              <div class="zone-card-icon-wrap">
+                <span class="zone-icon">🥪</span>
+                <span class="zone-mini-float">🍎 🧃</span>
+              </div>
+              <div class="zone-card-content">
+                <h3 class="zone-title">Lunch Box</h3>
+                <p class="zone-desc">Healthy Yummy Treats & Snacks!</p>
+                <span class="zone-tag tag-discovery">DISCOVERY</span>
+              </div>
+            </button>
+
+            <!-- 6. Friends Corner -->
+            <button class="zone-card card-friends" id="card-friends" data-zone="friends">
+              <div class="zone-card-badge" id="badge-friends">⭐</div>
+              <div class="zone-card-icon-wrap">
+                <span class="zone-icon">👫</span>
+                <span class="zone-mini-float">👋 ✋</span>
+              </div>
+              <div class="zone-card-content">
+                <h3 class="zone-title">Friends Corner</h3>
+                <p class="zone-desc">Wave, High-Five & Smile!</p>
+                <span class="zone-tag tag-social">SOCIAL FUN</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- School Gate Welcome Characters -->
+        <div class="gate-welcomers">
+          <div class="teacher-welcomer" id="teacher-gate">
+            <div class="teacher-avatar">👩‍🏫</div>
+            <div class="speech-bubble-mini">"Good Morning, John!"</div>
+          </div>
+          <div class="john-gate-avatar wave-anim">
+            <div class="avatar-john-mini">👦</div>
+          </div>
+          <div class="star-gate-avatar float-anim">
+            <div class="avatar-star-mini">⭐</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ZONE 1: CLASSROOM (DISCOVERY) ================= -->
+      <section id="scene-classroom" class="scene zone-scene hidden">
+        <div class="zone-header-bar classroom-bar">
+          <div class="zone-info">
+            <span class="zone-badge-icon">🏫</span>
+            <h2>Classroom Discovery</h2>
+          </div>
+          <div class="classroom-tabs">
+            <button class="class-tab active" data-tab="letters">🔤 Letters</button>
+            <button class="class-tab" data-tab="numbers">🔢 Numbers</button>
+            <button class="class-tab" data-tab="shapes">🔺 Shapes</button>
+          </div>
+        </div>
+
+        <div class="classroom-stage">
+          <!-- Teacher Character -->
+          <div class="classroom-teacher-area">
+            <div class="teacher-figure" id="classroom-teacher">
+              <div class="teacher-head">
+                <div class="teacher-hair"></div>
+                <div class="teacher-glasses">👓</div>
+                <div class="teacher-face-smile">😊</div>
+              </div>
+              <div class="teacher-dress">
+                <div class="teacher-pointer-hand wave-pointer">👉</div>
+              </div>
+            </div>
+            <div class="teacher-tag">Teacher Sunny</div>
+          </div>
+
+          <!-- Big Interactive Smart Blackboard -->
+          <div class="blackboard-container">
+            <div class="blackboard-frame">
+              <div class="chalk-ledge">
+                <span class="chalk c-white"></span>
+                <span class="chalk c-yellow"></span>
+                <span class="chalk c-blue"></span>
+                <span class="eraser">🧽</span>
+              </div>
+
+              <!-- Content Tab 1: Alphabet Letters -->
+              <div class="board-panel active" id="panel-letters">
+                <div class="board-title">Tap Any Letter to Learn! 🔤</div>
+                <div class="letters-grid" id="letters-grid">
+                  <!-- Generated dynamically in script.js (A to Z with pictures) -->
+                </div>
+              </div>
+
+              <!-- Content Tab 2: Numbers & Counting -->
+              <div class="board-panel" id="panel-numbers">
+                <div class="board-title">Tap a Number to Count Stars! 🔢</div>
+                <div class="numbers-row" id="numbers-row">
+                  <!-- 1 to 5 with dynamic star counting animations -->
+                </div>
+                <div class="counting-display" id="counting-display">
+                  <div class="counting-stars-tray" id="counting-stars-tray"></div>
+                  <div class="counting-word" id="counting-word">Tap a number!</div>
+                </div>
+              </div>
+
+              <!-- Content Tab 3: Shapes -->
+              <div class="board-panel" id="panel-shapes">
+                <div class="board-title">Tap a Shape to Hear Its Name! 🔷</div>
+                <div class="shapes-grid" id="shapes-grid">
+                  <!-- Circle, Star, Triangle, Square, Heart, Diamond -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discovery Feedback Banner -->
+          <div class="discovery-feedback-card" id="classroom-feedback">
+            <div class="feedback-icon" id="class-feed-icon">⭐</div>
+            <div class="feedback-text" id="class-feed-text">Tap anything on the board to discover!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ZONE 2: ART CORNER (CREATIVITY) ================= -->
+      <section id="scene-art" class="scene zone-scene hidden">
+        <div class="zone-header-bar art-bar">
+          <div class="zone-info">
+            <span class="zone-badge-icon">🎨</span>
+            <h2>Art & Color Corner</h2>
+          </div>
+          <div class="art-picture-selector">
+            <span class="selector-label">Choose Picture:</span>
+            <button class="pic-select-btn active" data-pic="school">🏫 School</button>
+            <button class="pic-select-btn" data-pic="bus">🚌 Bus</button>
+            <button class="pic-select-btn" data-pic="rocket">🚀 Rocket</button>
+            <button class="pic-select-btn" data-pic="nature">🌻 Nature</button>
+          </div>
+        </div>
+
+        <div class="art-stage">
+          <!-- Color Palette Bar -->
+          <div class="art-palette-dock">
+            <div class="palette-title">🎨 Pick a Color:</div>
+            <div class="palette-swatches" id="palette-swatches">
+              <button class="swatch-btn active" data-color="#FF3B30" style="--swatch-color: #FF3B30;" title="Cherry Red"></button>
+              <button class="swatch-btn" data-color="#FF9500" style="--swatch-color: #FF9500;" title="Bright Orange"></button>
+              <button class="swatch-btn" data-color="#FFD60A" style="--swatch-color: #FFD60A;" title="Sunny Yellow"></button>
+              <button class="swatch-btn" data-color="#34C759" style="--swatch-color: #34C759;" title="Leaf Green"></button>
+              <button class="swatch-btn" data-color="#00C7BE" style="--swatch-color: #00C7BE;" title="Turquoise"></button>
+              <button class="swatch-btn" data-color="#007AFF" style="--swatch-color: #007AFF;" title="Sky Blue"></button>
+              <button class="swatch-btn" data-color="#AF52DE" style="--swatch-color: #AF52DE;" title="Magic Purple"></button>
+              <button class="swatch-btn" data-color="#FF2D55" style="--swatch-color: #FF2D55;" title="Pink Rose"></button>
+              <button class="swatch-btn rainbow-brush-btn" data-color="rainbow" title="Rainbow Magic!">🌈</button>
+            </div>
+            <div class="active-color-indicator">
+              <span>Active: </span>
+              <div class="color-preview-circle" id="color-preview-circle"></div>
+              <span id="active-color-name">Cherry Red</span>
+            </div>
+            <div class="art-tools-row">
+              <button id="btn-art-rainbow" class="art-action-btn rainbow-btn">✨ Rainbow Fill</button>
+              <button id="btn-art-clear" class="art-action-btn clear-btn">🔄 Clear</button>
+            </div>
+          </div>
+
+          <!-- Coloring Canvas (Vector SVG Shapes) -->
+          <div class="art-easel-container">
+            <div class="easel-frame">
+              <div class="easel-canvas" id="easel-canvas">
+                <!-- SVG injected dynamically for each picture template -->
+              </div>
+            </div>
+          </div>
+
+          <!-- John's Art Reaction -->
+          <div class="art-reaction-panel">
+            <div class="artist-john-avatar">
+              <span class="beret-icon">🎨</span>
+              <div class="avatar-face">👦</div>
+            </div>
+            <div class="art-speech-bubble" id="art-speech-text">
+              "Tap a color, then tap any part of the picture to paint it!"
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ZONE 3: PUZZLE CORNER (THINKING) ================= -->
+      <section id="scene-puzzle" class="scene zone-scene hidden">
+        <div class="zone-header-bar puzzle-bar">
+          <div class="zone-info">
+            <span class="zone-badge-icon">🧩</span>
+            <h2>Puzzle Thinking Corner</h2>
+          </div>
+          <div class="puzzle-selector">
+            <button class="puz-select-btn active" data-puz="bus">🚌 School Bus (3 Pieces)</button>
+            <button class="puz-select-btn" data-puz="backpack">🎒 Backpack (4 Pieces)</button>
+          </div>
+        </div>
+
+        <div class="puzzle-stage">
+          <div class="puzzle-instruction-bar">
+            <span class="puz-hint-icon">💡</span>
+            <span id="puzzle-instruction-text">Drag or Tap each puzzle piece into its glowing outline!</span>
+          </div>
+
+          <!-- Puzzle Board Area (Target Slots) -->
+          <div class="puzzle-board-wrapper">
+            <div class="puzzle-board" id="puzzle-board">
+              <!-- Target Slots injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Pieces Tray (Pieces to place) -->
+          <div class="puzzle-tray-wrapper">
+            <div class="tray-title">🧩 Your Puzzle Pieces:</div>
+            <div class="puzzle-pieces-tray" id="puzzle-pieces-tray">
+              <!-- Draggable / Tappable pieces injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Puzzle Victory Celebration Modal / Overlay -->
+          <div class="puzzle-victory-overlay hidden" id="puzzle-victory">
+            <div class="victory-card pulse-pop">
+              <div class="victory-stars">⭐⭐⭐</div>
+              <h3>YOU DID IT! 🎉</h3>
+              <p>Great thinking, superstar!</p>
+              <button id="btn-next-puzzle" class="big-cta-btn">Next Fun Puzzle! ➔</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ZONE 4: PLAYGROUND (ACTIVE PLAY) ================= -->
+      <section id="scene-playground" class="scene zone-scene hidden">
+        <div class="zone-header-bar playground-bar">
+          <div class="zone-info">
+            <span class="zone-badge-icon">🛝</span>
+            <h2>School Playground</h2>
+          </div>
+          <div class="playground-tagline">Tap any play station to have fun with John!</div>
+        </div>
+
+        <div class="playground-stage">
+          <div class="playground-sky">
+            <div class="play-sun">☀️</div>
+            <div class="play-clouds">☁️ ☁️</div>
+          </div>
+
+          <div class="playground-ground">
+            <!-- 1. SLIDE STATION -->
+            <div class="play-station slide-station interactive" id="station-slide" title="Tap to Slide!">
+              <div class="slide-structure">
+                <div class="slide-ladder">🪜</div>
+                <div class="slide-chute">🛝</div>
+              </div>
+              <div class="station-john slide-john" id="play-john-slide">👦</div>
+              <div class="station-label">
+                <span class="label-name">Slide!</span>
+                <span class="label-hint">Tap me! 🛝</span>
+              </div>
+            </div>
+
+            <!-- 2. SWING STATION -->
+            <div class="play-station swing-station interactive" id="station-swing" title="Tap to Swing!">
+              <div class="swing-frame">
+                <div class="swing-rope-left"></div>
+                <div class="swing-rope-right"></div>
+                <div class="swing-seat" id="swing-seat-elem">
+                  <div class="station-john swing-john" id="play-john-swing">👦</div>
+                </div>
+              </div>
+              <div class="station-label">
+                <span class="label-name">Swing!</span>
+                <span class="label-hint">Tap me! 🎪</span>
+              </div>
+            </div>
+
+            <!-- 3. SOCCER BALL STATION -->
+            <div class="play-station soccer-station interactive" id="station-ball" title="Tap to Kick!">
+              <div class="soccer-goal">🥅</div>
+              <div class="soccer-ball" id="soccer-ball-elem">⚽</div>
+              <div class="station-john kicker-john" id="play-john-kicker">👦</div>
+              <div class="station-label">
+                <span class="label-name">Kick Ball!</span>
+                <span class="label-hint">Tap ball! ⚽</span>
+              </div>
+            </div>
+
+            <!-- 4. SEESAW STATION -->
+            <div class="play-station seesaw-station interactive" id="station-seesaw" title="Tap to Ride Seesaw!">
+              <div class="seesaw-fulcrum">▲</div>
+              <div class="seesaw-plank" id="seesaw-plank-elem">
+                <div class="seesaw-rider left-rider">
+                  <div class="station-john" id="play-john-seesaw">👦</div>
+                </div>
+                <div class="seesaw-rider right-rider">
+                  <div class="seesaw-friend">⭐</div>
+                </div>
+              </div>
+              <div class="station-label">
+                <span class="label-name">Seesaw!</span>
+                <span class="label-hint">Tap me! ⚖️</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Playground Speech Bar -->
+          <div class="playground-bubble-bar" id="playground-bubble-bar">
+            <div class="star-avatar float-anim">⭐</div>
+            <div class="bubble-text" id="playground-speech-text">
+              "School playgrounds are so much fun! Tap the slide, swing, ball, or seesaw!"
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ZONE 5: LUNCH CORNER (DISCOVERY) ================= -->
+      <section id="scene-lunch" class="scene zone-scene hidden">
+        <div class="zone-header-bar lunch-bar">
+          <div class="zone-info">
+            <span class="zone-badge-icon">🥪</span>
+            <h2>Lunch Box Discovery</h2>
+          </div>
+          <div class="lunch-tagline">Tap each yummy food to eat healthy snacks!</div>
+        </div>
+
+        <div class="lunch-stage">
+          <div class="lunch-table-mat">
+            <!-- Lunch Box Container -->
+            <div class="lunchbox-container" id="lunchbox-container">
+              <div class="lunchbox-lid" id="lunchbox-lid">
+                <div class="lid-handle"></div>
+                <div class="lid-design">
+                  <span class="lid-star">⭐</span>
+                  <span class="lid-label">JOHN'S LUNCH BOX</span>
+                  <span class="lid-star">⭐</span>
+                </div>
+                <button id="btn-open-lunchbox" class="lunch-open-btn pulse-glow">Tap to Open! 🥪</button>
+              </div>
+
+              <!-- Lunch Box Interior Items -->
+              <div class="lunchbox-interior" id="lunchbox-interior">
+                <!-- 1. Apple -->
+                <button class="lunch-item-card interactive" id="food-apple" data-food="apple">
+                  <div class="food-visual" id="vis-apple">🍎</div>
+                  <div class="food-bite-overlay" id="bite-apple"></div>
+                  <div class="food-name">Sweet Apple</div>
+                  <div class="food-action-hint">Tap to bite! 🍎</div>
+                </button>
+
+                <!-- 2. Banana -->
+                <button class="lunch-item-card interactive" id="food-banana" data-food="banana">
+                  <div class="food-visual" id="vis-banana">🍌</div>
+                  <div class="food-bite-overlay" id="bite-banana"></div>
+                  <div class="food-name">Ripe Banana</div>
+                  <div class="food-action-hint">Tap to munch! 🍌</div>
+                </button>
+
+                <!-- 3. Sandwich -->
+                <button class="lunch-item-card interactive" id="food-sandwich" data-food="sandwich">
+                  <div class="food-visual" id="vis-sandwich">🥪</div>
+                  <div class="food-bite-overlay" id="bite-sandwich"></div>
+                  <div class="food-name">Cheese Sandwich</div>
+                  <div class="food-action-hint">Tap to eat! 🥪</div>
+                </button>
+
+                <!-- 4. Water / Juice -->
+                <button class="lunch-item-card interactive" id="food-juice" data-food="juice">
+                  <div class="food-visual" id="vis-juice">🧃</div>
+                  <div class="food-bite-overlay" id="bite-juice"></div>
+                  <div class="food-name">Fresh Fruit Juice</div>
+                  <div class="food-action-hint">Tap to sip! 🧃</div>
+                </button>
+
+                <!-- 5. Cookie -->
+                <button class="lunch-item-card interactive" id="food-cookie" data-food="cookie">
+                  <div class="food-visual" id="vis-cookie">🍪</div>
+                  <div class="food-bite-overlay" id="bite-cookie"></div>
+                  <div class="food-name">Choco Cookie</div>
+                  <div class="food-action-hint">Tap for treat! 🍪</div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Little Star Yummy Reaction -->
+          <div class="lunch-reaction-card">
+            <div class="lunch-companions">
+              <div class="happy-john-eating" id="john-eating-avatar">👦😋</div>
+              <div class="happy-star-eating float-anim">⭐</div>
+            </div>
+            <div class="lunch-dialogue-text" id="lunch-speech-text">
+              "Yummy! Eating healthy foods gives us super energy for school!"
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ZONE 6: FRIENDS CORNER (SOCIAL) ================= -->
+      <section id="scene-friends" class="scene zone-scene hidden">
+        <div class="zone-header-bar friends-bar">
+          <div class="zone-info">
+            <span class="zone-badge-icon">👫</span>
+            <h2>Friends & Kindness Corner</h2>
+          </div>
+          <div class="friends-tagline">Tap any classmate to wave, high-five, and share!</div>
+        </div>
+
+        <div class="friends-stage">
+          <div class="friends-yard">
+            <!-- John on the left -->
+            <div class="friend-card john-card">
+              <div class="friend-avatar-wrap">
+                <div class="friend-body-avatar john-main-avatar" id="friends-john-avatar">👦</div>
+                <div class="friend-role-badge">John</div>
+              </div>
+              <div class="friend-speech-bubble" id="john-friends-speech">"Hello friends!"</div>
+            </div>
+
+            <!-- Classmate 1: Maya -->
+            <div class="friend-card interactive" id="friend-maya" data-friend="maya">
+              <div class="friend-avatar-wrap">
+                <div class="friend-body-avatar avatar-maya">👧</div>
+                <div class="friend-role-badge">Maya</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-act-btn btn-wave" data-action="wave" title="Wave to Maya">👋 Wave</button>
+                <button class="friend-act-btn btn-highfive" data-action="highfive" title="High Five Maya">✋ High Five</button>
+                <button class="friend-act-btn btn-share" data-action="share" title="Share Toy with Maya">🎁 Share</button>
+              </div>
+              <div class="friend-response-bubble" id="maya-speech">"Hi John! Let's play together!"</div>
+            </div>
+
+            <!-- Classmate 2: Leo -->
+            <div class="friend-card interactive" id="friend-leo" data-friend="leo">
+              <div class="friend-avatar-wrap">
+                <div class="friend-body-avatar avatar-leo">👦🏻</div>
+                <div class="friend-role-badge">Leo</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-act-btn btn-wave" data-action="wave" title="Wave to Leo">👋 Wave</button>
+                <button class="friend-act-btn btn-highfive" data-action="highfive" title="High Five Leo">✋ High Five</button>
+                <button class="friend-act-btn btn-share" data-action="share" title="Share Book with Leo">📚 Share</button>
+              </div>
+              <div class="friend-response-bubble" id="leo-speech">"You're my best buddy, John!"</div>
+            </div>
+
+            <!-- Classmate 3: Emma -->
+            <div class="friend-card interactive" id="friend-emma" data-friend="emma">
+              <div class="friend-avatar-wrap">
+                <div class="friend-body-avatar avatar-emma">👧🏽</div>
+                <div class="friend-role-badge">Emma</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-act-btn btn-wave" data-action="wave" title="Wave to Emma">👋 Wave</button>
+                <button class="friend-act-btn btn-highfive" data-action="highfive" title="High Five Emma">✋ High Five</button>
+                <button class="friend-act-btn btn-share" data-action="share" title="Share Crayons with Emma">🖍️ Share</button>
+              </div>
+              <div class="friend-response-bubble" id="emma-speech">"School is so fun with friends!"</div>
+            </div>
+          </div>
+
+          <!-- Social Tip Bar -->
+          <div class="kindness-banner">
+            <span class="banner-star">🌟</span>
+            <span id="kindness-text">"Sharing and smiling makes everyone happy at school!"</span>
+            <span class="banner-star">🌟</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCENE 3: FINAL SCHOOL CELEBRATION ================= -->
+      <section id="scene-celebration" class="scene hidden">
+        <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+        <div class="celebration-wrapper">
+          <!-- Golden Award Card -->
+          <div class="award-card bounce-in">
+            <div class="award-badge-ribbon">
+              <span class="award-star-icon">🌟</span>
+              <h1 class="award-title">SCHOOL DAY SUPERSTAR!</h1>
+              <span class="award-star-icon">🌟</span>
+            </div>
+
+            <p class="award-subtitle">You explored, discovered, created, and made friends today!</p>
+
+            <div class="trophy-display">
+              <div class="trophy-icon pulse-glow">🏆</div>
+              <div class="stars-earned-row">
+                <span class="celebration-star">⭐</span>
+                <span class="celebration-star">⭐</span>
+                <span class="celebration-star">⭐</span>
+                <span class="celebration-star">⭐</span>
+                <span class="celebration-star">⭐</span>
+                <span class="celebration-star">⭐</span>
+              </div>
+            </div>
+
+            <!-- Group of Celebrating Friends & Characters -->
+            <div class="celebrating-crowd">
+              <div class="crowd-member crowd-john jump-anim">
+                <div class="crowd-char">👦</div>
+                <span class="crowd-name">John</span>
+              </div>
+              <div class="crowd-member crowd-star spin-anim">
+                <div class="crowd-char">⭐</div>
+                <span class="crowd-name">Little Star</span>
+              </div>
+              <div class="crowd-member crowd-teacher wave-anim">
+                <div class="crowd-char">👩‍🏫</div>
+                <span class="crowd-name">Teacher</span>
+              </div>
+              <div class="crowd-member crowd-friend-1 jump-anim">
+                <div class="crowd-char">👧</div>
+                <span class="crowd-name">Maya</span>
+              </div>
+              <div class="crowd-member crowd-friend-2 jump-anim">
+                <div class="crowd-char">👦🏻</div>
+                <span class="crowd-name">Leo</span>
+              </div>
+              <div class="crowd-member crowd-friend-3 jump-anim">
+                <div class="crowd-char">👧🏽</div>
+                <span class="crowd-name">Emma</span>
+              </div>
+            </div>
+
+            <!-- Interactive Floating Balloons -->
+            <div class="floating-balloons-tray" id="balloons-tray">
+              <span class="balloon b-red interactive" data-color="red">🎈</span>
+              <span class="balloon b-yellow interactive" data-color="yellow">🎈</span>
+              <span class="balloon b-blue interactive" data-color="blue">🎈</span>
+              <span class="balloon b-green interactive" data-color="green">🎈</span>
+              <span class="balloon b-purple interactive" data-color="purple">🎈</span>
+            </div>
+            <div class="balloon-tap-hint">Tap balloons to pop them! 🎈💥</div>
+
+            <!-- Action Buttons -->
+            <div class="celebration-actions">
+              <button id="btn-play-again" class="big-cta-btn pulse-glow">
+                <span class="btn-icon">🔄</span>
+                <span class="btn-text">PLAY SCHOOL DAY AGAIN!</span>
+              </button>
+              <button id="btn-explore-more" class="big-cta-btn secondary-btn">
+                <span class="btn-icon">🏫</span>
+                <span class="btn-text">EXPLORE SCHOOL GATE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Particle & Sparkle Overlay Layer -->
+    <div id="particle-layer" class="particle-layer"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

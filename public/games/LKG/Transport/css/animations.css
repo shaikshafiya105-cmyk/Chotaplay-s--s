@@ -1,0 +1,304 @@
+/* ==============================================================
+   CHOTAPLAY — RIYA'S TRAFFIC RESCUE
+   Micro-Animations, Keyframes, and Celebrations
+   ============================================================== */
+
+/* Badges & HUD */
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.4; }
+  100% { transform: scale(1.1); opacity: 0.9; }
+}
+
+@keyframes pulseButton {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(255, 109, 0, 0.4); }
+  50% { transform: scale(1.06); box-shadow: 0 6px 18px rgba(255, 109, 0, 0.6); }
+}
+
+@keyframes pulseBigButton {
+  0%, 100% { transform: scale(1); box-shadow: 0 8px 24px rgba(0, 200, 83, 0.45); }
+  50% { transform: scale(1.07); box-shadow: 0 12px 36px rgba(0, 230, 118, 0.7); }
+}
+
+@keyframes pulseIndicator {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Environment Keyframes */
+@keyframes sunPulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.08); filter: brightness(1.15); }
+}
+
+@keyframes birdFly {
+  0% { transform: translateX(-150px) translateY(0); }
+  50% { transform: translateX(50vw) translateY(-20px); }
+  100% { transform: translateX(110vw) translateY(10px); }
+}
+
+@keyframes cloudDrift1 {
+  0% { transform: translateX(-200px); }
+  100% { transform: translateX(110vw); }
+}
+
+@keyframes cloudDrift2 {
+  0% { transform: translateX(-250px); }
+  100% { transform: translateX(110vw); }
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+.cloud::before, .cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.cloud-1 {
+  top: 15px;
+  left: 5%;
+  width: 130px;
+  height: 42px;
+  animation: cloudDrift1 55s linear infinite;
+}
+.cloud-1::before { width: 50px; height: 50px; top: -20px; left: 20px; }
+.cloud-1::after { width: 60px; height: 60px; top: -26px; right: 25px; }
+
+.cloud-2 {
+  top: 55px;
+  left: 45%;
+  width: 170px;
+  height: 50px;
+  opacity: 0.85;
+  animation: cloudDrift2 70s linear infinite;
+  animation-delay: -20s;
+}
+.cloud-2::before { width: 65px; height: 65px; top: -28px; left: 25px; }
+.cloud-2::after { width: 75px; height: 75px; top: -34px; right: 35px; }
+
+.cloud-3 {
+  top: 25px;
+  left: 75%;
+  width: 110px;
+  height: 36px;
+  opacity: 0.9;
+  animation: cloudDrift1 48s linear infinite;
+  animation-delay: -35s;
+}
+.cloud-3::before { width: 44px; height: 44px; top: -18px; left: 18px; }
+.cloud-3::after { width: 48px; height: 48px; top: -22px; right: 20px; }
+
+.cloud-4 {
+  top: 80px;
+  left: 15%;
+  width: 90px;
+  height: 30px;
+  opacity: 0.75;
+  animation: cloudDrift2 65s linear infinite;
+  animation-delay: -10s;
+}
+.cloud-4::before { width: 36px; height: 36px; top: -14px; left: 14px; }
+.cloud-4::after { width: 40px; height: 40px; top: -18px; right: 18px; }
+
+/* Water Waves & Beach Animations */
+@keyframes waveMotion1 {
+  0% { transform: translateX(0) scaleY(1); }
+  50% { transform: translateX(-20px) scaleY(1.15); }
+  100% { transform: translateX(0) scaleY(1); }
+}
+
+@keyframes waveMotion2 {
+  0% { transform: translateX(0) scaleY(1); }
+  50% { transform: translateX(25px) scaleY(0.9); }
+  100% { transform: translateX(0) scaleY(1); }
+}
+
+.water-waves {
+  position: absolute;
+  left: 0;
+  width: 160%;
+  height: 100%;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.wave-1 {
+  top: 20px;
+  background: repeating-radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0px, transparent 15px, rgba(255,255,255,0.2) 30px);
+  animation: waveMotion1 6s infinite ease-in-out;
+}
+
+.wave-2 {
+  top: 60px;
+  background: repeating-radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0px, transparent 20px, rgba(255,255,255,0.15) 40px);
+  animation: waveMotion2 8s infinite ease-in-out;
+}
+
+.water-sparkles {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, #FFF 1px, transparent 2px);
+  background-size: 30px 30px;
+  opacity: 0.4;
+  animation: sparkleTwinkle 3s infinite ease-in-out;
+}
+
+/* Island & Nature Keyframes */
+@keyframes palmSway {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(-4deg); }
+}
+
+@keyframes flagWave {
+  0%, 100% { transform: rotate(0deg) skewY(0deg); }
+  50% { transform: rotate(5deg) skewY(4deg); }
+}
+
+@keyframes treeGentleSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2.5deg); }
+}
+
+@keyframes radarSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes windsockWave {
+  0%, 100% { transform: rotate(0deg) scaleX(1); }
+  50% { transform: rotate(-8deg) scaleX(1.1); }
+}
+
+@keyframes floatSmoke {
+  0% { transform: translateY(0) scale(0.6); opacity: 0.8; }
+  100% { transform: translateY(-24px) scale(1.4); opacity: 0; }
+}
+
+@keyframes windowGlow {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.3); }
+}
+
+@keyframes balloonBob {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+
+/* Character Keyframes */
+@keyframes starFloat {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-14px) rotate(8deg); }
+}
+
+@keyframes starGlowPulse {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0.9; }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { transform: scale(0.6) rotate(0deg); opacity: 0.3; }
+  50% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+}
+
+@keyframes speechPop {
+  0% { transform: scale(0.4) translateY(20px); opacity: 0; }
+  80% { transform: scale(1.05) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes starWiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* Riya Character Dynamic States */
+.riya-avatar.state-happy #riya-mouth {
+  d: path("M 58 76 Q 70 94 82 76 Z");
+  fill: #E91E63;
+}
+
+.riya-avatar.state-talking #riya-mouth {
+  animation: mouthTalk 0.4s infinite alternate;
+}
+
+@keyframes mouthTalk {
+  0% { d: path("M 62 78 Q 70 82 78 78"); }
+  100% { d: path("M 60 76 Q 70 92 80 76 Z"); }
+}
+
+.riya-avatar.state-celebrating {
+  animation: riyaDance 0.8s infinite ease-in-out;
+}
+
+@keyframes riyaDance {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-16px) rotate(-6deg); }
+  75% { transform: translateY(-16px) rotate(6deg); }
+}
+
+.riya-arm-right.pointing {
+  transform-origin: 88px 112px;
+  transform: rotate(-35deg);
+  transition: transform 0.4s ease;
+}
+
+/* Vehicles & Particles Keyframes */
+@keyframes wheelSmoke {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 0.8; }
+  100% { transform: translate(-15px, -8px) scale(1.5); opacity: 0; }
+}
+
+@keyframes puffSteam {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 0.8; }
+  100% { transform: translate(-25px, -25px) scale(1.6); opacity: 0; }
+}
+
+@keyframes boatBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+@keyframes rippleSpread {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes runwayStrobe {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+@keyframes contrailPuff {
+  0% { transform: translateX(0) scale(0.6); opacity: 0.9; }
+  100% { transform: translateX(-30px) scale(1.8); opacity: 0; }
+}
+
+/* Little Star Fly-Around Orbit during Grand Celebration */
+.littlestar-container.flying-orbit {
+  animation: starOrbitTown 6s infinite ease-in-out !important;
+}
+
+@keyframes starOrbitTown {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  25% { transform: translate(300px, -200px) scale(1.3) rotate(90deg); }
+  50% { transform: translate(600px, -50px) scale(1.2) rotate(180deg); }
+  75% { transform: translate(250px, -280px) scale(1.4) rotate(270deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(360deg); }
+}

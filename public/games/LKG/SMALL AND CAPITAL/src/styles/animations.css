@@ -1,0 +1,149 @@
+/* Keyframe Animations & Micro-Interactions */
+
+@keyframes floatSubtle {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 94, 151, 0.5); }
+  100% { box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 50px rgba(255, 94, 151, 0.9); }
+}
+
+@keyframes pulseSubtle {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes pulseVoiceBorder {
+  0% { border-color: rgba(0, 229, 255, 0.6); box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 15px rgba(0, 229, 255, 0.3); }
+  100% { border-color: rgba(255, 210, 30, 0.9); box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 25px rgba(255, 210, 30, 0.6); }
+}
+
+@keyframes soundWave {
+  0% { height: 4px; }
+  100% { height: 14px; }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinSlowReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes pulseCore {
+  0% { transform: scale(0.9); opacity: 0.4; }
+  100% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes propGlow {
+  0% { box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
+  100% { box-shadow: 0 0 35px rgba(0, 229, 255, 0.8), 0 0 50px rgba(255, 210, 30, 0.5); }
+}
+
+@keyframes popBounceIn {
+  0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes pulseAction {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pulse-action {
+  animation: pulseAction 2s infinite ease-in-out;
+}
+
+.pulse-glow {
+  animation: pulseGlow 2.5s infinite alternate ease-in-out;
+}
+
+.animate-float {
+  animation: floatSubtle 3s infinite alternate ease-in-out;
+}
+
+.animate-pop-in {
+  animation: popBounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Riya Character Animation Classes */
+.riya-idle {
+  animation: riyaBreathe 3s infinite ease-in-out;
+}
+
+.riya-pointing {
+  animation: riyaPoint 1s ease-in-out;
+}
+
+.riya-celebrating {
+  animation: riyaCelebrate 0.8s infinite ease-in-out;
+}
+
+.riya-waving {
+  animation: riyaWave 1.2s infinite ease-in-out;
+}
+
+@keyframes riyaBreathe {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-4px) scaleY(1.015); }
+}
+
+@keyframes riyaPoint {
+  0% { transform: scale(1) translateX(0); }
+  50% { transform: scale(1.05) translateX(15px); }
+  100% { transform: scale(1) translateX(0); }
+}
+
+@keyframes riyaCelebrate {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-25px) scale(1.08) rotate(3deg); }
+}
+
+@keyframes riyaWave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg); }
+}
+
+/* Little Star Floating & Spin Animations */
+.star-floating {
+  animation: starHover 2.5s infinite ease-in-out;
+}
+
+.star-celebrating {
+  animation: starSpinCelebrate 0.9s infinite ease-in-out;
+}
+
+@keyframes starHover {
+  0%, 100% { transform: translateY(0px) rotate(-3deg); }
+  50% { transform: translateY(-16px) rotate(4deg); }
+}
+
+@keyframes starSpinCelebrate {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-35px) rotate(180deg) scale(1.35); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+
+/* Attraction / Transformation Vortex Transitions */
+.attract-moving {
+  transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  z-index: 50 !important;
+}
+
+.vortex-transform {
+  animation: vortexSwirl 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes vortexSwirl {
+  0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+  40% { transform: scale(0.2) rotate(360deg); filter: brightness(3); opacity: 0.8; }
+  60% { transform: scale(1.5) rotate(720deg); filter: brightness(4); opacity: 1; }
+  100% { transform: scale(1.1) rotate(720deg); filter: brightness(1.2); }
+}

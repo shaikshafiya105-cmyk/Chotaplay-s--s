@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fruit Memory Adventure</title>
+    <style>
+        /* =========================================================
+           CSS3 STYLES
+           ========================================================= */
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --secondary: #4CAF50;
+            --secondary-dark: #388E3C;
+            --bg-color: #FFF8E1;
+            --text-main: #3E2723;
+            --card-back: #81C784;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Typography */
+        h1 { font-size: 4vh; text-align: center; color: var(--primary-dark); margin-bottom: 1vh; }
+        h2 { font-size: 3vh; text-align: center; color: var(--secondary-dark); }
+        .subtitle { font-size: 2.5vh; color: var(--text-main); }
+        
+        /* Screens */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: 2vh;
+        }
+        .screen.active { display: flex; }
+
+        /* Buttons */
+        button {
+            font-size: 3vh;
+            padding: 1.5vh 4vw;
+            margin: 1vh;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .btn-primary { background-color: var(--primary); color: var(--white); }
+        .btn-secondary { background-color: var(--secondary); color: var(--white); }
+        .btn-toggle { background-color: #E0E0E0; color: #333; }
+        .btn-toggle.on { background-color: var(--secondary); color: white; }
+
+        /* Start Screen Specific */
+        #start-screen h1 { font-size: 6vh; margin-bottom: 2vh; }
+        .hero-icon { font-size: 12vh; margin-bottom: 2vh; }
+
+        /* Game Screen Layout */
+        #game-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 5vw 2vh 5vw; height: 10vh; }
+        #instruction-text { font-size: 3.5vh; font-weight: bold; color: var(--primary-dark); }
+        
+        /* 4x4 Grid */
+        #grid-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 90vh;
+        }
+        
+        .grid-4x4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 1.5vh;
+            width: 100%;
+            height: 100%;
+            max-height: 70vh;
+            padding: 1vh;
+        }
+
+        /* Cards */
+        .card {
+            perspective: 1000px;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        
+        /* Match & Wrong Animations */
+        .card.matched { opacity: 0; pointer-events: none; transition: opacity 0.5s ease 0.5s; }
+        .card.wrong-shake { animation: shake 0.4s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .card-back {
+            background-color: var(--card-back);
+            background-image: radial-gradient(circle at center, #A5D6A7 20%, transparent 20%), radial-gradient(circle at center, #A5D6A7 20%, transparent 20%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            border: 4px solid var(--white);
+        }
+        .card-back::after { content: '❓'; font-size: 4vh; opacity: 0.5; }
+
+        .card-front {
+            background-color: var(--white);
+            transform: rotateY(180deg);
+            border: 4px solid var(--primary);
+            padding: 1vh;
+        }
+        .fruit-image-container { font-size: 6vh; flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%; height: 60%; }
+        .fruit-img-tag { max-width: 90%; max-height: 90%; object-fit: contain; display: block; }
+        .fallback-emoji { display: none; }
+        .fruit-name { font-size: 2vh; font-weight: bold; text-align: center; text-transform: uppercase; line-height: 1.1; margin-top: 1vh;}
+        .fruit-alt-name { font-size: 1.5vh; color: #757575; }
+
+        /* Result Bar */
+        #result-bar-container {
+            height: 15vh;
+            width: 100%;
+            background-color: var(--white);
+            border-top: 4px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1vh;
+        }
+        #result-title { font-size: 2.5vh; font-weight: bold; margin-bottom: 1vh; color: var(--primary-dark); }
+        #result-slots {
+            display: flex;
+            gap: 2vw;
+            height: 6vh;
+        }
+        .result-item {
+            width: 6vh;
+            height: 6vh;
+            background-color: #F5F5F5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5vh;
+            opacity: 0.3;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        .result-item.filled { opacity: 1; background-color: #E8F5E9; transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .result-img { max-width: 80%; max-height: 80%; object-fit: contain; }
+
+        /* Modals & Overlays */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .overlay.active { display: flex; }
+        .modal-box {
+            background: var(--white); padding: 4vh 6vw; border-radius: 20px;
+            text-align: center; max-width: 80vw;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 8px solid var(--primary);
+        }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .modal-title { color: var(--primary-dark); font-size: 4vh; margin-bottom: 2vh; }
+        .modal-fruit-icon { height: 15vh; margin: 2vh auto; display: flex; align-items: center; justify-content: center; }
+        .modal-fruit-img { max-height: 100%; max-width: 100%; object-fit: contain; }
+        .modal-fruit-name { font-size: 5vh; font-weight: bold; color: var(--text-main); }
+        .modal-alt-name { font-size: 3vh; color: #757575; margin-bottom: 3vh; }
+
+        /* Victory Screen */
+        #victory-fruits {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 2vw; margin: 3vh 0; max-width: 80vw;
+        }
+        .victory-item {
+            background: var(--white); border-radius: 12px; padding: 1.5vh;
+            text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 15vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .victory-item .icon-container { height: 6vh; display: flex; align-items: center; justify-content: center; margin-bottom: 1vh;}
+        .victory-item .vic-img { max-height: 100%; max-width: 100%; object-fit: contain; }
+        .victory-item .name { font-size: 1.8vh; font-weight: bold; text-transform: uppercase;}
+        
+        .discovery-highlight {
+            background: #FFF9C4; border: 4px solid #FFEB3B; transform: scale(1.1); margin: 0 2vw;
+        }
+        .discovery-label { font-size: 1.5vh; color: #F57F17; font-weight: bold; margin-bottom: 0.5vh; }
+    </style>
+</head>
+<body>
+
+    <!-- START SCREEN -->
+    <div id="screen-start" class="screen active">
+        <div class="hero-icon">🍎</div>
+        <h1>FRUIT MEMORY ADVENTURE</h1>
+        <h2 class="subtitle">Match • Remember • Learn!</h2>
+        <p style="font-size: 2.5vh; margin: 3vh 0; color: #555;">Can you find all the matching fruits?</p>
+        
+        <div style="margin-bottom: 4vh;">
+            <button id="btn-audio-toggle" class="btn-toggle" onclick="toggleAudio()">🔊 Audio: OFF</button>
+        </div>
+        
+        <button class="btn-primary" style="font-size: 4vh; padding: 2vh 6vw;" onclick="startGame()">▶ START GAME</button>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="screen-game" class="screen">
+        <div id="game-header">
+            <button class="btn-toggle" id="btn-audio-game" onclick="toggleAudio()" style="font-size: 2vh; padding: 1vh 2vw;">🔊 OFF</button>
+            <div id="instruction-text">Let's find the matching fruits!</div>
+            <div style="width: 10vw;"></div>
+        </div>
+
+        <div id="grid-container">
+            <div class="grid-4x4" id="game-grid">
+                <!-- Cards injected by JS -->
+            </div>
+        </div>
+
+        <div id="result-bar-container">
+            <div id="result-title">🌟 Fruits Found: <span id="progress-text">0 / 8</span></div>
+            <div id="result-slots">
+                <!-- Result slots injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- DISCOVERY MODAL -->
+    <div id="modal-discovery" class="overlay">
+        <div class="modal-box">
+            <div class="modal-title">✨ NEW FRUIT DISCOVERED! ✨</div>
+            <div class="modal-fruit-icon" id="disc-icon">
+                <img id="disc-img" src="" class="modal-fruit-img" alt="Discovery Fruit">
+            </div>
+            <div class="modal-fruit-name" id="disc-name">CARAMBOLA</div>
+            <div class="modal-alt-name" id="disc-alt">Also called: Star Fruit</div>
+            <button class="btn-primary" onclick="closeDiscoveryModal()">Continue</button>
+        </div>
+    </div>
+
+    <!-- VICTORY SCREEN -->
+    <div id="screen-victory" class="screen">
+        <h1 style="font-size: 6vh;">🎉 AMAZING! 🎉</h1>
+        <h2>You found all 8 fruits!</h2>
+        
+        <div id="victory-fruits">
+            <!-- Populated by JS -->
+        </div>
+
+        <div style="display: flex; gap: 2vw; margin-top: 3vh;">
+            <button class="btn-primary" onclick="startGame()">🎮 PLAY AGAIN</button>
+            <button class="btn-secondary" onclick="showScreen('screen-start')">🏠 BACK TO FRUITS</button>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================
+           JAVASCRIPT LOGIC
+           ========================================================= */
+
+        // 1. FRUIT DATABASE
+        const fruitDB = [
+            // Familiar Fruits
+            { id: 'apple', name: 'Apple', alternateName: '', image: 'apple.webp', fallbackEmoji: '🍎', category: 'familiar' },
+            { id: 'banana', name: 'Banana', alternateName: '', image: 'banana.webp', fallbackEmoji: '🍌', category: 'familiar' },
+            { id: 'mango', name: 'Mango', alternateName: '', image: 'mango.webp', fallbackEmoji: '🥭', category: 'familiar' },
+            { id: 'orange', name: 'Orange', alternateName: '', image: 'orange.webp', fallbackEmoji: '🍊', category: 'familiar' },
+            { id: 'grapes', name: 'Grapes', alternateName: '', image: 'grapes.webp', fallbackEmoji: '🍇', category: 'familiar' },
+            { id: 'pineapple', name: 'Pineapple', alternateName: '', image: 'pineapple.webp', fallbackEmoji: '🍍', category: 'familiar' },
+            { id: 'pomegranate', name: 'Pomegranate', alternateName: '', image: 'pomegranate.webp', fallbackEmoji: '💖', category: 'familiar' },
+            { id: 'watermelon', name: 'Watermelon', alternateName: '', image: 'watermelon.webp', fallbackEmoji: '🍉', category: 'familiar' },
+            { id: 'guava', name: 'Guava', alternateName: '', image: 'guava.jpeg', fallbackEmoji: '🍐', category: 'familiar' },
+            { id: 'muskmelon', name: 'Muskmelon', alternateName: 'Cantaloupe', image: 'muskmelon.jpeg', fallbackEmoji: '🍈', category: 'familiar' },
+            { id: 'litchi', name: 'Litchi', alternateName: 'Lychee', image: 'litchi.jpeg', fallbackEmoji: '🍒', category: 'familiar' },
+            { id: 'pear', name: 'Pear', alternateName: '', image: 'pear.jpeg', fallbackEmoji: '🍐', category: 'familiar' },
+            { id: 'papaya', name: 'Papaya', alternateName: '', image: 'papaya.jpeg', fallbackEmoji: '🥭', category: 'familiar' },
+            { id: 'strawberry', name: 'Strawberry', alternateName: '', image: 'strawberry.jpeg', fallbackEmoji: '🍓', category: 'familiar' },
+            { id: 'coconut', name: 'Coconut', alternateName: '', image: 'coconut.jpeg', fallbackEmoji: '🥥', category: 'familiar' },
+            { id: 'custardapple', name: 'Custard Apple', alternateName: 'Sitaphal', image: 'custardapple.jpeg', fallbackEmoji: '🍈', category: 'familiar' },
+            
+            // Discovery Fruits
+            { id: 'kiwi', name: 'Kiwi', alternateName: '', image: 'kiwi.webp', fallbackEmoji: '🥝', category: 'discovery' },
+            { id: 'carambola', name: 'Carambola', alternateName: 'Star Fruit', image: 'star-fruit.webp', fallbackEmoji: '⭐', category: 'discovery' },
+            { id: 'rambutan', name: 'Rambutan', alternateName: '', image: 'rambhutan.webp', fallbackEmoji: '🍒', category: 'discovery' },
+            { id: 'passionfruit', name: 'Passion Fruit', alternateName: '', image: 'passion fruit.jpeg', fallbackEmoji: '🟡', category: 'discovery' },
+            { id: 'physalis', name: 'Physalis', alternateName: 'Golden Berry', image: 'physails.jpeg', fallbackEmoji: '🟠', category: 'discovery' },
+            { id: 'mangosteen', name: 'Mangosteen', alternateName: '', image: 'mangosteen.jpeg', fallbackEmoji: '🟣', category: 'discovery' },
+            { id: 'loquat', name: 'Loquat', alternateName: '', image: 'loquat.jpeg', fallbackEmoji: '🟡', category: 'discovery' },
+            { id: 'grapefruit', name: 'Grapefruit', alternateName: '', image: 'grapefruit.jpeg', fallbackEmoji: '🍊', category: 'discovery' },
+            { id: 'fig', name: 'Fig', alternateName: 'Anjeer', image: 'fig.jpeg', fallbackEmoji: '🟤', category: 'discovery' },
+            { id: 'jujube', name: 'Jujube', alternateName: 'Ber', image: 'jujubi.jpeg', fallbackEmoji: '🔴', category: 'discovery' },
+            { id: 'dragonfruit', name: 'Dragon Fruit', alternateName: 'Pitaya', image: 'dragon fruit.webp', fallbackEmoji: '🐉', category: 'discovery' }
+        ];
+
+        // 2. GAME STATE
+        let isAudioEnabled = false;
+        let preferredVoice = null; 
+        let currentRoundFruits = []; 
+        let deck = []; 
+        let firstCardIndex = null;
+        let secondCardIndex = null;
+        let isBoardLocked = false;
+        let matchedPairs = 0;
+        let discoveryFruitData = null;
+
+        // 3. VOICE ENGINE SETUP
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) return;
+
+            let femaleVoice = voices.find(v => 
+                v.lang.includes('en-IN') && 
+                (v.name.toLowerCase().includes('female') || 
+                 v.name.toLowerCase().includes('neerja') || 
+                 v.name.toLowerCase().includes('veena'))
+            );
+
+            if (!femaleVoice) {
+                femaleVoice = voices.find(v => 
+                    v.lang.includes('en') && 
+                    (v.name.toLowerCase().includes('female') || 
+                     v.name.toLowerCase().includes('samantha') || 
+                     v.name.toLowerCase().includes('zira') ||
+                     v.name.toLowerCase().includes('victoria') ||
+                     v.name.toLowerCase().includes('karen'))
+                );
+            }
+
+            if (!femaleVoice) {
+                femaleVoice = voices.find(v => v.lang === 'en-GB');
+            }
+
+            if (femaleVoice) {
+                preferredVoice = femaleVoice;
+            } else {
+                preferredVoice = voices[0];
+            }
+        }
+
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+        loadVoices();
+
+        // 4. CORE FUNCTIONS
+        function toggleAudio() {
+            isAudioEnabled = !isAudioEnabled;
+            const text = isAudioEnabled ? "🔊 Audio: ON" : "🔊 Audio: OFF";
+            document.getElementById('btn-audio-toggle').innerText = text;
+            document.getElementById('btn-audio-game').innerText = text;
+            
+            document.getElementById('btn-audio-toggle').className = isAudioEnabled ? "btn-toggle on" : "btn-toggle";
+            document.getElementById('btn-audio-game').className = isAudioEnabled ? "btn-toggle on" : "btn-toggle";
+
+            if(isAudioEnabled) playAudio("Audio enabled. Ready to play!");
+        }
+
+        function playAudio(text) {
+            if (!isAudioEnabled) return;
+            
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            if (preferredVoice) utterance.voice = preferredVoice;
+            
+            utterance.rate = 0.85; 
+            utterance.pitch = 1.3; 
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function setInstruction(text) {
+            document.getElementById('instruction-text').innerText = text;
+        }
+
+        // 5. GAME INITIALIZATION
+        function startGame() {
+            showScreen('screen-game');
+            resetGameState();
+            selectFruits();
+            createDeck();
+            renderGrid();
+            renderResultBar();
+            setInstruction("Let's find the matching fruits!");
+            playAudio("Let's find the matching fruits!");
+        }
+
+        function resetGameState() {
+            currentRoundFruits = [];
+            deck = [];
+            firstCardIndex = null;
+            secondCardIndex = null;
+            isBoardLocked = false;
+            matchedPairs = 0;
+            discoveryFruitData = null;
+        }
+
+        function selectFruits() {
+            const familiars = shuffleArray(fruitDB.filter(f => f.category === 'familiar'));
+            const discoveries = shuffleArray(fruitDB.filter(f => f.category === 'discovery'));
+
+            const selectedFamiliars = familiars.slice(0, 7);
+            discoveryFruitData = discoveries[0];
+
+            currentRoundFruits = [...selectedFamiliars, discoveryFruitData];
+        }
+
+        function createDeck() {
+            currentRoundFruits.forEach(fruit => {
+                deck.push({ ...fruit, id: fruit.id + '_1', originalId: fruit.id, isFlipped: false, isMatched: false });
+                deck.push({ ...fruit, id: fruit.id + '_2', originalId: fruit.id, isFlipped: false, isMatched: false });
+            });
+            deck = shuffleArray(deck);
+        }
+
+        // 6. RENDERING
+        function renderGrid() {
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = '';
+
+            deck.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card';
+                cardEl.dataset.index = index;
+                cardEl.onclick = () => onCardClick(index);
+
+                cardEl.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="fruit-image-container">
+                                <img src="${card.image}" alt="${card.name}" class="fruit-img-tag" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div class="fallback-emoji">${card.fallbackEmoji}</div>
+                            </div>
+                            <div class="fruit-name">${card.name}</div>
+                            ${card.alternateName ? `<div class="fruit-alt-name">${card.alternateName}</div>` : ''}
+                        </div>
+                        <div class="card-back"></div>
+                    </div>
+                `;
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function renderResultBar() {
+            const slotsContainer = document.getElementById('result-slots');
+            slotsContainer.innerHTML = '';
+            document.getElementById('progress-text').innerText = `0 / 8`;
+
+            for (let i = 0; i < 8; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'result-item';
+                slot.id = `result-slot-${i}`;
+                slot.innerText = '❓';
+                slotsContainer.appendChild(slot);
+            }
+        }
+
+        // 7. GAMEPLAY LOGIC
+        function onCardClick(index) {
+            if (isBoardLocked || deck[index].isFlipped || deck[index].isMatched) return;
+
+            const cardEls = document.querySelectorAll('.card');
+            
+            deck[index].isFlipped = true;
+            cardEls[index].classList.add('flipped');
+
+            if (firstCardIndex === null) {
+                firstCardIndex = index;
+                setInstruction("Now find the same fruit!");
+                playAudio("Now find the same fruit!");
+                return;
+            }
+
+            secondCardIndex = index;
+            isBoardLocked = true; 
+            
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            const card1 = deck[firstCardIndex];
+            const card2 = deck[secondCardIndex];
+
+            if (card1.originalId === card2.originalId) {
+                handleMatch(card1);
+            } else {
+                handleMismatch();
+            }
+        }
+
+        function handleMatch(matchedFruit) {
+            const cardEls = document.querySelectorAll('.card');
+            
+            deck[firstCardIndex].isMatched = true;
+            deck[secondCardIndex].isMatched = true;
+
+            setTimeout(() => {
+                cardEls[firstCardIndex].classList.add('matched');
+                cardEls[secondCardIndex].classList.add('matched');
+                
+                const slot = document.getElementById(`result-slot-${matchedPairs}`);
+                slot.innerHTML = `<img src="${matchedFruit.image}" class="result-img" alt="${matchedFruit.name}" onerror="this.outerHTML='${matchedFruit.fallbackEmoji}'">`;
+                slot.classList.add('filled');
+                
+                matchedPairs++;
+                document.getElementById('progress-text').innerText = `${matchedPairs} / 8`;
+
+                if (matchedFruit.category === 'discovery') {
+                    showDiscoveryFruit(matchedFruit);
+                } else {
+                    setInstruction(`Great job! ${matchedFruit.name}!`);
+                    playAudio(`Great job! It's a ${matchedFruit.name}!`);
+                    resumeGameplayAfterMatch();
+                }
+            }, 800); 
+        }
+
+        function handleMismatch() {
+            const cardEls = document.querySelectorAll('.card');
+            const idx1 = firstCardIndex;
+            const idx2 = secondCardIndex;
+
+            setInstruction("Try again!");
+            playAudio("Oops, try again!");
+
+            cardEls[idx1].classList.add('wrong-shake');
+            cardEls[idx2].classList.add('wrong-shake');
+
+            setTimeout(() => {
+                deck[idx1].isFlipped = false;
+                deck[idx2].isFlipped = false;
+
+                cardEls[idx1].classList.remove('flipped', 'wrong-shake');
+                cardEls[idx2].classList.remove('flipped', 'wrong-shake');
+                
+                setInstruction("Find the matching fruits!");
+
+                firstCardIndex = null;
+                secondCardIndex = null;
+                isBoardLocked = false;
+            }, 1500); 
+        }
+
+        // 8. DISCOVERY MOMENT
+        function showDiscoveryFruit(fruit) {
+            document.getElementById('disc-img').src = fruit.image;
+            document.getElementById('disc-img').onerror = function() {
+                this.outerHTML = `<div style="font-size:10vh">${fruit.fallbackEmoji}</div>`;
+            };
+            document.getElementById('disc-name').innerText = fruit.name;
+            document.getElementById('disc-alt').innerText = fruit.alternateName ? `Also called: ${fruit.alternateName}` : '';
+            
+            document.getElementById('modal-discovery').classList.add('active');
+            
+            const audioText = fruit.alternateName ? `${fruit.name}. Also called ${fruit.alternateName}!` : `${fruit.name}!`;
+            playAudio(`Wow! New fruit discovered! ${audioText}`);
+        }
+
+        function closeDiscoveryModal() {
+            document.getElementById('modal-discovery').classList.remove('active');
+            resumeGameplayAfterMatch();
+        }
+
+        function resumeGameplayAfterMatch() {
+            firstCardIndex = null;
+            secondCardIndex = null;
+            isBoardLocked = false;
+
+            if (matchedPairs === 8) {
+                setTimeout(triggerVictory, 500);
+            }
+        }
+
+        // 9. VICTORY
+        function triggerVictory() {
+            showScreen('screen-victory');
+            playAudio("Amazing! You found all eight fruits! Great job everyone!");
+
+            const victoryContainer = document.getElementById('victory-fruits');
+            victoryContainer.innerHTML = '';
+
+            currentRoundFruits.forEach(fruit => {
+                const item = document.createElement('div');
+                item.className = 'victory-item';
+                
+                const imgHtml = `<img src="${fruit.image}" class="vic-img" alt="${fruit.name}" onerror="this.outerHTML='<div style=\\'font-size:5vh\\'>${fruit.fallbackEmoji}</div>'">`;
+                
+                if (fruit.category === 'discovery') {
+                    item.classList.add('discovery-highlight');
+                    item.innerHTML = `
+                        <div class="discovery-label">🌟 NEW FRUIT</div>
+                        <div class="icon-container">${imgHtml}</div>
+                        <div class="name">${fruit.name}</div>
+                        ${fruit.alternateName ? `<div style="font-size: 1.2vh; color:#555;">${fruit.alternateName}</div>` : ''}
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <div class="icon-container">${imgHtml}</div>
+                        <div class="name">${fruit.name}</div>
+                    `;
+                }
+                
+                victoryContainer.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

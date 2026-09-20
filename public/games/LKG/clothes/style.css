@@ -1,0 +1,1565 @@
+/* ============================================================
+   CHOTAPLAY: RIYA'S MAGIC CLOSET - STYLESHEET
+   UKG Environmental Studies Design System
+   ============================================================ */
+
+:root {
+  /* Color Palette - Vibrant Children's Wonderland */
+  --color-magic-purple: #7a42f4;
+  --color-magic-indigo: #4928b5;
+  --color-magic-pink: #ff529a;
+  --color-magic-rose: #ff75ab;
+  --color-gold-star: #ffc83b;
+  --color-gold-bright: #ffe600;
+  --color-sky-blue: #38bdf8;
+  --color-mint-green: #34d399;
+  --color-sunny-orange: #fb923c;
+  --color-wood-frame: #8d4f27;
+  --color-wood-shelf: #fef08a;
+  
+  /* Neutrals & Glassmorphism */
+  --bg-dark-overlay: rgba(18, 12, 38, 0.75);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.95);
+  --glass-shadow: 0 16px 36px rgba(45, 15, 85, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
+  --text-dark: #2d184d;
+  --text-muted: #5e477d;
+  --text-light: #ffffff;
+  
+  /* Fonts */
+  --font-main: 'Fredoka', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', cursive, sans-serif;
+  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* UI Tokens */
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --radius-full: 9999px;
+  --transition-bounce: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-smooth: all 0.25s ease-out;
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-main);
+  background-color: #1e0d36;
+  color: var(--text-dark);
+}
+
+/* App Container */
+.game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at center, #351c6b 0%, #15082b 100%);
+  overflow: hidden;
+}
+
+/* ============================================================
+   TOP HUD NAVIGATION
+   ============================================================ */
+.game-hud {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-height: 72px;
+}
+
+.hud-left, .hud-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  color: var(--text-dark);
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  outline: none;
+}
+
+.hud-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 20px rgba(122, 66, 244, 0.28);
+  border-color: var(--color-gold-star);
+}
+
+.hud-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.hud-btn .btn-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.freeplay-nav-btn {
+  background: linear-gradient(135deg, #ffeff7 0%, #ffe0f0 100%);
+  border-color: var(--color-magic-pink);
+  color: #c91866;
+}
+
+/* Progress Tracker */
+.hud-center {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 16px;
+}
+
+.progress-card {
+  background: rgba(255, 255, 255, 0.94);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.progress-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  letter-spacing: 0.5px;
+}
+
+.progress-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-magic-pink);
+}
+
+.progress-track {
+  position: relative;
+  height: 14px;
+  background: #ede8f5;
+  border-radius: var(--radius-full);
+  overflow: visible;
+  border: 1px solid #d4c8ea;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ff75ab, #ffc83b, #34d399);
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 10px rgba(255, 200, 59, 0.6);
+}
+
+.star-indicators {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  pointer-events: none;
+}
+
+.star-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d8cde8;
+  color: #fff;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-bounce);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.star-dot.active {
+  background: var(--color-gold-star);
+  color: #78350f;
+  transform: scale(1.25);
+  box-shadow: 0 0 10px var(--color-gold-bright);
+}
+
+/* ============================================================
+   STAGE & BACKDROP
+   ============================================================ */
+.game-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stage-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  transition: all 0.8s ease-in-out;
+}
+
+.backdrop-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, #4c2882 0%, #200a45 75%, #120428 100%);
+  transition: background 0.8s ease;
+}
+
+/* Theme variations */
+.stage-backdrop.theme-wardrobe .backdrop-gradient,
+.stage-backdrop.theme-closet .backdrop-gradient {
+  background: radial-gradient(circle at 50% 35%, #582f94 0%, #260d52 75%, #150530 100%);
+}
+
+.stage-backdrop.theme-sunny .backdrop-gradient {
+  background: radial-gradient(circle at 25% 25%, #60a5fa 0%, #38bdf8 30%, #fef08a 100%);
+}
+
+.stage-backdrop.theme-rainy .backdrop-gradient {
+  background: radial-gradient(circle at 50% 30%, #475569 0%, #1e293b 60%, #0f172a 100%);
+}
+
+.stage-backdrop.theme-cold .backdrop-gradient {
+  background: radial-gradient(circle at 50% 20%, #e0f2fe 0%, #7dd3fc 45%, #1e3a8a 100%);
+}
+
+.stage-backdrop.theme-school .backdrop-gradient {
+  background: radial-gradient(circle at 50% 30%, #fef08a 0%, #fed7aa 40%, #fb923c 100%);
+}
+
+.stage-backdrop.theme-celebration .backdrop-gradient {
+  background: radial-gradient(circle at 50% 30%, #c084fc 0%, #7e22ce 50%, #3b0764 100%);
+}
+
+.weather-canvas, .particles-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.weather-canvas { z-index: 2; }
+.particles-canvas { z-index: 100; }
+
+/* ============================================================
+   SUBTITLE / STORY BANNER
+   ============================================================ */
+.dialogue-overlay {
+  position: relative;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  padding: 10px 20px 4px;
+}
+
+.companion-bubble {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 3px solid var(--color-magic-rose);
+  border-radius: var(--radius-full);
+  padding: 8px 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  max-width: 800px;
+  transition: var(--transition-bounce);
+}
+
+.bubble-speaker {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  background: #fdf2f8;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid #fbcfe8;
+  white-space: nowrap;
+}
+
+.bubble-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+/* ============================================================
+   PLAY ARENA (TWO COLUMN DESKTOP / RESPONSIVE)
+   ============================================================ */
+.play-arena {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  padding: 10px 24px 20px;
+  gap: 20px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Character Stage (Fully Dressed Riya & Little Star) */
+.character-stage-wrap {
+  position: relative;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.character-platform {
+  position: absolute;
+  bottom: 20px;
+  width: 250px;
+  height: 60px;
+  z-index: 1;
+}
+
+.platform-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  height: 38px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  filter: blur(8px);
+}
+
+.platform-glow {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 48px;
+  background: radial-gradient(ellipse at center, rgba(255, 200, 59, 0.6) 0%, rgba(255, 117, 171, 0.3) 50%, transparent 80%);
+  border-radius: 50%;
+}
+
+.riya-character-container {
+  position: relative;
+  z-index: 5;
+  width: 260px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.riya-character {
+  width: 100%;
+  height: 370px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom center;
+}
+
+.riya-name-badge {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--color-magic-pink);
+  border-radius: var(--radius-full);
+  padding: 3px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  margin-top: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Little Star Companion */
+.little-star-companion {
+  position: absolute;
+  top: 15px;
+  right: 5px;
+  width: 90px;
+  height: 90px;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: starFloat 3s ease-in-out infinite alternate;
+}
+
+.little-star-companion:hover {
+  transform: scale(1.15) rotate(8deg);
+}
+
+.star-halo {
+  position: absolute;
+  inset: -6px;
+  background: radial-gradient(circle, rgba(255, 230, 0, 0.7) 0%, rgba(255, 200, 59, 0) 70%);
+  border-radius: 50%;
+  animation: starGlowPulse 2s ease-in-out infinite alternate;
+}
+
+.star-body-svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================
+   INTERACTIVE ACTIVITY PANEL & SCENES
+   ============================================================ */
+.interactive-panel {
+  position: relative;
+  z-index: 20;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 3px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.scene-view {
+  display: none;
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.scene-view.active {
+  display: flex;
+  animation: sceneFadeIn 0.4s ease-out forwards;
+}
+
+.activity-header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.activity-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #7a42f4, #ff529a);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  margin-bottom: 6px;
+  box-shadow: 0 2px 8px rgba(122, 66, 244, 0.3);
+}
+
+.activity-instruction {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================
+   SCENE 0: INTRO SCREEN
+   ============================================================ */
+.intro-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.intro-badge {
+  background: #fdf2f8;
+  border: 1.5px solid #fbcfe8;
+  color: #db2777;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: var(--radius-full);
+  margin-bottom: 12px;
+}
+
+.game-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.title-highlight {
+  background: linear-gradient(135deg, #ff529a 0%, #ffc83b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 12px rgba(255, 82, 154, 0.2);
+}
+
+.intro-desc {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-muted);
+  max-width: 520px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.intro-wardrobe-preview {
+  margin-bottom: 24px;
+}
+
+.wardrobe-mini-doors {
+  display: flex;
+  gap: 8px;
+  background: linear-gradient(135deg, #a16207, #78350f);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  border: 3px solid #fef08a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.mini-door {
+  font-size: 32px;
+  animation: doorWiggle 2s ease-in-out infinite alternate;
+}
+
+.intro-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Magic Action Buttons */
+.magic-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-main);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: var(--transition-bounce);
+  outline: none;
+}
+
+.primary-start {
+  background: linear-gradient(135deg, #ff529a 0%, #ffc83b 100%);
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 3px solid #ffffff;
+}
+
+.primary-start:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 12px 28px rgba(255, 82, 154, 0.35);
+}
+
+.secondary-btn {
+  background: #fdf2f8;
+  color: #db2777;
+  border: 2px solid #fbcfe8;
+}
+
+.secondary-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: #fce7f3;
+}
+
+.small-btn {
+  padding: 8px 18px;
+  font-size: 14px;
+}
+
+/* ============================================================
+   GAME 1: MAGIC CLOSET DISCOVERY
+   ============================================================ */
+.wardrobe-discovery-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.magic-wardrobe-frame {
+  width: 100%;
+  max-width: 680px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 8px solid #a16207;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px rgba(161, 98, 7, 0.25), inset 0 2px 8px rgba(255, 255, 255, 0.8);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.wardrobe-header-arch {
+  text-align: center;
+  background: #a16207;
+  color: #fef08a;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+}
+
+.wardrobe-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Clothing Card Styles */
+.clothing-item-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border: 3px solid #e2d7f5;
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transition: var(--transition-bounce);
+  min-height: 120px;
+}
+
+.clothing-item-card:hover {
+  transform: translateY(-5px) scale(1.06);
+  border-color: var(--color-magic-purple);
+  box-shadow: 0 10px 24px rgba(122, 66, 244, 0.2);
+}
+
+.clothing-card-svg {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.clothing-card-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-top: 6px;
+  text-align: center;
+}
+
+.clothing-item-card.item-highlight {
+  border-color: #10b981 !important;
+  background: #ecfdf5 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important;
+  transform: scale(1.12) !important;
+}
+
+/* ============================================================
+   GAME 2: WHERE DOES IT BELONG? (CLOTHING BOARD)
+   ============================================================ */
+.clothing-board-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-item-podium {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 130px;
+}
+
+.clothing-board-zones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 650px;
+}
+
+.board-zone-drop {
+  background: #ffffff;
+  border: 3px dashed #c4b5fd;
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.board-zone-drop:hover {
+  border-color: var(--color-magic-purple);
+  background: #f5f3ff;
+  transform: translateY(-3px);
+}
+
+.board-zone-drop.zone-highlight {
+  border-color: #10b981;
+  border-style: solid;
+  background: #ecfdf5;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  transform: scale(1.08);
+}
+
+.zone-icon { font-size: 32px; margin-bottom: 4px; }
+.zone-label { font-size: 15px; font-weight: 700; color: var(--color-magic-indigo); }
+.zone-counter { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+/* ============================================================
+   GAME 3: WEATHER DETECTIVE
+   ============================================================ */
+.weather-gameplay-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.weather-window-frame {
+  width: 100%;
+  max-width: 480px;
+  height: 180px;
+  background: #ffffff;
+  border: 6px solid #fb923c;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(251, 146, 60, 0.25);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-window-glass {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-visual-sky {
+  position: absolute;
+  inset: 0;
+  transition: background 0.6s ease;
+}
+
+.weather-visual-sky.sky-sunny {
+  background: linear-gradient(180deg, #38bdf8 0%, #fef08a 100%);
+}
+
+.weather-visual-sky.sky-rainy {
+  background: linear-gradient(180deg, #475569 0%, #64748b 60%, #94a3b8 100%);
+}
+
+.weather-visual-sky.sky-cold {
+  background: linear-gradient(180deg, #7dd3fc 0%, #e0f2fe 100%);
+}
+
+.weather-condition-label {
+  position: relative;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #fb923c;
+  border-radius: var(--radius-full);
+  padding: 6px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.weather-choices-grid {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  width: 100%;
+  max-width: 580px;
+}
+
+.weather-choice-card {
+  flex: 1;
+  background: #ffffff;
+  border: 3px solid #e2d7f5;
+  border-radius: var(--radius-md);
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: var(--transition-bounce);
+}
+
+.weather-choice-card:hover {
+  transform: translateY(-6px) scale(1.07);
+  border-color: var(--color-magic-purple);
+  box-shadow: 0 12px 28px rgba(122, 66, 244, 0.25);
+}
+
+/* ============================================================
+   GAME 4: WHAT'S IN THE SCHOOL BAG?
+   ============================================================ */
+.school-bag-layout {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.school-bag-hero-area {
+  flex: 1;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.backpack-graphic-wrap {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.bag-packed-tray {
+  width: 100%;
+  background: #f8fafc;
+  border: 2px dashed #94a3b8;
+  border-radius: var(--radius-md);
+  padding: 10px;
+  min-height: 90px;
+}
+
+.tray-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.packed-items-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.packed-badge {
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+  color: #1d4ed8;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.school-items-shelf {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 340px;
+}
+
+/* ============================================================
+   GAME 5: CLOTHING DETECTIVE (PEEK-HOLE)
+   ============================================================ */
+.detective-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.detective-magnifier-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.magnifier-ring {
+  width: 160px;
+  height: 160px;
+  border: 10px solid #fbbf24;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(251, 191, 36, 0.35), inset 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.magnifier-lens {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detective-clue-label {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+}
+
+.detective-choices-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 540px;
+  justify-content: center;
+}
+
+/* ============================================================
+   GAME 6: MAGIC CLOTHING SORTER (SHELVES)
+   ============================================================ */
+.sorter-shelves-layout {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sorter-spawn-zone {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sorter-shelves-rack {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  max-width: 500px;
+}
+
+.wardrobe-shelf-zone {
+  background: #fffbeb;
+  border: 3px solid #fde68a;
+  border-radius: var(--radius-md);
+  padding: 10px;
+  min-height: 110px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.wardrobe-shelf-zone:hover {
+  border-color: #f59e0b;
+  transform: translateY(-3px);
+}
+
+.shelf-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: #b45309;
+  border-bottom: 2px solid #fef3c7;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.shelf-items-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 50px;
+}
+
+/* ============================================================
+   GAME 7: WHERE DO WE WEAR IT? (EDUCATIONAL MANNEQUIN)
+   ============================================================ */
+.body-diagram-layout {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.body-diagram-item-box {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.educational-mannequin-wrap {
+  position: relative;
+  width: 220px;
+  height: 320px;
+  background: #f8fafc;
+  border: 3px solid #cbd5e1;
+  border-radius: var(--radius-lg);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mannequin-canvas-host {
+  width: 100%;
+  height: 100%;
+}
+
+.animated-pointer-arrow {
+  position: absolute;
+  font-size: 28px;
+  color: #ef4444;
+  font-weight: 900;
+  display: none;
+  filter: drop-shadow(0 2px 6px rgba(239, 68, 68, 0.6));
+  animation: arrowPulse 0.8s ease-in-out infinite alternate;
+}
+
+.body-diagram-choices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 240px;
+}
+
+.diagram-choice-btn {
+  background: #ffffff;
+  border: 2px solid #e2d7f5;
+  border-radius: var(--radius-md);
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: var(--transition-bounce);
+}
+
+.diagram-choice-btn:hover {
+  border-color: var(--color-magic-purple);
+  transform: translateY(-2px) scale(1.04);
+}
+
+/* ============================================================
+   GAME 8: MAGIC CLOSET SURPRISE (DOORS)
+   ============================================================ */
+.surprise-doors-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.magic-door-card {
+  position: relative;
+  height: 260px;
+  background: linear-gradient(135deg, #a16207 0%, #78350f 100%);
+  border: 4px solid #fef08a;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  perspective: 800px;
+  overflow: hidden;
+  transition: var(--transition-bounce);
+}
+
+.magic-door-card:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+.door-exterior {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: left center;
+}
+
+.magic-door-card.door-open .door-exterior {
+  transform: rotateY(-110deg);
+}
+
+.door-symbol { font-size: 44px; margin-bottom: 8px; }
+.door-label { font-size: 14px; font-weight: 700; color: #fef08a; }
+.door-knob { position: absolute; right: 12px; top: 50%; font-size: 20px; }
+
+.door-interior {
+  position: absolute;
+  inset: 0;
+  background: #fdf2f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  gap: 6px;
+}
+
+/* ============================================================
+   FINAL CELEBRATION
+   ============================================================ */
+.celebration-hero-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.celebration-badge-gold {
+  background: linear-gradient(135deg, #ffc83b 0%, #fb923c 100%);
+  color: #78350f;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: var(--radius-full);
+  margin-bottom: 8px;
+}
+
+.celebration-main-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  margin-bottom: 6px;
+}
+
+.celebration-lead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.arranged-categories-showcase {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 18px;
+}
+
+.category-display-col {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid #e2d7f5;
+  border-radius: var(--radius-md);
+  padding: 8px;
+  min-height: 120px;
+}
+
+.col-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+  border-bottom: 1.5px solid #f3e8ff;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.col-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.explorer-award-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fef08a;
+  border: 3px solid #eab308;
+  padding: 8px 24px;
+  border-radius: var(--radius-full);
+  font-size: 20px;
+  font-weight: 700;
+  color: #854d0e;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(234, 179, 8, 0.35);
+  animation: badgeGlow 1.5s ease-in-out infinite alternate;
+}
+
+.celebration-actions-row {
+  display: flex;
+  gap: 14px;
+}
+
+/* ============================================================
+   FREE PLAY MODE
+   ============================================================ */
+.freeplay-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.freeplay-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.freeplay-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-magic-indigo);
+}
+
+.freeplay-tip {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.freeplay-category-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.category-tab {
+  padding: 6px 16px;
+  background: #ffffff;
+  border: 2px solid #e2d7f5;
+  border-radius: var(--radius-full);
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+}
+
+.category-tab.active, .category-tab:hover {
+  background: var(--color-magic-indigo);
+  border-color: var(--color-magic-indigo);
+  color: #ffffff;
+}
+
+.freeplay-items-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 250px;
+  padding: 4px;
+}
+
+.freeplay-spotlight-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fdf2f8;
+  border: 2px solid #fbcfe8;
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+}
+
+.spotlight-icon { font-size: 32px; }
+.spotlight-info { flex: 1; }
+.spotlight-name { font-size: 15px; font-weight: 700; color: var(--color-magic-pink); }
+.spotlight-desc { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+
+/* ============================================================
+   MODALS & DRAWERS
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg-dark-overlay);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop.active {
+  display: flex;
+  animation: modalPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 3px solid var(--glass-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  width: 100%;
+  max-width: 650px;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.modal-close-btn {
+  background: #f3f4f6;
+  border: none;
+  font-size: 24px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.activity-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #faf5ff;
+  border: 2px solid #e9d5ff;
+  border-radius: var(--radius-md);
+  padding: 12px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+
+.activity-menu-item:hover {
+  background: #f3e8ff;
+  border-color: var(--color-magic-purple);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.menu-item-icon { font-size: 28px; }
+.menu-item-title { font-size: 15px; font-weight: 700; color: var(--color-magic-indigo); }
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+@keyframes starFloat {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-12px) rotate(6deg); }
+}
+
+@keyframes starGlowPulse {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  100% { opacity: 1.0; transform: scale(1.15); }
+}
+
+@keyframes doorWiggle {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(4deg); }
+}
+
+@keyframes arrowPulse {
+  0% { transform: scale(1.0) translateX(0); }
+  100% { transform: scale(1.3) translateX(8px); }
+}
+
+@keyframes badgeGlow {
+  0% { transform: scale(1.0); box-shadow: 0 6px 18px rgba(234, 179, 8, 0.35); }
+  100% { transform: scale(1.04); box-shadow: 0 10px 28px rgba(234, 179, 8, 0.65); }
+}
+
+@keyframes sceneFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1.0); }
+}
+
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1.0); }
+}
+
+/* Riya Expression & Body Animations */
+.anim-idle { animation: charIdle 3s ease-in-out infinite alternate; }
+.anim-happy { animation: charHappy 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 2; }
+.anim-twirl { animation: charTwirl 1.2s ease-in-out; }
+.anim-walk { animation: charWalk 1.4s ease-in-out infinite; }
+
+@keyframes charIdle {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(1deg); }
+}
+
+@keyframes charHappy {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-24px) scale(1.06); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes charTwirl {
+  0% { transform: rotateY(0deg) scale(1); }
+  50% { transform: rotateY(180deg) scale(1.08); }
+  100% { transform: rotateY(360deg) scale(1); }
+}
+
+@keyframes charWalk {
+  0% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(-2deg); }
+}
+
+/* ============================================================
+   RESPONSIVE MEDIA QUERIES
+   ============================================================ */
+@media (max-width: 900px) {
+  .play-arena {
+    flex-direction: column;
+    padding: 10px 14px;
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  .character-stage-wrap {
+    width: 100%;
+    height: 180px;
+    padding-bottom: 0;
+  }
+
+  .riya-character-container {
+    width: 180px;
+    height: 180px;
+  }
+
+  .riya-character {
+    height: 160px;
+  }
+
+  .little-star-companion {
+    top: 5px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .interactive-panel {
+    min-height: 400px;
+  }
+
+  .wardrobe-sections-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .surprise-doors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

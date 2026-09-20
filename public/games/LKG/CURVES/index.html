@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>John's Curve Magic Adventure | ChotaPlay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Top Bar Navigation & Status -->
+    <header id="top-bar">
+      <div class="brand-badge">
+        <span class="brand-name">CHOTAPLAY</span>
+        <span class="game-title">✨ John's Curve Magic</span>
+      </div>
+      
+      <div id="progress-tracker">
+        <div class="step-badge active" data-step="1" id="step-btn-1" title="Upward Curve">
+          <span class="step-icon">🌈</span>
+          <span class="step-label">Upward ∪</span>
+        </div>
+        <div class="step-badge" data-step="2" id="step-btn-2" title="Downward Curve">
+          <span class="step-icon">🚤</span>
+          <span class="step-label">Downward ∩</span>
+        </div>
+        <div class="step-badge" data-step="3" id="step-btn-3" title="Right Curve">
+          <span class="step-icon">🐛</span>
+          <span class="step-label">Right )</span>
+        </div>
+        <div class="step-badge" data-step="4" id="step-btn-4" title="Left Curve">
+          <span class="step-icon">🎢</span>
+          <span class="step-label">Left (</span>
+        </div>
+        <div class="step-badge" data-step="5" id="step-btn-5" title="Free Magic">
+          <span class="step-icon">🪄</span>
+          <span class="step-label">Free Magic</span>
+        </div>
+      </div>
+
+      <div class="top-controls">
+        <button id="btn-sound" class="icon-btn" aria-label="Toggle Sound" title="Sound Effects">🔊</button>
+        <button id="btn-voice" class="icon-btn" aria-label="Toggle Voice" title="Voice Guide">🗣️</button>
+        <button id="btn-restart" class="icon-btn" aria-label="Restart Game" title="Restart Game">🔄</button>
+      </div>
+    </header>
+
+    <!-- Main Interactive Stage -->
+    <main id="game-stage">
+      <!-- Background Environmental Layers -->
+      <div id="scene-bg" class="scene-sky">
+        <div class="bg-layer sky-elements">
+          <div class="sun"></div>
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+          <div class="stars-cluster"></div>
+        </div>
+
+        <!-- Scene 1: Rainbow Sky Scene Object -->
+        <div id="magic-obj-rainbow" class="magic-element-wrapper hidden">
+          <div class="rainbow-arc">
+            <div class="rainbow-band band-red"></div>
+            <div class="rainbow-band band-orange"></div>
+            <div class="rainbow-band band-yellow"></div>
+            <div class="rainbow-band band-green"></div>
+            <div class="rainbow-band band-blue"></div>
+            <div class="rainbow-band band-purple"></div>
+          </div>
+          <div class="rainbow-cloud cloud-left">☁️</div>
+          <div class="rainbow-cloud cloud-right">☁️</div>
+        </div>
+
+        <!-- Scene 2: River Bank & Magic Boat -->
+        <div id="magic-obj-river" class="magic-element-wrapper hidden">
+          <div class="water-waves">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+          </div>
+          <div class="magic-boat" id="boat-actor">
+            <div class="boat-hull">⛵</div>
+            <div class="boat-ripples"></div>
+          </div>
+        </div>
+
+        <!-- Scene 3: Garden & Caterpillar Path -->
+        <div id="magic-obj-garden" class="magic-element-wrapper hidden">
+          <div class="garden-ground">
+            <div class="flower flower-target">🌻</div>
+            <div class="flower flower-deco1">🌸</div>
+            <div class="flower flower-deco2">🌷</div>
+            <div class="magic-caterpillar" id="caterpillar-actor">
+              <span class="cat-face">🐛</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 4: Fairground & Magic Coaster Ride -->
+        <div id="magic-obj-ride" class="magic-element-wrapper hidden">
+          <div class="ride-track-svg">
+            <svg viewBox="0 0 600 300" class="track-line-svg">
+              <path id="coaster-path" d="M 500,200 C 400,260 250,220 200,150 C 150,70 300,50 350,120 C 400,200 250,260 100,220" fill="none" stroke="rgba(255,215,0,0.7)" stroke-width="8" stroke-dasharray="10,6" />
+            </svg>
+            <div class="magic-cart" id="cart-actor">
+              <div class="cart-body">🎢</div>
+              <div class="spark-trail"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas Drawing Board Overlay -->
+      <div id="canvas-wrapper">
+        <canvas id="drawing-canvas"></canvas>
+        <div id="guide-overlay" class="guide-upward">
+          <svg id="guide-svg" viewBox="0 0 400 300">
+            <path id="guide-path" d="" fill="none" />
+            <circle id="guide-hand" r="14" cx="0" cy="0" />
+          </svg>
+          <div id="guide-hint-text" class="guide-text">Draw Upward ∪</div>
+        </div>
+        <div id="sparkle-particles"></div>
+      </div>
+
+      <!-- Characters Layer (John & Little Star) -->
+      <div id="characters-stage">
+        <!-- John Character (Matching the boy in the illustration) -->
+        <div id="john-character" class="character-box idle">
+          <div class="avatar-svg-wrap">
+            <svg viewBox="0 0 160 220" class="character-svg john-svg">
+              <!-- Shadow -->
+              <ellipse cx="80" cy="210" rx="45" ry="8" fill="rgba(0,0,0,0.2)" />
+              
+              <!-- Legs & Shoes -->
+              <g class="john-legs">
+                <rect x="58" y="145" width="16" height="35" rx="8" fill="#f2c8a2" />
+                <rect x="86" y="145" width="16" height="35" rx="8" fill="#f2c8a2" />
+                <!-- Khaki Shorts -->
+                <path d="M 52,120 L 108,120 L 112,150 L 85,150 L 80,135 L 75,150 L 48,150 Z" fill="#d4a373" stroke="#b07d50" stroke-width="2" />
+                <rect x="50" y="132" width="10" height="12" rx="2" fill="#c39364" />
+                <rect x="100" y="132" width="10" height="12" rx="2" fill="#c39364" />
+                <!-- Socks & Sneakers -->
+                <rect x="56" y="174" width="20" height="12" rx="4" fill="#a0c4ff" />
+                <rect x="84" y="174" width="20" height="12" rx="4" fill="#a0c4ff" />
+                <path d="M 46,186 Q 66,182 78,190 Q 76,204 54,204 Q 44,200 46,186 Z" fill="#ffffff" stroke="#3a86ff" stroke-width="3" />
+                <path d="M 82,186 Q 94,182 114,190 Q 116,204 94,204 Q 82,200 82,186 Z" fill="#ffffff" stroke="#3a86ff" stroke-width="3" />
+              </g>
+
+              <!-- Body / T-Shirt -->
+              <g class="john-torso">
+                <path d="M 50,75 L 110,75 L 106,125 L 54,125 Z" fill="#3a86ff" stroke="#2563eb" stroke-width="2" rx="10" />
+                <!-- Rocket emblem on t-shirt -->
+                <g transform="translate(73, 85) scale(0.65)">
+                  <path d="M 10,0 Q 20,10 16,30 L 4,30 Q 0,10 10,0 Z" fill="#ffffff" />
+                  <path d="M 10,2 Q 13,8 10,12" stroke="#ff006e" stroke-width="3" />
+                  <circle cx="10" cy="15" r="4" fill="#ffbe0b" />
+                  <path d="M 6,30 L 10,38 L 14,30 Z" fill="#ff5400" />
+                </g>
+                <!-- Arms -->
+                <g class="arm arm-left">
+                  <path d="M 50,78 Q 30,95 44,115" fill="none" stroke="#f2c8a2" stroke-width="14" stroke-linecap="round" />
+                  <circle cx="44" cy="115" r="8" fill="#f2c8a2" />
+                </g>
+                <g class="arm arm-right pointing-arm">
+                  <path d="M 110,78 Q 130,90 125,110" fill="none" stroke="#f2c8a2" stroke-width="14" stroke-linecap="round" />
+                  <circle cx="125" cy="110" r="8" fill="#f2c8a2" />
+                  <!-- Finger pointing -->
+                  <path d="M 125,108 L 138,98" stroke="#f2c8a2" stroke-width="6" stroke-linecap="round" />
+                </g>
+              </g>
+
+              <!-- Head & Hair -->
+              <g class="john-head">
+                <ellipse cx="80" cy="48" rx="30" ry="32" fill="#f2c8a2" />
+                <!-- Ears -->
+                <circle cx="50" cy="48" r="8" fill="#f2c8a2" />
+                <circle cx="110" cy="48" r="8" fill="#f2c8a2" />
+                <!-- Eyes -->
+                <ellipse class="eye eye-left" cx="68" cy="45" rx="5" ry="6" fill="#4a2810" />
+                <circle cx="67" cy="43" r="2" fill="#ffffff" />
+                <ellipse class="eye eye-right" cx="92" cy="45" rx="5" ry="6" fill="#4a2810" />
+                <circle cx="91" cy="43" r="2" fill="#ffffff" />
+                <!-- Cheeks -->
+                <circle cx="62" cy="54" r="6" fill="rgba(255,100,100,0.35)" />
+                <circle cx="98" cy="54" r="6" fill="rgba(255,100,100,0.35)" />
+                <!-- Smile -->
+                <path class="mouth" d="M 72,56 Q 80,66 88,56" fill="none" stroke="#6b2d18" stroke-width="3" stroke-linecap="round" />
+                <!-- Cute Hair Tuft (Spiky brown hair) -->
+                <path d="M 48,42 C 45,15 65,8 80,10 C 95,8 115,15 112,42 C 105,28 92,26 80,27 C 68,26 55,28 48,42 Z" fill="#603813" />
+                <path d="M 68,14 C 74,2 88,4 84,16" fill="#603813" />
+                <path d="M 85,12 C 96,2 108,8 102,20" fill="#603813" />
+              </g>
+            </svg>
+          </div>
+          <span class="char-name">John</span>
+        </div>
+
+        <!-- Little Star Character -->
+        <div id="star-character" class="character-box star-float">
+          <div class="star-svg-wrap">
+            <svg viewBox="0 0 120 120" class="character-svg star-svg">
+              <defs>
+                <filter id="star-glow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="5" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <linearGradient id="star-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fff59d" />
+                  <stop offset="100%" stop-color="#ffb703" />
+                </linearGradient>
+              </defs>
+              <g filter="url(#star-glow)">
+                <!-- 5-Pointed Star Body -->
+                <polygon points="60,10 74,44 110,46 82,70 91,106 60,85 29,106 38,70 10,46 46,44" fill="url(#star-grad)" stroke="#fb8500" stroke-width="3" stroke-linejoin="round" />
+                <!-- Happy Eyes -->
+                <ellipse cx="50" cy="56" rx="5" ry="6" fill="#3d1308" />
+                <circle cx="49" cy="54" r="2" fill="#ffffff" />
+                <ellipse cx="70" cy="56" rx="5" ry="6" fill="#3d1308" />
+                <circle cx="69" cy="54" r="2" fill="#ffffff" />
+                <!-- Blushing Cheeks -->
+                <circle cx="42" cy="64" r="5" fill="rgba(255,70,100,0.5)" />
+                <circle cx="78" cy="64" r="5" fill="rgba(255,70,100,0.5)" />
+                <!-- Open Smile -->
+                <path d="M 52,66 Q 60,76 68,66 Z" fill="#d90429" stroke="#9b001a" stroke-width="1.5" />
+                <!-- Magic Sparkle Wand -->
+                <line x1="85" y1="65" x2="105" y2="45" stroke="#fb8500" stroke-width="4" stroke-linecap="round" />
+                <polygon points="105,40 108,47 115,45 110,51 113,58 106,54 100,58 102,51 96,47 103,47" fill="#fff" />
+              </g>
+            </svg>
+          </div>
+          <span class="char-name">Little Star</span>
+        </div>
+      </div>
+
+      <!-- Dialogue & Speech Bubble Area -->
+      <div id="speech-bubble-wrapper">
+        <div id="speech-bubble">
+          <div id="speaker-tag">🌟 Little Star:</div>
+          <p id="dialogue-text">"Welcome to Curve Magic Land! Let's bring back the magic!"</p>
+          <button id="btn-repeat-speech" class="mini-sound-btn" title="Listen again">🔊 Listen</button>
+        </div>
+      </div>
+
+      <!-- Action Buttons Bar -->
+      <div id="stage-actions">
+        <button id="btn-hint" class="action-btn hint-btn">💡 Show Hint</button>
+        <button id="btn-clear" class="action-btn clear-btn">🧹 Clear</button>
+      </div>
+    </main>
+
+    <!-- Overlay 1: Welcome Intro Modal -->
+    <div id="intro-modal" class="modal-backdrop active">
+      <div class="modal-card">
+        <div class="modal-sparkles">✨ ⭐ ✨</div>
+        <h1 class="modal-title">John's Curve Magic Adventure</h1>
+        <p class="modal-subtitle">CHOTAPLAY &bull; Preschool Learning (Ages 3–6)</p>
+        
+        <div class="intro-preview-grid">
+          <div class="preview-item">
+            <span class="preview-icon">∪</span>
+            <span class="preview-text">Upward Curve<br><strong>🌈 Rainbow</strong></span>
+          </div>
+          <div class="preview-item">
+            <span class="preview-icon">∩</span>
+            <span class="preview-text">Downward Curve<br><strong>🚤 Magic Boat</strong></span>
+          </div>
+          <div class="preview-item">
+            <span class="preview-icon">)</span>
+            <span class="preview-text">Right Curve<br><strong>🐛 Caterpillar</strong></span>
+          </div>
+          <div class="preview-item">
+            <span class="preview-icon">(</span>
+            <span class="preview-text">Left Curve<br><strong>🎢 Magic Ride</strong></span>
+          </div>
+        </div>
+
+        <p class="story-desc">
+          "The Magic Curves are missing! Draw with your finger or mouse to bring back the magic world!"
+        </p>
+
+        <button id="btn-start-game" class="magic-play-btn pulse-anim">
+          <span>✨ START MAGIC ✨</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Overlay 2: Success / Transformation Celebration Flash -->
+    <div id="success-banner" class="success-pop hidden">
+      <div class="success-content">
+        <span class="success-icon" id="success-emoji">🌈</span>
+        <h2 id="success-title">Upward Curve!</h2>
+        <p id="success-desc">Wow! You brought back the Rainbow!</p>
+      </div>
+    </div>
+
+    <!-- Overlay 3: Final Victory / Magic Master Modal -->
+    <div id="victory-modal" class="modal-backdrop hidden">
+      <div class="modal-card celebration-card">
+        <div class="trophy-badge">🏆 🌟 🪄</div>
+        <h1 class="modal-title">CURVE MAGIC MASTER!</h1>
+        <p class="modal-subtitle">You restored all four magic curves!</p>
+        
+        <div class="master-curves-row">
+          <div class="master-card" data-curve="UPWARD">
+            <div class="card-symbol">∪</div>
+            <div class="card-label">Upward</div>
+            <div class="card-reward">🌈 Rainbow</div>
+          </div>
+          <div class="master-card" data-curve="DOWNWARD">
+            <div class="card-symbol">∩</div>
+            <div class="card-label">Downward</div>
+            <div class="card-reward">🚤 Boat</div>
+          </div>
+          <div class="master-card" data-curve="RIGHT">
+            <div class="card-symbol">)</div>
+            <div class="card-label">Right</div>
+            <div class="card-reward">🐛 Caterpillar</div>
+          </div>
+          <div class="master-card" data-curve="LEFT">
+            <div class="card-symbol">(</div>
+            <div class="card-label">Left</div>
+            <div class="card-reward">🎢 Magic Ride</div>
+          </div>
+        </div>
+
+        <div class="victory-actions">
+          <button id="btn-free-play" class="magic-play-btn">
+            <span>🪄 Magic Curve Brush (Free Play)</span>
+          </button>
+          <button id="btn-play-again" class="secondary-btn">
+            <span>🔄 Play Adventure Again</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confetti Canvas Container -->
+    <canvas id="confetti-canvas"></canvas>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

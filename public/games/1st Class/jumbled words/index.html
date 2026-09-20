@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ChotaPlay — Animal Jumbled Letter Puzzle</title>
+  <meta name="description" content="ChotaPlay Animal Jumbled Letter Puzzle Game! Solve the jumbled letters to unlock real animal images with Riya, John and Little Star!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Animated Background Elements -->
+  <div class="sky-background" aria-hidden="true">
+    <div class="sun"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="floating-stars" id="floatingStars"></div>
+  </div>
+
+  <!-- Particle / Confetti Canvas -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <div class="game-wrapper">
+    <!-- Top Header -->
+    <header class="game-header">
+      <div class="header-left">
+        <span class="brand-badge">🌟 ChotaPlay</span>
+        <h1 class="game-title">Animal Jumbled Puzzle</h1>
+      </div>
+
+      <div class="header-center">
+        <div class="puzzle-progress-pill" id="puzzleProgressPill" title="Current puzzle number">
+          <span class="progress-icon">🐾</span>
+          <span id="puzzleProgressText">Puzzle 1 of 31</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button id="btnSoundToggle" class="header-btn" title="Toggle Sound and Voice" aria-label="Toggle Sound">
+          <span id="soundIcon" class="btn-icon">🔊</span>
+          <span id="soundLabel" class="btn-text">Sound ON</span>
+        </button>
+
+        <button id="btnHint" class="header-btn hint-btn" title="Get a letter hint" aria-label="Hint">
+          <span class="btn-icon">💡</span>
+          <span class="btn-text">Hint</span>
+        </button>
+
+        <button id="btnResetPuzzle" class="header-btn restart-btn" title="Restart this puzzle" aria-label="Restart Puzzle">
+          <span class="btn-icon">🔄</span>
+          <span class="btn-text">Reset</span>
+        </button>
+
+        <button id="btnPuzzleList" class="header-btn menu-btn" title="Choose any animal puzzle" aria-label="Choose Puzzle">
+          <span class="btn-icon">📋</span>
+          <span class="btn-text">Puzzles</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Game Arena -->
+    <main class="game-main-stage">
+      
+      <!-- Character Left: RIYA -->
+      <aside class="character-flank character-riya" id="riyaArea" aria-label="Character Riya">
+        <div class="character-speech-bubble riya-bubble" id="riyaBubble">
+          <span class="bubble-speaker">Riya</span>
+          <p class="bubble-message" id="riyaMessage">Let's solve the puzzle!</p>
+        </div>
+        <div class="character-image-container">
+          <img src="girl-removebg-preview.png" alt="Riya" class="character-portrait" id="riyaImg">
+        </div>
+        <div class="character-name-badge riya-name">👧 Riya</div>
+      </aside>
+
+      <!-- Center Puzzle Area -->
+      <section class="puzzle-center-arena">
+        
+        <!-- Little Star Top Host -->
+        <div class="star-host-container" id="starHostArea">
+          <div class="star-avatar-box">
+            <img src="star-removebg-preview.png" alt="Little Star" class="star-portrait" id="starImg">
+          </div>
+          <div class="star-speech-bubble" id="starBubble">
+            <span class="star-speaker-label">⭐ Little Star</span>
+            <p class="star-message" id="starMessage">Can you unlock the animal?</p>
+          </div>
+        </div>
+
+        <!-- Mystery Animal Card / Reveal Showcase -->
+        <div class="mystery-card-wrapper" id="mysteryCardWrapper">
+          <div class="mystery-card" id="mysteryCard">
+            
+            <!-- State 1: Locked Mystery Screen (Before Word Solved) -->
+            <div class="mystery-unsolved-view" id="mysteryUnsolvedView">
+              <div class="mystery-icon-box">
+                <span class="mystery-question-mark">?</span>
+                <span class="mystery-lock-badge">🔒</span>
+              </div>
+              <p class="mystery-instruction">Spell the word to unlock the real animal!</p>
+              <div class="letter-count-badge" id="letterCountBadge">3 Letters</div>
+            </div>
+
+            <!-- State 2: Solved Real Animal View (Revealed After Completion) -->
+            <div class="mystery-solved-view" id="mysterySolvedView" style="display: none;">
+              <div class="real-image-container">
+                <img src="" alt="Real Animal" class="real-animal-img" id="realAnimalImage">
+                <div class="reveal-sparkle-ring"></div>
+              </div>
+              <div class="animal-revealed-banner" id="animalRevealedBanner">
+                <span class="unlocked-text">✨ UNLOCKED! ✨</span>
+                <h2 class="animal-solved-name" id="animalSolvedName">CAT</h2>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Word Slots Area (_ _ _) -->
+        <div class="word-slots-container" id="wordSlotsContainer" aria-label="Word answer slots">
+          <!-- Slots rendered dynamically -->
+        </div>
+
+        <!-- Jumbled Letter Tiles Box -->
+        <div class="jumbled-tiles-section" id="jumbledTilesSection" aria-label="Jumbled letter tiles">
+          <p class="tiles-instruction-label">Tap the letters in the right order:</p>
+          <div class="letter-tiles-container" id="letterTilesContainer">
+            <!-- Large interactive letter buttons rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Action / Next Puzzle Button Container -->
+        <div class="action-footer-bar" id="actionFooterBar">
+          <button id="btnPrevPuzzle" class="nav-btn prev-puzzle-btn" title="Previous puzzle" aria-label="Previous Puzzle">
+            <span>◀ Prev</span>
+          </button>
+
+          <button id="btnNextPuzzle" class="next-puzzle-main-btn" id="btnNextPuzzle" title="Go to the next animal puzzle">
+            <span class="btn-star-sparkle">⭐</span>
+            <span class="next-btn-text">NEXT PUZZLE ➔</span>
+          </button>
+
+          <button id="btnSkipPuzzle" class="nav-btn next-puzzle-btn" title="Next puzzle" aria-label="Skip to Next">
+            <span>Next ▶</span>
+          </button>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- All Puzzles Drawer / Modal -->
+    <div class="puzzles-modal-overlay" id="puzzlesModal" style="display: none;" aria-hidden="true">
+      <div class="puzzles-modal-content">
+        <div class="modal-header">
+          <h2>🐾 Select Any Animal Puzzle</h2>
+          <button id="btnCloseModal" class="close-modal-btn" aria-label="Close">✖</button>
+        </div>
+        <div class="puzzles-grid" id="puzzlesGrid">
+          <!-- 31 puzzle preview cards populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

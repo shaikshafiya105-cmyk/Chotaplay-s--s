@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vegetable Memory Adventure</title>
+    <style>
+        /* Base Styles & Projector-First Variables */
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FF9800;
+            --bg-color: #F1F8E9;
+            --text-color: #2E7D32;
+            --card-bg: #FFFFFF;
+            --card-back: #8BC34A;
+            --discovery-color: #9C27B0;
+            --shadow: 0 4px 15px rgba(0,0,0,0.15);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        /* 
+           STRICT NO-SCROLL BODY 
+           Provides the outer background margin 
+        */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; 
+            padding: 3vmin;   
+        }
+
+        /* MASTER CONSOLIDATED FRAME */
+        .app-frame {
+            background: white;
+            width: 100%;
+            height: 100%;
+            max-width: 1200px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2vh 2vw;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        /* Typography */
+        h1 { font-size: clamp(2rem, 5vh, 4rem); margin-bottom: 1vh; color: var(--primary-color); text-align: center; }
+        h2 { font-size: clamp(1.5rem, 3.5vh, 2.5rem); margin-bottom: 1vh; color: var(--secondary-color); text-align: center; }
+        h3 { font-size: clamp(1.2rem, 2.5vh, 2rem); margin-bottom: 0.5vh; text-align: center; }
+        .instruction { font-size: clamp(1.2rem, 2.5vh, 2rem); margin-bottom: 3vh; color: #555; text-align: center; }
+        
+        #game-prompt { 
+            font-size: clamp(1.2rem, 3vh, 2rem); 
+            height: clamp(1.5rem, 4vh, 3rem); 
+            font-weight: bold; 
+            margin-bottom: 1vh; 
+            text-align: center;
+        }
+
+        /* Buttons */
+        .controls { display: flex; gap: 1.5vw; justify-content: center; margin-top: 2vh; }
+        button {
+            font-size: clamp(1.2rem, 2.5vh, 2rem);
+            padding: 1vh 2vw;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+        }
+        button:active { transform: translateY(4px); box-shadow: none; }
+        .btn-primary { background-color: var(--secondary-color); color: white; }
+        .btn-secondary { background-color: #E0E0E0; color: #333; }
+        
+        .btn-icon { 
+            font-size: clamp(1.5rem, 3.5vh, 2.5rem); 
+            background: #f5f5f5; 
+            box-shadow: 0 3px 0 rgba(0,0,0,0.1); 
+            padding: 0.5vh 1vw;
+            border-radius: 10px;
+        }
+
+        /* Game Header */
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1vh 2vw;
+            flex-shrink: 0; 
+        }
+        .game-header h2 { margin: 0; text-align: left; }
+
+        /* GRID CONTAINER */
+        .grid-container {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 0; 
+            padding: 1vh;
+        }
+
+        /* THE GRID */
+        .grid-4x4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 1.2vh;
+            height: 100%; 
+            max-height: 65vh;
+            aspect-ratio: 3 / 4; 
+            perspective: 1000px;
+        }
+
+        /* Cards */
+        .card {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+            border-radius: 10px;
+            transition: transform 0.2s, opacity 0.5s ease;
+        }
+        .card:hover { transform: scale(1.02); }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.4s;
+            transform-style: preserve-3d;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        .card.flipped .card-inner, .card.matched .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Removed Card State (Hides the card after a match) */
+        .card.removed-card {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front {
+            background-color: var(--card-back);
+            background-image: radial-gradient(#fff 10%, transparent 11%), radial-gradient(#fff 10%, transparent 11%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            border: 3px solid white;
+        }
+
+        .card-back {
+            background-color: var(--card-bg);
+            transform: rotateY(180deg);
+            padding: 0.5vh;
+            border: 3px solid var(--primary-color);
+        }
+
+        .card-image {
+            width: 90%;
+            height: 55%;
+            object-fit: contain;
+            margin-bottom: 2%;
+        }
+
+        .card-name {
+            font-size: clamp(0.7rem, 1.6vh, 1.4rem);
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .card-alt-name {
+            font-size: clamp(0.6rem, 1.1vh, 0.9rem);
+            color: #666;
+            text-align: center;
+        }
+
+        /* Result Bar */
+        .result-bar-container {
+            width: 95%;
+            flex-shrink: 0;
+            background: var(--bg-color);
+            padding: 1vh 2vw;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 1vh;
+            border: 2px solid #C8E6C9;
+        }
+
+        .result-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5vw;
+            justify-content: center;
+            min-height: clamp(30px, 5vh, 50px);
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 0.3vh 0.8vw;
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 1.8vh, 1.2rem);
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .result-item.discovery-item {
+            border-color: var(--discovery-color);
+            background: #F3E5F5;
+        }
+
+        .result-item img {
+            width: clamp(15px, 3vh, 30px);
+            height: clamp(15px, 3vh, 30px);
+            object-fit: contain;
+            margin-right: 5px;
+        }
+
+        /* Discovery Overlay */
+        #discovery-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        #discovery-overlay.show { opacity: 1; pointer-events: all; }
+
+        .discovery-box {
+            background: white;
+            padding: 3vh 4vw;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.3);
+            border: 5px solid var(--discovery-color);
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #discovery-overlay.show .discovery-box { transform: scale(1); }
+        .discovery-box h2 { color: var(--discovery-color); margin-bottom: 2vh; font-size: clamp(1.8rem, 4vh, 3rem); }
+        .discovery-img { height: clamp(100px, 25vh, 250px); object-fit: contain; margin-bottom: 2vh; }
+
+        /* Victory Screen Specifics */
+        .victory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1vh;
+            margin: 1.5vh 0;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .special-victory-highlight {
+            background: #F3E5F5;
+            padding: 1.5vh 3vw;
+            border-radius: 15px;
+            border: 3px solid var(--discovery-color);
+            margin-bottom: 1vh;
+            display: inline-block;
+        }
+        .special-victory-highlight h4 {
+            color: var(--discovery-color);
+            font-size: clamp(1.2rem, 2.2vh, 1.8rem);
+            margin-bottom: 1vh;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .shake { animation: shake 0.4s; }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 
+           FIXED: Added rotateY(180deg) to these animations 
+           so the card stays face-up while blinking! 
+        */
+        @keyframes glowMatch {
+            0% { box-shadow: 0 0 5px var(--secondary-color); transform: rotateY(180deg) scale(1); }
+            50% { box-shadow: 0 0 20px var(--secondary-color); transform: rotateY(180deg) scale(1.05); }
+            100% { box-shadow: 0 0 5px var(--secondary-color); transform: rotateY(180deg) scale(1); }
+        }
+        .card.matched .card-inner { animation: glowMatch 0.8s ease forwards; }
+        
+        @keyframes glowDiscovery {
+            0% { box-shadow: 0 0 5px var(--discovery-color); transform: rotateY(180deg) scale(1); }
+            50% { box-shadow: 0 0 30px var(--discovery-color); transform: rotateY(180deg) scale(1.1); }
+            100% { box-shadow: 0 0 5px var(--discovery-color); transform: rotateY(180deg) scale(1); }
+        }
+        .card.matched.discovery-card .card-inner { animation: glowDiscovery 1s ease forwards; }
+
+    </style>
+</head>
+<body>
+
+    <!-- MASTER APP FRAME -->
+    <div class="app-frame">
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h1>🥕 Vegetable Memory Adventure</h1>
+            <h2>Match • Remember • Learn!</h2>
+            <p class="instruction">Can you find all the matching vegetables?</p>
+            
+            <div class="controls">
+                <button id="btn-start" class="btn-primary">▶ START GAME</button>
+                <button id="btn-audio-toggle-start" class="btn-secondary">🔊 Audio ON</button>
+            </div>
+        </div>
+
+        <!-- Main Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <h2>🥕 Memory Adventure</h2>
+                <button id="btn-audio-toggle-game" class="btn-icon">🔊</button>
+            </div>
+            
+            <p id="game-prompt">Let's find the matching vegetables!</p>
+            
+            <div class="grid-container">
+                <div id="card-grid" class="grid-4x4">
+                    <!-- Cards injected via JS -->
+                </div>
+            </div>
+
+            <div class="result-bar-container">
+                <h3>🌟 VEGETABLES FOUND (<span id="progress-text">0 / 8</span>)</h3>
+                <div id="result-bar" class="result-bar"></div>
+            </div>
+        </div>
+
+        <!-- Discovery Overlay -->
+        <div id="discovery-overlay">
+            <div class="discovery-box">
+                <h2>✨ NEW VEGETABLE DISCOVERED! ✨</h2>
+                <img id="discovery-img" class="discovery-img" src="" alt="">
+                <h1 id="discovery-name"></h1>
+                <h3 id="discovery-alt-name"></h3>
+            </div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victory-screen" class="screen">
+            <h1>🎉 AMAZING!</h1>
+            <h2>You found all 8 vegetables!</h2>
+            
+            <div class="special-victory-highlight" id="victory-discovery-container">
+                <h4>🌟 TODAY'S NEW VEGETABLE</h4>
+                <div id="victory-discovery-details" style="display: flex; align-items: center; justify-content: center; gap: 1vw;">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <div id="victory-vegetables" class="victory-grid">
+                <!-- Completed vegetables injected here -->
+            </div>
+            
+            <div class="controls">
+                <button id="btn-play-again" class="btn-primary">🎮 PLAY AGAIN</button>
+                <button id="btn-home" class="btn-secondary">🏠 BACK</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Master Vegetable Database
+        const masterVegetableDB = [
+            { id: "potato", name: "Potato", image: "potato.jpeg", category: "familiar" },
+            { id: "onion", name: "Onion", image: "onion.jpeg", category: "familiar" },
+            { id: "tomato", name: "Tomato", image: "tomato.jpeg", category: "familiar" },
+            { id: "carrot", name: "Carrot", image: "carrot.jpeg", category: "familiar" },
+            { id: "cauliflower", name: "Cauliflower", image: "cauliflower.jpeg", category: "familiar" },
+            { id: "cabbage", name: "Cabbage", image: "cabbage.jpeg", category: "familiar" },
+            { id: "spinach", name: "Spinach", image: "spinach.jpeg", category: "familiar" },
+            { id: "green-peas", name: "Green Peas", alternateName: "Peas", image: "peas.jpeg", category: "familiar" },
+            { id: "cucumber", name: "Cucumber", alternateName: "Kheera", image: "cucumber.jpeg", category: "familiar" }, 
+            { id: "capsicum", name: "Capsicum", alternateName: "Bell Pepper", image: "capsicum.jpeg", category: "familiar" },
+            { id: "brinjal", name: "Brinjal", alternateName: "Eggplant", image: "brinjal.jpeg", category: "familiar" },
+            { id: "corn", name: "Corn", alternateName: "Maize", image: "corn.jpeg", category: "familiar" },
+            { id: "pumpkin", name: "Pumpkin", image: "pumpkin.jpeg", category: "familiar" },
+            { id: "beans", name: "Beans", image: "beans.jpeg", category: "familiar" },
+            { id: "radish", name: "Radish", image: "radish.jpeg", category: "familiar" },
+
+            { id: "bottle-gourd", name: "Bottle Gourd", alternateName: "Lauki", image: "bottle gourd.jpeg", category: "discovery" },
+            { id: "okra", name: "Okra", alternateName: "Lady's Finger", image: "okra.jpeg", category: "discovery" },
+            { id: "ridge-gourd", name: "Ridge Gourd", image: "ridge gourd.jpeg", category: "discovery" },
+            { id: "bitter-gourd", name: "Bitter Gourd", alternateName: "Bitter Melon", image: "bitter gourd.jpeg", category: "discovery" },
+            { id: "sweet-potato", name: "Sweet Potato", image: "sweet potato.jpeg", category: "discovery" },
+            { id: "beetroot", name: "Beetroot", alternateName: "Beet", image: "beetroot.jpeg", category: "discovery" }
+        ];
+
+        // Game State
+        let audioEnabled = false; 
+        let currentRoundVegetables = [];
+        let currentDiscoveryVegetable = null;
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let lockBoard = false;
+
+        // Enhanced Audio System
+        let availableVoices = [];
+        function loadVoices() {
+            if ('speechSynthesis' in window) {
+                availableVoices = window.speechSynthesis.getVoices();
+            }
+        }
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices(); 
+        }
+
+        function playAudio(text) {
+            if (!audioEnabled || !('speechSynthesis' in window)) return;
+            
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(text);
+            
+            const preferredVoices = ['Google UK English Female', 'Google US English', 'Microsoft Zira', 'Samantha', 'Karen', 'Tessa'];
+            let selectedVoice = null;
+            
+            for(let v of preferredVoices) {
+                selectedVoice = availableVoices.find(voice => voice.name.includes(v));
+                if(selectedVoice) break;
+            }
+            
+            if(!selectedVoice) {
+                 selectedVoice = availableVoices.find(v => v.lang.startsWith('en-IN') || v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) || availableVoices[0];
+            }
+            
+            if (selectedVoice) {
+                speech.voice = selectedVoice;
+            }
+            
+            speech.rate = 0.95; 
+            speech.pitch = 1.1; 
+            
+            window.speechSynthesis.speak(speech);
+        }
+
+        // DOM Elements
+        const screens = {
+            start: document.getElementById('start-screen'),
+            game: document.getElementById('game-screen'),
+            victory: document.getElementById('victory-screen')
+        };
+        const cardGrid = document.getElementById('card-grid');
+        const resultBar = document.getElementById('result-bar');
+        const progressText = document.getElementById('progress-text');
+        const gamePrompt = document.getElementById('game-prompt');
+        const discoveryOverlay = document.getElementById('discovery-overlay');
+        const victoryVegetables = document.getElementById('victory-vegetables');
+        const victoryDiscoveryDetails = document.getElementById('victory-discovery-details');
+
+        // Initialization
+        function init() {
+            document.getElementById('btn-start').addEventListener('click', startGame);
+            document.getElementById('btn-play-again').addEventListener('click', startGame);
+            document.getElementById('btn-home').addEventListener('click', showStartScreen);
+            
+            document.getElementById('btn-audio-toggle-start').addEventListener('click', toggleAudio);
+            document.getElementById('btn-audio-toggle-game').addEventListener('click', toggleAudio);
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const icon = audioEnabled ? '🔊' : '🔇';
+            const text = audioEnabled ? '🔊 Audio ON' : '🔇 Audio OFF';
+            document.getElementById('btn-audio-toggle-start').textContent = text;
+            document.getElementById('btn-audio-toggle-game').textContent = icon;
+            
+            if(audioEnabled) {
+                playAudio("Audio enabled.");
+            } else {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(s => s.classList.remove('active'));
+            screens[screenName].classList.add('active');
+        }
+
+        function showStartScreen() {
+            showScreen('start');
+        }
+
+        function startGame() {
+            if(!audioEnabled) {
+                audioEnabled = true;
+                document.getElementById('btn-audio-toggle-start').textContent = '🔊 Audio ON';
+                document.getElementById('btn-audio-toggle-game').textContent = '🔊';
+            }
+
+            showScreen('game');
+            matchedPairs = 0;
+            flippedCards = [];
+            lockBoard = false;
+            resultBar.innerHTML = '';
+            progressText.textContent = `0 / 8`;
+            gamePrompt.textContent = "Let's find the matching vegetables!";
+            
+            let dummy = new SpeechSynthesisUtterance("");
+            dummy.volume = 0;
+            window.speechSynthesis.speak(dummy);
+            
+            setTimeout(() => playAudio("Ready to play! Now find the matching vegetables."), 300);
+            
+            setupBoard();
+        }
+
+        function setupBoard() {
+            cardGrid.innerHTML = '';
+            
+            const familiarPool = masterVegetableDB.filter(v => v.category === 'familiar');
+            const discoveryPool = masterVegetableDB.filter(v => v.category === 'discovery');
+
+            const selectedFamiliar = [...familiarPool].sort(() => 0.5 - Math.random()).slice(0, 7);
+            const selectedDiscovery = [...discoveryPool].sort(() => 0.5 - Math.random()).slice(0, 1);
+            
+            currentDiscoveryVegetable = selectedDiscovery[0];
+            currentRoundVegetables = [...selectedFamiliar, ...selectedDiscovery];
+            
+            cards = [...currentRoundVegetables, ...currentRoundVegetables];
+            cards.sort(() => 0.5 - Math.random());
+            
+            cards.forEach((veg, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card');
+                cardElement.dataset.id = veg.id;
+                
+                const altNameHTML = veg.alternateName ? `<div class="card-alt-name">${veg.alternateName}</div>` : '';
+                
+                cardElement.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back">
+                            <img src="${veg.image}" alt="${veg.name}" class="card-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM1NTUiPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                            <div class="card-name">${veg.name}</div>
+                            ${altNameHTML}
+                        </div>
+                    </div>
+                `;
+                
+                cardElement.addEventListener('click', () => handleCardClick(cardElement, veg));
+                cardGrid.appendChild(cardElement);
+            });
+        }
+
+        function handleCardClick(cardElement, veg) {
+            if (lockBoard) return; 
+            if (cardElement.classList.contains('flipped') || cardElement.classList.contains('matched') || cardElement.classList.contains('removed-card')) return; 
+            
+            cardElement.classList.add('flipped');
+            flippedCards.push({ element: cardElement, data: veg });
+            
+            if (flippedCards.length === 1) {
+                gamePrompt.textContent = "Now find the same vegetable!";
+                playAudio("Now find the same vegetable!");
+            } else if (flippedCards.length === 2) {
+                lockBoard = true; 
+                setTimeout(() => {
+                    checkMatch();
+                }, 400); 
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.data.id === card2.data.id) {
+                handleMatch(card1, card2);
+            } else {
+                handleMismatch(card1, card2);
+            }
+        }
+
+        function handleMatch(card1, card2) {
+            const isDiscovery = (card1.data.id === currentDiscoveryVegetable.id);
+            
+            card1.element.classList.add('matched');
+            card2.element.classList.add('matched');
+
+            if (isDiscovery) {
+                card1.element.classList.add('discovery-card');
+                card2.element.classList.add('discovery-card');
+            }
+            
+            matchedPairs++;
+            progressText.textContent = `${matchedPairs} / 8`;
+            
+            if (isDiscovery) {
+                showDiscoveryMoment(card1.data, card1, card2);
+            } else {
+                gamePrompt.textContent = "✨ Great Match!";
+                playAudio(`Great match! It's a ${card1.data.name}!`);
+                
+                setTimeout(() => {
+                    card1.element.classList.add('removed-card');
+                    card2.element.classList.add('removed-card');
+                    
+                    updateResultBar(card1.data, false);
+                    finishMatchProcess();
+                }, 800);
+            }
+        }
+
+        function showDiscoveryMoment(veg, card1, card2) {
+            document.getElementById('discovery-img').src = veg.image;
+            document.getElementById('discovery-name').textContent = veg.name;
+            document.getElementById('discovery-alt-name').textContent = veg.alternateName ? `Also called: ${veg.alternateName}` : '';
+            
+            discoveryOverlay.classList.add('show');
+            
+            let audioText = `New vegetable discovered! It's a ${veg.name}.`;
+            if (veg.alternateName) audioText += ` Also called ${veg.alternateName}.`;
+            playAudio(audioText);
+
+            setTimeout(() => {
+                discoveryOverlay.classList.remove('show');
+                
+                card1.element.classList.add('removed-card');
+                card2.element.classList.add('removed-card');
+                
+                updateResultBar(veg, true);
+                gamePrompt.textContent = "✨ Great Match!";
+                finishMatchProcess();
+            }, 3500); 
+        }
+
+        function finishMatchProcess() {
+            flippedCards = [];
+            if (matchedPairs === 8) {
+                setTimeout(showVictory, 1000);
+            } else {
+                lockBoard = false;
+            }
+        }
+
+        function handleMismatch(card1, card2) {
+            gamePrompt.textContent = "Oops, try again!";
+            playAudio("Oops, try again!");
+            
+            card1.element.classList.add('shake');
+            card2.element.classList.add('shake');
+            
+            setTimeout(() => {
+                card1.element.classList.remove('flipped', 'shake');
+                card2.element.classList.remove('flipped', 'shake');
+                gamePrompt.textContent = "Let's find the matching vegetables!";
+                flippedCards = [];
+                lockBoard = false;
+            }, 1200);
+        }
+
+        function updateResultBar(veg, isDiscovery) {
+            const item = document.createElement('div');
+            item.classList.add('result-item');
+            if (isDiscovery) item.classList.add('discovery-item');
+            
+            let symbol = isDiscovery ? '⭐ ' : '';
+            item.innerHTML = `
+                <img src="${veg.image}" alt="${veg.name}" onerror="this.style.display='none'"> 
+                ${symbol}${veg.name}
+            `;
+            resultBar.appendChild(item);
+        }
+
+        function showVictory() {
+            showScreen('victory');
+            playAudio("Amazing! You found all 8 vegetables!");
+            
+            victoryDiscoveryDetails.innerHTML = `
+                <img src="${currentDiscoveryVegetable.image}" style="width:clamp(40px, 8vh, 80px); height:clamp(40px, 8vh, 80px); object-fit:contain;" alt="${currentDiscoveryVegetable.name}">
+                <div style="text-align: left;">
+                    <h2 style="margin:0; font-size:clamp(1.2rem, 2.5vh, 2rem); color:var(--discovery-color)">⭐ ${currentDiscoveryVegetable.name}</h2>
+                    ${currentDiscoveryVegetable.alternateName ? `<p style="margin:0; font-size:clamp(0.9rem, 1.8vh, 1.2rem); color:#555;">Also called ${currentDiscoveryVegetable.alternateName}</p>` : ''}
+                </div>
+            `;
+
+            victoryVegetables.innerHTML = '';
+            currentRoundVegetables.forEach(veg => {
+                const item = document.createElement('div');
+                item.classList.add('result-item');
+                if (veg.id === currentDiscoveryVegetable.id) item.classList.add('discovery-item');
+                
+                item.style.flexDirection = "column";
+                item.style.height = "auto";
+                item.style.padding = "0.5vh 1vw";
+                
+                item.innerHTML = `
+                    <img src="${veg.image}" style="width:clamp(30px, 5vh, 60px); height:clamp(30px, 5vh, 60px); margin:0 0 5px 0" alt="${veg.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM1NTUiPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    <span style="font-size: clamp(0.7rem, 1.4vh, 1rem)">${veg.id === currentDiscoveryVegetable.id ? '⭐ ' : ''}${veg.name}</span>
+                `;
+                victoryVegetables.appendChild(item);
+            });
+        }
+
+        // Start Application
+        init();
+    </script>
+</body>
+</html>
