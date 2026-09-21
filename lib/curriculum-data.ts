@@ -1,23 +1,23 @@
 import { CurriculumTopic, GradeSlug } from './types';
 
 export const LKG_TOPICS: CurriculumTopic[] = [
-  { id: 'lkg-01', index: 1, slug: 'alphabets', title: 'Alphabets', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/ALPHABETS.mp4', gamePath: '/games/lkg/alphabets%20-%20Copy/index.html', isUnlockedDefault: true },
+  { id: 'lkg-01', index: 1, slug: 'alphabets', title: 'Alphabets', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/ALPHABETS.mp4', gamePath: '/games/LKG/alphabets%20-%20Copy/index.html', isUnlockedDefault: true },
   { id: 'lkg-02', index: 2, slug: 'rhyme', title: 'Rhyme', grade: 'lkg', hasGame: false, videoSrc: '/videos/LKG/Rhyme.mp4' },
   { id: 'lkg-03', index: 3, slug: 'story', title: 'Story', grade: 'lkg', hasGame: false, videoSrc: '/videos/LKG/lazy%20lion%20story.mp4' },
-  { id: 'lkg-04', index: 4, slug: 'lines', title: 'Lines', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Line%20Concepts.mp4', gamePath: '/games/lkg/LINES%20CONCEPTS/index.html' },
-  { id: 'lkg-05', index: 5, slug: 'curves', title: 'Curves', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Curves%20.mp4', gamePath: '/games/lkg/CURVES/index.html' },
-  { id: 'lkg-06', index: 6, slug: 'comparison', title: 'Comparison', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/BIG%20AND%20SMALL.mp4', gamePath: '/games/lkg/COMPARISON/index.html' },
-  { id: 'lkg-07', index: 7, slug: 'senses', title: 'Senses', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Senses.mp4', gamePath: '/games/lkg/Seneses/index.html' },
+  { id: 'lkg-04', index: 4, slug: 'lines', title: 'Lines', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Line%20Concepts.mp4', gamePath: '/games/LKG/LINES%20CONCEPTS/index.html' },
+  { id: 'lkg-05', index: 5, slug: 'curves', title: 'Curves', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Curves%20.mp4', gamePath: '/games/LKG/CURVES/index.html' },
+  { id: 'lkg-06', index: 6, slug: 'comparison', title: 'Comparison', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/BIG%20AND%20SMALL.mp4', gamePath: '/games/LKG/COMPARISON/index.html' },
+  { id: 'lkg-07', index: 7, slug: 'senses', title: 'Senses', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Senses.mp4', gamePath: '/games/LKG/Seneses/index.html' },
   { id: 'lkg-08', index: 8, slug: 'special-person', title: 'Special Person Called Me', grade: 'lkg', hasGame: false, videoSrc: '/videos/LKG/Special%20Person%20Called%20Me.mp4' },
-  { id: 'lkg-09', index: 9, slug: 'school-is-fun', title: 'School Is Fun', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/School%20is%20fun.mp4', gamePath: '/games/lkg/school/index.html' },
-  { id: 'lkg-10', index: 10, slug: 'colours', title: 'Colours', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Fun%20With%20Colours.mp4', gamePath: '/games/lkg/COLOURS/index.html' },
-  { id: 'lkg-12', index: 11, slug: 'good-habits', title: 'Good Habits', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Good%20Habits.mp4', gamePath: '/games/lkg/habits/index.html' },
-  { id: 'lkg-13', index: 12, slug: 'transport', title: 'Transport', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Transport%20Around%20Us.mp4', gamePath: '/games/lkg/Transport/index.html' },
-  { id: 'lkg-14', index: 13, slug: 'difference', title: 'Difference', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/TALL%20AND%20SHORT.mp4', gamePath: '/games/lkg/COMPARISON/index.html' },
-  { id: 'lkg-15', index: 14, slug: 'zero', title: 'Zero', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/understanding%20zero.mp4', gamePath: '/games/lkg/ZERO/index.html' },
-  { id: 'lkg-16', index: 15, slug: 'letters-words', title: 'Letters & Words', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Letters%20And%20Words.mp4', gamePath: '/games/lkg/SMALL%20AND%20CAPITAL/dist/index.html' },
-  { id: 'lkg-17', index: 16, slug: 'clothes', title: 'Clothes', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Clothes%20We%20Wear.mp4', gamePath: '/games/lkg/clothes/index.html' },
-  { id: 'lkg-18', index: 17, slug: 'counting-numbers', title: 'Counting Numbers', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Counting%20Numbers.mp4', gamePath: '/games/lkg/NUMBERS/index.html' },
+  { id: 'lkg-09', index: 9, slug: 'school-is-fun', title: 'School Is Fun', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/School%20is%20fun.mp4', gamePath: '/games/LKG/school/index.html' },
+  { id: 'lkg-10', index: 10, slug: 'colours', title: 'Colours', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Fun%20With%20Colours.mp4', gamePath: '/games/LKG/COLOURS/index.html' },
+  { id: 'lkg-12', index: 11, slug: 'good-habits', title: 'Good Habits', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Good%20Habits.mp4', gamePath: '/games/LKG/habits/index.html' },
+  { id: 'lkg-13', index: 12, slug: 'transport', title: 'Transport', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Transport%20Around%20Us.mp4', gamePath: '/games/LKG/Transport/index.html' },
+  { id: 'lkg-14', index: 13, slug: 'difference', title: 'Difference', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/TALL%20AND%20SHORT.mp4', gamePath: '/games/LKG/COMPARISON/index.html' },
+  { id: 'lkg-15', index: 14, slug: 'zero', title: 'Zero', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/understanding%20zero.mp4', gamePath: '/games/LKG/ZERO/index.html' },
+  { id: 'lkg-16', index: 15, slug: 'letters-words', title: 'Letters & Words', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Letters%20And%20Words.mp4', gamePath: '/games/LKG/SMALL%20AND%20CAPITAL/dist/index.html' },
+  { id: 'lkg-17', index: 16, slug: 'clothes', title: 'Clothes', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Clothes%20We%20Wear.mp4', gamePath: '/games/LKG/clothes/index.html' },
+  { id: 'lkg-18', index: 17, slug: 'counting-numbers', title: 'Counting Numbers', grade: 'lkg', hasGame: true, videoSrc: '/videos/LKG/Counting%20Numbers.mp4', gamePath: '/games/LKG/NUMBERS/index.html' },
 ];
 
 export const UKG_TOPICS: CurriculumTopic[] = [
@@ -55,11 +55,11 @@ export const FIRST_CLASS_TOPICS: CurriculumTopic[] = [
 ];
 
 export const ACTIVITIES_TOPICS: CurriculumTopic[] = [
-  { id: 'act-01', index: 1, slug: 'alphabets', title: 'Alphabets', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/ALPHABETS.mp4', gamePath: '/games/lkg/alphabets%20-%20Copy/index.html', isUnlockedDefault: true },
-  { id: 'act-02', index: 2, slug: 'lines', title: 'Lines', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Line%20Concepts.mp4', gamePath: '/games/lkg/LINES%20CONCEPTS/index.html' },
-  { id: 'act-03', index: 3, slug: 'curves', title: 'Curves', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Curves%20.mp4', gamePath: '/games/lkg/CURVES/index.html' },
-  { id: 'act-04', index: 4, slug: 'colours', title: 'Colours', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Fun%20With%20Colours.mp4', gamePath: '/games/lkg/COLOURS/index.html' },
-  { id: 'act-05', index: 5, slug: 'senses', title: 'Senses', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Senses.mp4', gamePath: '/games/lkg/Seneses/index.html' },
+  { id: 'act-01', index: 1, slug: 'alphabets', title: 'Alphabets', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/ALPHABETS.mp4', gamePath: '/games/LKG/alphabets%20-%20Copy/index.html', isUnlockedDefault: true },
+  { id: 'act-02', index: 2, slug: 'lines', title: 'Lines', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Line%20Concepts.mp4', gamePath: '/games/LKG/LINES%20CONCEPTS/index.html' },
+  { id: 'act-03', index: 3, slug: 'curves', title: 'Curves', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Curves%20.mp4', gamePath: '/games/LKG/CURVES/index.html' },
+  { id: 'act-04', index: 4, slug: 'colours', title: 'Colours', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Fun%20With%20Colours.mp4', gamePath: '/games/LKG/COLOURS/index.html' },
+  { id: 'act-05', index: 5, slug: 'senses', title: 'Senses', grade: 'activities', hasGame: true, videoSrc: '/videos/LKG/Senses.mp4', gamePath: '/games/LKG/Seneses/index.html' },
   { id: 'act-06', index: 6, slug: 'shapes', title: 'Shapes', grade: 'activities', hasGame: true, videoSrc: '/videos/UKG/Shapes%20.mp4', gamePath: '/games/ukg/SHAPES/index.html' },
   { id: 'act-08', index: 7, slug: 'fruits-vegetables', title: 'Fruits & Vegetables', grade: 'activities', hasGame: false, videoSrc: '/videos/1st%20class/Vegetables%20and%20Fruits.mp4' },
   { id: 'act-09', index: 8, slug: 'thirsty-crow', title: 'Thirsty Crow', grade: 'activities', hasGame: false, videoSrc: '/videos/UKG/Thirsty%20crow.mp4' },
