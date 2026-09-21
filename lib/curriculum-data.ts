@@ -21,7 +21,7 @@ export const LKG_TOPICS: CurriculumTopic[] = [
 ];
 
 export const UKG_TOPICS: CurriculumTopic[] = [
-  { id: 'ukg-01', index: 1, slug: 'vowels', title: 'Vowels', grade: 'ukg', hasGame: true, videoSrc: '/videos/UKG/VOWELS.mp4', gamePath: '/games/ukg/vowels/index.html', isUnlockedDefault: true },
+  { id: 'ukg-01', index: 1, slug: 'vowels', title: 'Vowels', grade: 'ukg', hasGame: true, videoSrc: '/videos/UKG/VOWELS%20NEW.mp4', gamePath: '/games/ukg/vowels/index.html', isUnlockedDefault: true },
   { id: 'ukg-02', index: 2, slug: 'alphabets', title: 'Alphabets', grade: 'ukg', hasGame: true, videoSrc: '/videos/UKG/ALPHABETS.mp4', gamePath: '/games/ukg/alphabets%20-%20Copy/index.html' },
   { id: 'ukg-03', index: 3, slug: 'add-with-fingers', title: 'Add With Fingers', grade: 'ukg', hasGame: false, videoSrc: '/videos/UKG/ADD%20WITH%20FINGERS.mp4' },
   { id: 'ukg-04', index: 4, slug: 'pronouns', title: 'Pronouns', grade: 'ukg', hasGame: true, videoSrc: '/videos/UKG/i%20and%20u.mp4', gamePath: '/games/ukg/PRONOUNS/index.html' },
